@@ -1,11 +1,11 @@
 accounts:
   - name: alice
-    coins: ["20000token", "200000000stake"]
+    coins: ["200000000heart"]
   - name: bob
-    coins: ["10000token", "100000000stake"]
+    coins: ["100000000heart"]
 validator:
   name: alice
-  staked: "100000000stake"
+  staked: "1000heart"
 client:
   openapi:
     path: "docs/static/openapi.yml"
@@ -13,4 +13,24 @@ client:
     path: "vue/src/store"
 faucet:
   name: bob
-  coins: ["5token", "100000stake"]
+  coins: ["100000heart"]
+genesis:
+  chain_id: "humans"
+  app_state:
+    bank:
+      denom_metadata:
+        - description: "Humans ai HEART"
+          display: "heart"
+          base: "uheart"
+          name: "Humans"
+          symbol: "HEART"
+          denom_units:
+            - denom: "uheart"
+              aliases:
+                - "milliheart"
+              exponent: "0"
+            - denom: "heart"
+              exponent: "6"
+    staking:
+      params:
+        bond_denom: "uheart"
