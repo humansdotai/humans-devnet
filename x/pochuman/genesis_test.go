@@ -38,6 +38,14 @@ func TestGenesis(t *testing.T) {
 				Index: "1",
 			},
 		},
+		PoolBalanceList: []types.PoolBalance{
+			{
+				Index: "0",
+			},
+			{
+				Index: "1",
+			},
+		},
 		// this line is used by starport scaffolding # genesis/test/state
 	}
 
@@ -52,5 +60,6 @@ func TestGenesis(t *testing.T) {
 	require.ElementsMatch(t, genesisState.FeeBalanceList, got.FeeBalanceList)
 	require.ElementsMatch(t, genesisState.KeysignVoteDataList, got.KeysignVoteDataList)
 	require.ElementsMatch(t, genesisState.ObserveVoteList, got.ObserveVoteList)
+	require.ElementsMatch(t, genesisState.PoolBalanceList, got.PoolBalanceList)
 	// this line is used by starport scaffolding # genesis/test/assert
 }

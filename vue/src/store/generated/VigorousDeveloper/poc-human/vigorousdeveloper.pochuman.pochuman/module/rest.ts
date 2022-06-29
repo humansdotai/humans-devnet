@@ -61,6 +61,13 @@ export interface PochumanObserveVote {
  */
 export type PochumanParams = object;
 
+export interface PochumanPoolBalance {
+  index?: string;
+  chainName?: string;
+  balance?: string;
+  decimal?: string;
+}
+
 export interface PochumanQueryAllFeeBalanceResponse {
   feeBalance?: PochumanFeeBalance[];
 
@@ -106,6 +113,21 @@ export interface PochumanQueryAllObserveVoteResponse {
   pagination?: V1Beta1PageResponse;
 }
 
+export interface PochumanQueryAllPoolBalanceResponse {
+  poolBalance?: PochumanPoolBalance[];
+
+  /**
+   * PageResponse is to be embedded in gRPC response messages where the
+   * corresponding request message has used PageRequest.
+   *
+   *  message SomeResponse {
+   *          repeated Bar results = 1;
+   *          PageResponse page = 2;
+   *  }
+   */
+  pagination?: V1Beta1PageResponse;
+}
+
 export interface PochumanQueryGetFeeBalanceResponse {
   feeBalance?: PochumanFeeBalance;
 }
@@ -116,6 +138,10 @@ export interface PochumanQueryGetKeysignVoteDataResponse {
 
 export interface PochumanQueryGetObserveVoteResponse {
   observeVote?: PochumanObserveVote;
+}
+
+export interface PochumanQueryGetPoolBalanceResponse {
+  poolBalance?: PochumanPoolBalance;
 }
 
 /**
@@ -533,6 +559,48 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
   queryParams = (params: RequestParams = {}) =>
     this.request<PochumanQueryParamsResponse, RpcStatus>({
       path: `/VigorousDeveloper/poc-human/pochuman/params`,
+      method: "GET",
+      format: "json",
+      ...params,
+    });
+
+  /**
+   * No description
+   *
+   * @tags Query
+   * @name QueryPoolBalanceAll
+   * @summary Queries a list of PoolBalance items.
+   * @request GET:/VigorousDeveloper/poc-human/pochuman/pool_balance
+   */
+  queryPoolBalanceAll = (
+    query?: {
+      "pagination.key"?: string;
+      "pagination.offset"?: string;
+      "pagination.limit"?: string;
+      "pagination.count_total"?: boolean;
+      "pagination.reverse"?: boolean;
+    },
+    params: RequestParams = {},
+  ) =>
+    this.request<PochumanQueryAllPoolBalanceResponse, RpcStatus>({
+      path: `/VigorousDeveloper/poc-human/pochuman/pool_balance`,
+      method: "GET",
+      query: query,
+      format: "json",
+      ...params,
+    });
+
+  /**
+   * No description
+   *
+   * @tags Query
+   * @name QueryPoolBalance
+   * @summary Queries a PoolBalance by index.
+   * @request GET:/VigorousDeveloper/poc-human/pochuman/pool_balance/{index}
+   */
+  queryPoolBalance = (index: string, params: RequestParams = {}) =>
+    this.request<PochumanQueryGetPoolBalanceResponse, RpcStatus>({
+      path: `/VigorousDeveloper/poc-human/pochuman/pool_balance/${index}`,
       method: "GET",
       format: "json",
       ...params,

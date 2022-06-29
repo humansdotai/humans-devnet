@@ -46,6 +46,14 @@ func TestGenesisState_Validate(t *testing.T) {
 						Index: "1",
 					},
 				},
+				PoolBalanceList: []types.PoolBalance{
+					{
+						Index: "0",
+					},
+					{
+						Index: "1",
+					},
+				},
 				// this line is used by starport scaffolding # types/genesis/validField
 			},
 			valid: true,
@@ -82,6 +90,20 @@ func TestGenesisState_Validate(t *testing.T) {
 			desc: "duplicated observeVote",
 			genState: &types.GenesisState{
 				ObserveVoteList: []types.ObserveVote{
+					{
+						Index: "0",
+					},
+					{
+						Index: "0",
+					},
+				},
+			},
+			valid: false,
+		},
+		{
+			desc: "duplicated poolBalance",
+			genState: &types.GenesisState{
+				PoolBalanceList: []types.PoolBalance{
 					{
 						Index: "0",
 					},

@@ -4,9 +4,10 @@ import { FeeBalance } from "./module/types/pochuman/fee_balance"
 import { KeysignVoteData } from "./module/types/pochuman/keysign_vote_data"
 import { ObserveVote } from "./module/types/pochuman/observe_vote"
 import { Params } from "./module/types/pochuman/params"
+import { PoolBalance } from "./module/types/pochuman/pool_balance"
 
 
-export { FeeBalance, KeysignVoteData, ObserveVote, Params };
+export { FeeBalance, KeysignVoteData, ObserveVote, Params, PoolBalance };
 
 async function initTxClient(vuexGetters) {
 	return await txClient(vuexGetters['common/wallet/signer'], {
@@ -51,12 +52,15 @@ const getDefaultState = () => {
 				KeysignVoteDataAll: {},
 				ObserveVote: {},
 				ObserveVoteAll: {},
+				PoolBalance: {},
+				PoolBalanceAll: {},
 				
 				_Structure: {
 						FeeBalance: getStructure(FeeBalance.fromPartial({})),
 						KeysignVoteData: getStructure(KeysignVoteData.fromPartial({})),
 						ObserveVote: getStructure(ObserveVote.fromPartial({})),
 						Params: getStructure(Params.fromPartial({})),
+						PoolBalance: getStructure(PoolBalance.fromPartial({})),
 						
 		},
 		_Registry: registry,
@@ -126,6 +130,18 @@ export default {
 						(<any> params).query=null
 					}
 			return state.ObserveVoteAll[JSON.stringify(params)] ?? {}
+		},
+				getPoolBalance: (state) => (params = { params: {}}) => {
+					if (!(<any> params).query) {
+						(<any> params).query=null
+					}
+			return state.PoolBalance[JSON.stringify(params)] ?? {}
+		},
+				getPoolBalanceAll: (state) => (params = { params: {}}) => {
+					if (!(<any> params).query) {
+						(<any> params).query=null
+					}
+			return state.PoolBalanceAll[JSON.stringify(params)] ?? {}
 		},
 				
 		getTypeStructure: (state) => (type) => {
@@ -322,6 +338,54 @@ export default {
 				return getters['getObserveVoteAll']( { params: {...key}, query}) ?? {}
 			} catch (e) {
 				throw new Error('QueryClient:QueryObserveVoteAll API Node Unavailable. Could not perform query: ' + e.message)
+				
+			}
+		},
+		
+		
+		
+		
+		 		
+		
+		
+		async QueryPoolBalance({ commit, rootGetters, getters }, { options: { subscribe, all} = { subscribe:false, all:false}, params, query=null }) {
+			try {
+				const key = params ?? {};
+				const queryClient=await initQueryClient(rootGetters)
+				let value= (await queryClient.queryPoolBalance( key.index)).data
+				
+					
+				commit('QUERY', { query: 'PoolBalance', key: { params: {...key}, query}, value })
+				if (subscribe) commit('SUBSCRIBE', { action: 'QueryPoolBalance', payload: { options: { all }, params: {...key},query }})
+				return getters['getPoolBalance']( { params: {...key}, query}) ?? {}
+			} catch (e) {
+				throw new Error('QueryClient:QueryPoolBalance API Node Unavailable. Could not perform query: ' + e.message)
+				
+			}
+		},
+		
+		
+		
+		
+		 		
+		
+		
+		async QueryPoolBalanceAll({ commit, rootGetters, getters }, { options: { subscribe, all} = { subscribe:false, all:false}, params, query=null }) {
+			try {
+				const key = params ?? {};
+				const queryClient=await initQueryClient(rootGetters)
+				let value= (await queryClient.queryPoolBalanceAll(query)).data
+				
+					
+				while (all && (<any> value).pagination && (<any> value).pagination.next_key!=null) {
+					let next_values=(await queryClient.queryPoolBalanceAll({...query, 'pagination.key':(<any> value).pagination.next_key})).data
+					value = mergeResults(value, next_values);
+				}
+				commit('QUERY', { query: 'PoolBalanceAll', key: { params: {...key}, query}, value })
+				if (subscribe) commit('SUBSCRIBE', { action: 'QueryPoolBalanceAll', payload: { options: { all }, params: {...key},query }})
+				return getters['getPoolBalanceAll']( { params: {...key}, query}) ?? {}
+			} catch (e) {
+				throw new Error('QueryClient:QueryPoolBalanceAll API Node Unavailable. Could not perform query: ' + e.message)
 				
 			}
 		},

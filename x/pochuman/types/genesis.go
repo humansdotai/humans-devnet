@@ -13,6 +13,7 @@ func DefaultGenesis() *GenesisState {
 		FeeBalanceList:      []FeeBalance{},
 		KeysignVoteDataList: []KeysignVoteData{},
 		ObserveVoteList:     []ObserveVote{},
+		PoolBalanceList:     []PoolBalance{},
 		// this line is used by starport scaffolding # genesis/types/default
 		Params: DefaultParams(),
 	}
@@ -50,6 +51,16 @@ func (gs GenesisState) Validate() error {
 			return fmt.Errorf("duplicated index for observeVote")
 		}
 		observeVoteIndexMap[index] = struct{}{}
+	}
+	// Check for duplicated index in poolBalance
+	poolBalanceIndexMap := make(map[string]struct{})
+
+	for _, elem := range gs.PoolBalanceList {
+		index := string(PoolBalanceKey(elem.Index))
+		if _, ok := poolBalanceIndexMap[index]; ok {
+			return fmt.Errorf("duplicated index for poolBalance")
+		}
+		poolBalanceIndexMap[index] = struct{}{}
 	}
 	// this line is used by starport scaffolding # genesis/types/validate
 

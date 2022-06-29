@@ -8,6 +8,7 @@ import {
 } from "../cosmos/base/query/v1beta1/pagination";
 import { KeysignVoteData } from "../pochuman/keysign_vote_data";
 import { ObserveVote } from "../pochuman/observe_vote";
+import { PoolBalance } from "../pochuman/pool_balance";
 
 export const protobufPackage = "vigorousdeveloper.pochuman.pochuman";
 
@@ -68,6 +69,23 @@ export interface QueryAllObserveVoteRequest {
 
 export interface QueryAllObserveVoteResponse {
   observeVote: ObserveVote[];
+  pagination: PageResponse | undefined;
+}
+
+export interface QueryGetPoolBalanceRequest {
+  index: string;
+}
+
+export interface QueryGetPoolBalanceResponse {
+  poolBalance: PoolBalance | undefined;
+}
+
+export interface QueryAllPoolBalanceRequest {
+  pagination: PageRequest | undefined;
+}
+
+export interface QueryAllPoolBalanceResponse {
+  poolBalance: PoolBalance[];
   pagination: PageResponse | undefined;
 }
 
@@ -1137,6 +1155,323 @@ export const QueryAllObserveVoteResponse = {
   },
 };
 
+const baseQueryGetPoolBalanceRequest: object = { index: "" };
+
+export const QueryGetPoolBalanceRequest = {
+  encode(
+    message: QueryGetPoolBalanceRequest,
+    writer: Writer = Writer.create()
+  ): Writer {
+    if (message.index !== "") {
+      writer.uint32(10).string(message.index);
+    }
+    return writer;
+  },
+
+  decode(
+    input: Reader | Uint8Array,
+    length?: number
+  ): QueryGetPoolBalanceRequest {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = {
+      ...baseQueryGetPoolBalanceRequest,
+    } as QueryGetPoolBalanceRequest;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.index = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryGetPoolBalanceRequest {
+    const message = {
+      ...baseQueryGetPoolBalanceRequest,
+    } as QueryGetPoolBalanceRequest;
+    if (object.index !== undefined && object.index !== null) {
+      message.index = String(object.index);
+    } else {
+      message.index = "";
+    }
+    return message;
+  },
+
+  toJSON(message: QueryGetPoolBalanceRequest): unknown {
+    const obj: any = {};
+    message.index !== undefined && (obj.index = message.index);
+    return obj;
+  },
+
+  fromPartial(
+    object: DeepPartial<QueryGetPoolBalanceRequest>
+  ): QueryGetPoolBalanceRequest {
+    const message = {
+      ...baseQueryGetPoolBalanceRequest,
+    } as QueryGetPoolBalanceRequest;
+    if (object.index !== undefined && object.index !== null) {
+      message.index = object.index;
+    } else {
+      message.index = "";
+    }
+    return message;
+  },
+};
+
+const baseQueryGetPoolBalanceResponse: object = {};
+
+export const QueryGetPoolBalanceResponse = {
+  encode(
+    message: QueryGetPoolBalanceResponse,
+    writer: Writer = Writer.create()
+  ): Writer {
+    if (message.poolBalance !== undefined) {
+      PoolBalance.encode(
+        message.poolBalance,
+        writer.uint32(10).fork()
+      ).ldelim();
+    }
+    return writer;
+  },
+
+  decode(
+    input: Reader | Uint8Array,
+    length?: number
+  ): QueryGetPoolBalanceResponse {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = {
+      ...baseQueryGetPoolBalanceResponse,
+    } as QueryGetPoolBalanceResponse;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.poolBalance = PoolBalance.decode(reader, reader.uint32());
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryGetPoolBalanceResponse {
+    const message = {
+      ...baseQueryGetPoolBalanceResponse,
+    } as QueryGetPoolBalanceResponse;
+    if (object.poolBalance !== undefined && object.poolBalance !== null) {
+      message.poolBalance = PoolBalance.fromJSON(object.poolBalance);
+    } else {
+      message.poolBalance = undefined;
+    }
+    return message;
+  },
+
+  toJSON(message: QueryGetPoolBalanceResponse): unknown {
+    const obj: any = {};
+    message.poolBalance !== undefined &&
+      (obj.poolBalance = message.poolBalance
+        ? PoolBalance.toJSON(message.poolBalance)
+        : undefined);
+    return obj;
+  },
+
+  fromPartial(
+    object: DeepPartial<QueryGetPoolBalanceResponse>
+  ): QueryGetPoolBalanceResponse {
+    const message = {
+      ...baseQueryGetPoolBalanceResponse,
+    } as QueryGetPoolBalanceResponse;
+    if (object.poolBalance !== undefined && object.poolBalance !== null) {
+      message.poolBalance = PoolBalance.fromPartial(object.poolBalance);
+    } else {
+      message.poolBalance = undefined;
+    }
+    return message;
+  },
+};
+
+const baseQueryAllPoolBalanceRequest: object = {};
+
+export const QueryAllPoolBalanceRequest = {
+  encode(
+    message: QueryAllPoolBalanceRequest,
+    writer: Writer = Writer.create()
+  ): Writer {
+    if (message.pagination !== undefined) {
+      PageRequest.encode(message.pagination, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(
+    input: Reader | Uint8Array,
+    length?: number
+  ): QueryAllPoolBalanceRequest {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = {
+      ...baseQueryAllPoolBalanceRequest,
+    } as QueryAllPoolBalanceRequest;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.pagination = PageRequest.decode(reader, reader.uint32());
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryAllPoolBalanceRequest {
+    const message = {
+      ...baseQueryAllPoolBalanceRequest,
+    } as QueryAllPoolBalanceRequest;
+    if (object.pagination !== undefined && object.pagination !== null) {
+      message.pagination = PageRequest.fromJSON(object.pagination);
+    } else {
+      message.pagination = undefined;
+    }
+    return message;
+  },
+
+  toJSON(message: QueryAllPoolBalanceRequest): unknown {
+    const obj: any = {};
+    message.pagination !== undefined &&
+      (obj.pagination = message.pagination
+        ? PageRequest.toJSON(message.pagination)
+        : undefined);
+    return obj;
+  },
+
+  fromPartial(
+    object: DeepPartial<QueryAllPoolBalanceRequest>
+  ): QueryAllPoolBalanceRequest {
+    const message = {
+      ...baseQueryAllPoolBalanceRequest,
+    } as QueryAllPoolBalanceRequest;
+    if (object.pagination !== undefined && object.pagination !== null) {
+      message.pagination = PageRequest.fromPartial(object.pagination);
+    } else {
+      message.pagination = undefined;
+    }
+    return message;
+  },
+};
+
+const baseQueryAllPoolBalanceResponse: object = {};
+
+export const QueryAllPoolBalanceResponse = {
+  encode(
+    message: QueryAllPoolBalanceResponse,
+    writer: Writer = Writer.create()
+  ): Writer {
+    for (const v of message.poolBalance) {
+      PoolBalance.encode(v!, writer.uint32(10).fork()).ldelim();
+    }
+    if (message.pagination !== undefined) {
+      PageResponse.encode(
+        message.pagination,
+        writer.uint32(18).fork()
+      ).ldelim();
+    }
+    return writer;
+  },
+
+  decode(
+    input: Reader | Uint8Array,
+    length?: number
+  ): QueryAllPoolBalanceResponse {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = {
+      ...baseQueryAllPoolBalanceResponse,
+    } as QueryAllPoolBalanceResponse;
+    message.poolBalance = [];
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.poolBalance.push(PoolBalance.decode(reader, reader.uint32()));
+          break;
+        case 2:
+          message.pagination = PageResponse.decode(reader, reader.uint32());
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryAllPoolBalanceResponse {
+    const message = {
+      ...baseQueryAllPoolBalanceResponse,
+    } as QueryAllPoolBalanceResponse;
+    message.poolBalance = [];
+    if (object.poolBalance !== undefined && object.poolBalance !== null) {
+      for (const e of object.poolBalance) {
+        message.poolBalance.push(PoolBalance.fromJSON(e));
+      }
+    }
+    if (object.pagination !== undefined && object.pagination !== null) {
+      message.pagination = PageResponse.fromJSON(object.pagination);
+    } else {
+      message.pagination = undefined;
+    }
+    return message;
+  },
+
+  toJSON(message: QueryAllPoolBalanceResponse): unknown {
+    const obj: any = {};
+    if (message.poolBalance) {
+      obj.poolBalance = message.poolBalance.map((e) =>
+        e ? PoolBalance.toJSON(e) : undefined
+      );
+    } else {
+      obj.poolBalance = [];
+    }
+    message.pagination !== undefined &&
+      (obj.pagination = message.pagination
+        ? PageResponse.toJSON(message.pagination)
+        : undefined);
+    return obj;
+  },
+
+  fromPartial(
+    object: DeepPartial<QueryAllPoolBalanceResponse>
+  ): QueryAllPoolBalanceResponse {
+    const message = {
+      ...baseQueryAllPoolBalanceResponse,
+    } as QueryAllPoolBalanceResponse;
+    message.poolBalance = [];
+    if (object.poolBalance !== undefined && object.poolBalance !== null) {
+      for (const e of object.poolBalance) {
+        message.poolBalance.push(PoolBalance.fromPartial(e));
+      }
+    }
+    if (object.pagination !== undefined && object.pagination !== null) {
+      message.pagination = PageResponse.fromPartial(object.pagination);
+    } else {
+      message.pagination = undefined;
+    }
+    return message;
+  },
+};
+
 /** Query defines the gRPC querier service. */
 export interface Query {
   /** Parameters queries the parameters of the module. */
@@ -1165,6 +1500,14 @@ export interface Query {
   ObserveVoteAll(
     request: QueryAllObserveVoteRequest
   ): Promise<QueryAllObserveVoteResponse>;
+  /** Queries a PoolBalance by index. */
+  PoolBalance(
+    request: QueryGetPoolBalanceRequest
+  ): Promise<QueryGetPoolBalanceResponse>;
+  /** Queries a list of PoolBalance items. */
+  PoolBalanceAll(
+    request: QueryAllPoolBalanceRequest
+  ): Promise<QueryAllPoolBalanceResponse>;
 }
 
 export class QueryClientImpl implements Query {
@@ -1263,6 +1606,34 @@ export class QueryClientImpl implements Query {
     );
     return promise.then((data) =>
       QueryAllObserveVoteResponse.decode(new Reader(data))
+    );
+  }
+
+  PoolBalance(
+    request: QueryGetPoolBalanceRequest
+  ): Promise<QueryGetPoolBalanceResponse> {
+    const data = QueryGetPoolBalanceRequest.encode(request).finish();
+    const promise = this.rpc.request(
+      "vigorousdeveloper.pochuman.pochuman.Query",
+      "PoolBalance",
+      data
+    );
+    return promise.then((data) =>
+      QueryGetPoolBalanceResponse.decode(new Reader(data))
+    );
+  }
+
+  PoolBalanceAll(
+    request: QueryAllPoolBalanceRequest
+  ): Promise<QueryAllPoolBalanceResponse> {
+    const data = QueryAllPoolBalanceRequest.encode(request).finish();
+    const promise = this.rpc.request(
+      "vigorousdeveloper.pochuman.pochuman.Query",
+      "PoolBalanceAll",
+      data
+    );
+    return promise.then((data) =>
+      QueryAllPoolBalanceResponse.decode(new Reader(data))
     );
   }
 }
