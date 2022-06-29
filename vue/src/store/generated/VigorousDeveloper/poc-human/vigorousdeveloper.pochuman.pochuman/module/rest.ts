@@ -9,6 +9,8 @@
  * ---------------------------------------------------------------
  */
 
+export type PochumanMsgKeysignVoteResponse = object;
+
 export type PochumanMsgObservationVoteResponse = object;
 
 export type PochumanMsgRequestTransactionResponse = object;

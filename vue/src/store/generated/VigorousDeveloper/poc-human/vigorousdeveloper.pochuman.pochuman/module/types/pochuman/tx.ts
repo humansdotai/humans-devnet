@@ -35,6 +35,14 @@ export interface MsgUpdateBalance {
 
 export interface MsgUpdateBalanceResponse {}
 
+export interface MsgKeysignVote {
+  creator: string;
+  txHash: string;
+  pubKey: string;
+}
+
+export interface MsgKeysignVoteResponse {}
+
 const baseMsgRequestTransaction: object = {
   creator: "",
   originChain: "",
@@ -626,6 +634,133 @@ export const MsgUpdateBalanceResponse = {
   },
 };
 
+const baseMsgKeysignVote: object = { creator: "", txHash: "", pubKey: "" };
+
+export const MsgKeysignVote = {
+  encode(message: MsgKeysignVote, writer: Writer = Writer.create()): Writer {
+    if (message.creator !== "") {
+      writer.uint32(10).string(message.creator);
+    }
+    if (message.txHash !== "") {
+      writer.uint32(18).string(message.txHash);
+    }
+    if (message.pubKey !== "") {
+      writer.uint32(26).string(message.pubKey);
+    }
+    return writer;
+  },
+
+  decode(input: Reader | Uint8Array, length?: number): MsgKeysignVote {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = { ...baseMsgKeysignVote } as MsgKeysignVote;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.creator = reader.string();
+          break;
+        case 2:
+          message.txHash = reader.string();
+          break;
+        case 3:
+          message.pubKey = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): MsgKeysignVote {
+    const message = { ...baseMsgKeysignVote } as MsgKeysignVote;
+    if (object.creator !== undefined && object.creator !== null) {
+      message.creator = String(object.creator);
+    } else {
+      message.creator = "";
+    }
+    if (object.txHash !== undefined && object.txHash !== null) {
+      message.txHash = String(object.txHash);
+    } else {
+      message.txHash = "";
+    }
+    if (object.pubKey !== undefined && object.pubKey !== null) {
+      message.pubKey = String(object.pubKey);
+    } else {
+      message.pubKey = "";
+    }
+    return message;
+  },
+
+  toJSON(message: MsgKeysignVote): unknown {
+    const obj: any = {};
+    message.creator !== undefined && (obj.creator = message.creator);
+    message.txHash !== undefined && (obj.txHash = message.txHash);
+    message.pubKey !== undefined && (obj.pubKey = message.pubKey);
+    return obj;
+  },
+
+  fromPartial(object: DeepPartial<MsgKeysignVote>): MsgKeysignVote {
+    const message = { ...baseMsgKeysignVote } as MsgKeysignVote;
+    if (object.creator !== undefined && object.creator !== null) {
+      message.creator = object.creator;
+    } else {
+      message.creator = "";
+    }
+    if (object.txHash !== undefined && object.txHash !== null) {
+      message.txHash = object.txHash;
+    } else {
+      message.txHash = "";
+    }
+    if (object.pubKey !== undefined && object.pubKey !== null) {
+      message.pubKey = object.pubKey;
+    } else {
+      message.pubKey = "";
+    }
+    return message;
+  },
+};
+
+const baseMsgKeysignVoteResponse: object = {};
+
+export const MsgKeysignVoteResponse = {
+  encode(_: MsgKeysignVoteResponse, writer: Writer = Writer.create()): Writer {
+    return writer;
+  },
+
+  decode(input: Reader | Uint8Array, length?: number): MsgKeysignVoteResponse {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = { ...baseMsgKeysignVoteResponse } as MsgKeysignVoteResponse;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(_: any): MsgKeysignVoteResponse {
+    const message = { ...baseMsgKeysignVoteResponse } as MsgKeysignVoteResponse;
+    return message;
+  },
+
+  toJSON(_: MsgKeysignVoteResponse): unknown {
+    const obj: any = {};
+    return obj;
+  },
+
+  fromPartial(_: DeepPartial<MsgKeysignVoteResponse>): MsgKeysignVoteResponse {
+    const message = { ...baseMsgKeysignVoteResponse } as MsgKeysignVoteResponse;
+    return message;
+  },
+};
+
 /** Msg defines the Msg service. */
 export interface Msg {
   RequestTransaction(
@@ -634,8 +769,9 @@ export interface Msg {
   ObservationVote(
     request: MsgObservationVote
   ): Promise<MsgObservationVoteResponse>;
-  /** this line is used by starport scaffolding # proto/tx/rpc */
   UpdateBalance(request: MsgUpdateBalance): Promise<MsgUpdateBalanceResponse>;
+  /** this line is used by starport scaffolding # proto/tx/rpc */
+  KeysignVote(request: MsgKeysignVote): Promise<MsgKeysignVoteResponse>;
 }
 
 export class MsgClientImpl implements Msg {
@@ -680,6 +816,18 @@ export class MsgClientImpl implements Msg {
     );
     return promise.then((data) =>
       MsgUpdateBalanceResponse.decode(new Reader(data))
+    );
+  }
+
+  KeysignVote(request: MsgKeysignVote): Promise<MsgKeysignVoteResponse> {
+    const data = MsgKeysignVote.encode(request).finish();
+    const promise = this.rpc.request(
+      "vigorousdeveloper.pochuman.pochuman.Msg",
+      "KeysignVote",
+      data
+    );
+    return promise.then((data) =>
+      MsgKeysignVoteResponse.decode(new Reader(data))
     );
   }
 }
