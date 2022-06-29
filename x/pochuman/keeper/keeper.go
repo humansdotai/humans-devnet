@@ -277,13 +277,10 @@ func (k Keeper) UpdateTransactionRequestData(ctx sdk.Context, obsVotes []types.O
 
 		// After we confirm payment on external blockchain, we deduct fee
 		index := "2"
-		chainName := "Solana"
+		chainName := "Human"
 		if d.OriginChain == types.CHAIN_ETHEREUM {
 			index = "1"
 			chainName = "Ethereum"
-		} else if d.OriginChain == types.CHAIN_POLYGON {
-			index = "3"
-			chainName = "Polygon"
 		}
 
 		feeItem, bFound := k.GetFeeBalance(ctx, index)

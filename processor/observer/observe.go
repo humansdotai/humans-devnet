@@ -8,7 +8,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/VigorousDeveloper/poc-human/processor/diverclient"
+	diverclient "github.com/VigorousDeveloper/poc-human/processor/humanclient"
 	"github.com/VigorousDeveloper/poc-human/x/pochuman/types"
 	"github.com/cenkalti/backoff"
 	stypes "github.com/cosmos/cosmos-sdk/types"
@@ -16,21 +16,19 @@ import (
 
 // Observer observer service
 type Observer struct {
-	lock                 *sync.Mutex
-	stopChan             chan struct{}
-	diversifiChainBridge *diverclient.DiversifiChainBridge
-	storage              *ObserverStorage
+	lock             *sync.Mutex
+	stopChan         chan struct{}
+	HumanChainBridge *diverclient.HumanChainBridge
+	storage          *ObserverStorage
 
-	CurEthHeight  uint64
-	CurSolHeight  uint64
-	CurKimaHeight uint64
+	CurEthHeight   uint64
+	CurHumanHeight uint64
 
 	approve_voted []string
 	keysign_voted []string
 
 	EthPoolChanged chan bool
-	SolPoolChanged chan bool
-	PolPoolChanged chan bool
+	HmPoolChanged  chan bool
 
 	ArrMsgUpdateBalance      []*types.MsgUpdateBalance
 	ArrMsgKeysignVote        []*types.MsgKeysignVote
@@ -43,10 +41,10 @@ type Observer struct {
 const (
 	//----------ETHEREUM---------
 	//-------------------------
-	// Ethereum RPC Node Provider URL from Pokt
+	// Ethereum RPC Node Provider URL from Alchemy
 	URL_Ethereum_RPC_Node_Provider = "https://eth-rinkeby.alchemyapi.io/v2/JiLlXSz2HgdpuutVqt-irguqqDBxPV4D"
 
-	// Ethereum RPC Node Provider WSS URL from Infura, rinkeby
+	// Ethereum RPC Node Provider WSS URL from Alchemy, rinkeby
 	URL_Ethereum_RPC_Node_Provider_WSS = "wss://eth-rinkeby.alchemyapi.io/v2/JiLlXSz2HgdpuutVqt-irguqqDBxPV4D"
 
 	// Ethereum Rinkeby USDK Contract Address
@@ -57,47 +55,10 @@ const (
 
 	// Ethereum Pool Account Private Key
 	Ethereum_Pool_Account_Private_Key = "4b11634f979c262e33def94f52a0a82e57d0db5d7f94efd2844a1892623e063c"
-
-	//----------POLYGON---------
-	//--------------------------
-	// Ethereum RPC Node Provider URL from Pokt
-	URL_Polygon_RPC_Node_Provider = "https://polygon-mumbai.g.alchemy.com/v2/gm02AeSIBsrJVs1cKpQRVEf383Qlhh5s"
-
-	// Ethereum RPC Node Provider WSS URL from Infura, rinkeby
-	URL_Polygon_RPC_Node_Provider_WSS = "wss://polygon-mumbai.g.alchemy.com/v2/gm02AeSIBsrJVs1cKpQRVEf383Qlhh5s"
-
-	// Polygon Mumbai USDK Contract Address
-	Polygon_USDK_Token_Address = "0x5bd4865a6dEd507dA08ed1aBE3cd971a7e0405D7"
-
-	// Polygon Pool Account Address
-	Polygon_Pool_Address = "0x369b28f227C0188478cb05F8467bdd52002EcC4E"
-
-	// Polygon Pool Account Private Key
-	Polygon_Pool_Account_Private_Key = "4b11634f979c262e33def94f52a0a82e57d0db5d7f94efd2844a1892623e063c"
-
-	//----------SOLANA---------
-	//-------------------------
-	// Solana RPC Node Provider URL from ChainStack
-	URL_Solana_RPC_Node_Provider = "https://nd-013-629-002.p2pify.com/b2367a95592abda85ae5802581b8880f"
-
-	// Solana WSS Node provider
-	ChainStack_Solana_WSS_Provider = "wss://ws-nd-013-629-002.p2pify.com/b2367a95592abda85ae5802581b8880f"
-
-	// Solana Pool Devnet USDC token account address
-	Solana_Pool_USDC_Token_Account_Address = "AnrnjMrYHhdLGsKKXi37VxK2PGDpp5LrXvdXFMs8J8yA"
-
-	// Solana Pool Account Private Key
-	Solana_USDC_Pool_Account_Private_Key = "3UN7JaU8WFphHMnijRSvWChh8GQgJnVm6eGu88xqmgJecfvGwNLTmPUmKZpqWX8pXX73sNheRVcZky8kD8jHSjR5"
-
-	// Solana USDC token address
-	Solana_USDK_Token_Address = "GkbnUDkymDTF4U6Z5wM5kKJn3GmGndMn2rN5typmyUHY"
-
-	// Solana Pool Public Key
-	Solana_Pool_Pub_key = "DRmLANN1qXBELs69gW5upY4qH4iWc23MTcRPjDuzZYuH"
 )
 
 // NewObserver create a new instance of Observer for chain
-func NewObserver(chainBridge *diverclient.DiversifiChainBridge, dataPath string) (*Observer, error) {
+func NewObserver(chainBridge *diverclient.HumanChainBridge, dataPath string) (*Observer, error) {
 	storage, err := NewObserverStorage(dataPath)
 	if err != nil {
 		return nil, fmt.Errorf("fail to create observer storage: %w", err)
@@ -106,14 +67,12 @@ func NewObserver(chainBridge *diverclient.DiversifiChainBridge, dataPath string)
 	return &Observer{
 		lock:                  &sync.Mutex{},
 		stopChan:              make(chan struct{}),
-		diversifiChainBridge:  chainBridge,
+		HumanChainBridge:      chainBridge,
 		storage:               storage,
 		CurEthHeight:          0,
-		CurSolHeight:          0,
-		CurKimaHeight:         0,
+		CurHumanHeight:        0,
 		EthPoolChanged:        make(chan bool),
-		SolPoolChanged:        make(chan bool),
-		PolPoolChanged:        make(chan bool),
+		HmPoolChanged:         make(chan bool),
 		approve_voted:         make([]string, 0),
 		keysign_voted:         make([]string, 0),
 		ArrMsgUpdateBalance:   make([]*types.MsgUpdateBalance, 0),
@@ -143,13 +102,14 @@ func (o *Observer) DoCurRequest(payload io.Reader, endpoint string) string {
 
 func (o *Observer) Start() error {
 	go o.ProcessTxInsEthExternal()
+	go o.ProcessTxInsHmExternal()
 	go o.ProcessUpdateEthPoolBalance()
+	go o.ProcessUpdateHumanPoolBalance()
 	go o.ProcessKeysignTx()
-	go o.ProcessSendTxToDiversifiChain()
+	go o.ProcessSendTxToHumanChain()
 
 	o.EthPoolChanged <- true
-	o.SolPoolChanged <- true
-	o.PolPoolChanged <- true
+	o.HmPoolChanged <- true
 
 	return nil
 }
@@ -172,6 +132,18 @@ func (o *Observer) ProcessUpdateEthPoolBalance() {
 	}
 }
 
+// Human Balance Checking
+func (o *Observer) ProcessUpdateHumanPoolBalance() {
+	for {
+		select {
+		case <-o.stopChan:
+			return
+		case <-o.HmPoolChanged:
+			o.FetchBalanceOfEtherPool()
+		}
+	}
+}
+
 func (o *Observer) ProcessKeysignTx() {
 	for {
 		select {
@@ -184,7 +156,7 @@ func (o *Observer) ProcessKeysignTx() {
 }
 
 // Ethereum Checking
-func (o *Observer) ProcessSendTxToDiversifiChain() {
+func (o *Observer) ProcessSendTxToHumanChain() {
 	for {
 		select {
 		case <-o.stopChan:
@@ -235,7 +207,7 @@ func (o *Observer) SendBroadcast(msgs ...stypes.Msg) error {
 	bf.MaxElapsedTime = time.Second * 5
 
 	return backoff.Retry(func() error {
-		_, err := o.diversifiChainBridge.Broadcast(msgs...)
+		_, err := o.HumanChainBridge.Broadcast(msgs...)
 		if err != nil {
 			return fmt.Errorf("fail to send the tx to thorchain: %w", err)
 		}
@@ -258,10 +230,10 @@ func (o *Observer) continsHash(s []string, str string) bool {
 // Fetch DiversifiChain & Broadcast Keysign Transaction
 func (o *Observer) FetchTransactionAndBroadcastKeysignTx() bool {
 	// Get PubKey & Voter Address
-	pubKey, voter := o.diversifiChainBridge.GetVoterInfo()
+	pubKey, voter := o.HumanChainBridge.GetVoterInfo()
 
 	// Get All Transaction Data from DiversifiChain
-	txDataList, err := o.diversifiChainBridge.GetTxDataList("")
+	txDataList, err := o.HumanChainBridge.GetTxDataList("")
 
 	//
 	if err != nil {
@@ -288,12 +260,8 @@ func (o *Observer) FetchTransactionAndBroadcastKeysignTx() bool {
 				o.EthPoolChanged <- true
 			}
 
-			if tx.OriginChain == types.CHAIN_SOLANA {
-				o.SolPoolChanged <- true
-			}
-
-			if tx.OriginChain == types.CHAIN_POLYGON {
-				o.PolPoolChanged <- true
+			if tx.OriginChain == types.CHAIN_HUMAN {
+				o.HmPoolChanged <- true
 			}
 
 			return true
@@ -304,7 +272,7 @@ func (o *Observer) FetchTransactionAndBroadcastKeysignTx() bool {
 			// observe voted list
 			o.approve_voted = append(o.approve_voted, tx.ConfirmedBlockHash)
 
-			moniker := o.diversifiChainBridge.GetMonikerName()
+			moniker := o.HumanChainBridge.GetMonikerName()
 			data := &types.TransactionData{
 				Index:              "1",
 				OriginChain:        tx.OriginChain,
@@ -321,13 +289,13 @@ func (o *Observer) FetchTransactionAndBroadcastKeysignTx() bool {
 			}
 
 			bResult := false
-
 			if tx.TargetChain == types.CHAIN_ETHEREUM {
 				bResult = o.EthereumTransferTokenToTarget(data, moniker)
-			} else if tx.TargetChain == types.CHAIN_POLYGON {
+			} else if tx.TargetChain == types.CHAIN_HUMAN {
+				bResult = o.HumanTransferTokenToTarget(data, moniker)
 			}
 
-			pubKey, _ := o.diversifiChainBridge.GetVoterInfo()
+			pubKey, _ := o.HumanChainBridge.GetVoterInfo()
 			securedKey := types.EncryptMsgSHA256(pubKey)
 
 			// construct msg

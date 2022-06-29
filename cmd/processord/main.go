@@ -7,8 +7,8 @@ import (
 	"syscall"
 
 	"github.com/VigorousDeveloper/poc-human/cmd"
-	"github.com/VigorousDeveloper/poc-human/processor/diverclient"
-	"github.com/VigorousDeveloper/poc-human/processor/diverclient/cosmos"
+	diverclient "github.com/VigorousDeveloper/poc-human/processor/humanclient"
+	"github.com/VigorousDeveloper/poc-human/processor/humanclient/cosmos"
 	"github.com/VigorousDeveloper/poc-human/processor/observer"
 )
 
@@ -65,10 +65,10 @@ func main() {
 		ChainHomeFolder: "~/.diversifi/",
 	}
 
-	diversifichainBridge, err := diverclient.NewDiversifiChainBridge(k, cfg, signer, pubKey, addr)
+	HumanChainBridge, err := diverclient.NewHumanChainBridge(k, cfg, signer, pubKey, addr)
 
 	obs_storage := ""
-	obs, err := observer.NewObserver(diversifichainBridge, obs_storage)
+	obs, err := observer.NewObserver(HumanChainBridge, obs_storage)
 	if err != nil {
 		fmt.Println("fail to create observer")
 		return
@@ -79,7 +79,7 @@ func main() {
 		return
 	}
 
-	// tss, err := tss.NewTssSigner(diversifichainBridge)
+	// tss, err := tss.NewTssSigner(HumanChainBridge)
 	// if err != nil {
 	// 	fmt.Println("fail to create tss")
 	// 	return

@@ -55,8 +55,8 @@ type BridgeConfig struct {
 	ChainHomeFolder string
 }
 
-// DiversifiChainBridge will be used to send tx to DIVERSIChain
-type DiversifiChainBridge struct {
+// HumanChainBridge will be used to send tx to DIVERSIChain
+type HumanChainBridge struct {
 	keys          *Keys
 	cfg           BridgeConfig
 	blockHeight   uint64
@@ -72,12 +72,12 @@ type DiversifiChainBridge struct {
 	voterAddress                string
 }
 
-// NewDiversifiChainBridge create a new instance of DiversifiChainBridge
-func NewDiversifiChainBridge(k *Keys, cfg *BridgeConfig, signer string, pubKey string, voter string) (*DiversifiChainBridge, error) {
+// NewHumanChainBridge create a new instance of HumanChainBridge
+func NewHumanChainBridge(k *Keys, cfg *BridgeConfig, signer string, pubKey string, voter string) (*HumanChainBridge, error) {
 	httpClient := retryablehttp.NewClient()
 	httpClient.Logger = nil
 
-	return &DiversifiChainBridge{
+	return &HumanChainBridge{
 		keys:          k,
 		httpClient:    httpClient,
 		signerName:    signer,
@@ -89,7 +89,7 @@ func NewDiversifiChainBridge(k *Keys, cfg *BridgeConfig, signer string, pubKey s
 }
 
 // GetContext return a valid context with all relevant values set
-func (b *DiversifiChainBridge) GetContext() client.Context {
+func (b *HumanChainBridge) GetContext() client.Context {
 	ctx := client.Context{}
 	ctx = ctx.WithKeyring(b.keys.GetKeybase())
 	ctx = ctx.WithChainID(b.cfg.ChainId)
@@ -118,12 +118,12 @@ func (b *DiversifiChainBridge) GetContext() client.Context {
 	return ctx
 }
 
-func (b *DiversifiChainBridge) getWithPath(path string) ([]byte, int, error) {
+func (b *HumanChainBridge) getWithPath(path string) ([]byte, int, error) {
 	return b.get(b.getDiversifiChainURL(path))
 }
 
 // getThorChainURL with the given path
-func (b *DiversifiChainBridge) getDiversifiChainURL(path string) string {
+func (b *HumanChainBridge) getDiversifiChainURL(path string) string {
 	uri := url.URL{
 		Scheme: "http",
 		Host:   b.cfg.ChainHost,
@@ -133,7 +133,7 @@ func (b *DiversifiChainBridge) getDiversifiChainURL(path string) string {
 }
 
 // get handle all the low level http GET calls using retryablehttp.ThorchainBridge
-func (b *DiversifiChainBridge) get(url string) ([]byte, int, error) {
+func (b *HumanChainBridge) get(url string) ([]byte, int, error) {
 	resp, err := b.httpClient.Get(url)
 	if err != nil {
 		fmt.Println("ffailed to GET from diversifichain")
@@ -157,17 +157,17 @@ func (b *DiversifiChainBridge) get(url string) ([]byte, int, error) {
 }
 
 //
-func (b *DiversifiChainBridge) GetVoterInfo() (string, string) {
+func (b *HumanChainBridge) GetVoterInfo() (string, string) {
 	return b.pubKey, b.voterAddress
 }
 
 //
-func (b *DiversifiChainBridge) GetMonikerName() string {
+func (b *HumanChainBridge) GetMonikerName() string {
 	return b.signerName
 }
 
 // getAccountNumberAndSequenceNumber returns account and Sequence number required to post into thorchain
-func (b *DiversifiChainBridge) getAccountNumberAndSequenceNumber() (uint64, uint64, error) {
+func (b *HumanChainBridge) getAccountNumberAndSequenceNumber() (uint64, uint64, error) {
 	path := fmt.Sprintf("%s/%s", "/cosmos/auth/v1beta1/accounts", b.keys.GetSignerInfo().GetAddress())
 
 	body, _, err := b.getWithPath(path)
@@ -188,7 +188,7 @@ func (b *DiversifiChainBridge) getAccountNumberAndSequenceNumber() (uint64, uint
 var DiversifiBlockTime = 5 * time.Second
 
 // GetBlockHeight returns the current height for diversifi blocks
-func (b *DiversifiChainBridge) GetBlockHeight() (uint64, error) {
+func (b *HumanChainBridge) GetBlockHeight() (uint64, error) {
 	if time.Since(b.lastBlockHeightCheck) < DiversifiBlockTime && b.lastDiversichainBlockHeight > 0 {
 		return b.lastDiversichainBlockHeight, nil
 	}
@@ -205,7 +205,7 @@ func (b *DiversifiChainBridge) GetBlockHeight() (uint64, error) {
 }
 
 // getLastBlock calls the /lastblock/{chain} endpoint and Unmarshal's into the QueryResLastBlockHeights type
-func (b *DiversifiChainBridge) GetLastBlock(chain string) (QueryResLastBlockHeights, error) {
+func (b *HumanChainBridge) GetLastBlock(chain string) (QueryResLastBlockHeights, error) {
 	path := "/cosmos/base/tendermint/v1beta1/blocks/latest"
 	if chain != "" {
 		path = fmt.Sprintf("%s/%s", path, chain)
@@ -223,7 +223,7 @@ func (b *DiversifiChainBridge) GetLastBlock(chain string) (QueryResLastBlockHeig
 }
 
 // Get Transaction Data List
-func (b *DiversifiChainBridge) GetTxDataList(chain string) (QueryTransactionDataList, error) {
+func (b *HumanChainBridge) GetTxDataList(chain string) (QueryTransactionDataList, error) {
 	path := "/Diversifi-Technologies/diversifi/diversifi/transaction_data"
 	if chain != "" {
 		path = fmt.Sprintf("%s/%s", path, chain)

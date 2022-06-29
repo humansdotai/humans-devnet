@@ -12,7 +12,7 @@ import (
 )
 
 // Broadcast Broadcasts tx to diversifi
-func (b *DiversifiChainBridge) Broadcast(msgs ...stypes.Msg) (TxID, error) {
+func (b *HumanChainBridge) Broadcast(msgs ...stypes.Msg) (TxID, error) {
 	b.broadcastLock.Lock()
 	defer b.broadcastLock.Unlock()
 

@@ -15,8 +15,8 @@ import (
 )
 
 const (
-	// folder name for diversifi thorcli
-	diversichainCliFolderName = `.diversifi`
+	// folder name for human configuration
+	diversichainCliFolderName = `.human`
 )
 
 // Keys manages all the keys used by diversifi

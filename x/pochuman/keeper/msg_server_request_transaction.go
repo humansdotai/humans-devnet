@@ -18,16 +18,16 @@ func (k msgServer) RequestTransaction(goCtx context.Context, msg *types.MsgReque
 		return &types.MsgRequestTransactionResponse{Code: "501", Msg: "Invalid amount parameter"}, nil
 	}
 
-	if msg.OriginChain != types.CHAIN_ETHEREUM && msg.OriginChain != types.CHAIN_POLYGON && msg.OriginChain != types.CHAIN_SOLANA {
+	if msg.OriginChain != types.CHAIN_ETHEREUM && msg.OriginChain != types.CHAIN_HUMAN {
 		return &types.MsgRequestTransactionResponse{Code: "501", Msg: "Invalid chain parameter"}, sdkerrors.Wrapf(sdkerrors.ErrInvalidCoins, "invalid chain")
 	}
 
-	if msg.TargetChain != types.CHAIN_ETHEREUM && msg.TargetChain != types.CHAIN_POLYGON && msg.TargetChain != types.CHAIN_SOLANA {
+	if msg.TargetChain != types.CHAIN_ETHEREUM && msg.TargetChain != types.CHAIN_HUMAN {
 		return &types.MsgRequestTransactionResponse{Code: "501", Msg: "Invalid chain parameter"}, sdkerrors.Wrapf(sdkerrors.ErrInvalidCoins, "invalid chain")
 	}
 
 	// check destination chain
-	if msg.TargetChain == types.CHAIN_SOLANA {
+	if msg.TargetChain == types.CHAIN_HUMAN {
 		balance, er := k.GetPoolBalance(ctx, "2")
 		if !er {
 			return &types.MsgRequestTransactionResponse{Code: "501", Msg: "Insufficient balance"}, sdkerrors.Wrap(sdkerrors.ErrInsufficientFunds, "Solana pool doens't have enough balance")
@@ -59,24 +59,6 @@ func (k msgServer) RequestTransaction(goCtx context.Context, msg *types.MsgReque
 		// if pool balance is lower than transfer amount
 		if b < amt {
 			return &types.MsgRequestTransactionResponse{Code: "501", Msg: "Insufficient balance"}, sdkerrors.Wrap(sdkerrors.ErrInsufficientFunds, "Ethereum pool doens't have enough balance")
-		}
-	}
-
-	// check dest chain
-	if msg.TargetChain == types.CHAIN_POLYGON {
-		balance, er := k.GetPoolBalance(ctx, "3")
-		if !er {
-			return &types.MsgRequestTransactionResponse{Code: "501", Msg: "Insufficient balance"}, sdkerrors.Wrap(sdkerrors.ErrInsufficientFunds, "Polygon pool doens't have enough balance")
-		}
-
-		b, e := strconv.ParseFloat(balance.Balance, 64)
-		if e != nil {
-			return &types.MsgRequestTransactionResponse{Code: "501", Msg: "Insufficient balance"}, sdkerrors.Wrap(sdkerrors.ErrInsufficientFunds, "Polygon pool doens't have enough balance")
-		}
-
-		// if pool balance is lower than transfer amount
-		if b < amt {
-			return &types.MsgRequestTransactionResponse{Code: "501", Msg: "Insufficient balance"}, sdkerrors.Wrap(sdkerrors.ErrInsufficientFunds, "Polygon pool doens't have enough balance")
 		}
 	}
 

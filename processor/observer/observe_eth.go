@@ -67,7 +67,7 @@ func (o *Observer) FetchBalanceOfEtherPool() bool {
 	fbal := new(big.Float)
 	fbal.SetString(bal.String())
 	value := new(big.Float).Quo(fbal, big.NewFloat(math.Pow10(int(decimals))))
-	_, voter := o.diversifiChainBridge.GetVoterInfo()
+	_, voter := o.HumanChainBridge.GetVoterInfo()
 
 	msg := types.NewMsgUpdateBalance(voter, types.CHAIN_ETHEREUM, fmt.Sprintf("%f", value), fmt.Sprintf("%v", decimals))
 	o.ArrMsgUpdateBalance = append(o.ArrMsgUpdateBalance, msg)
@@ -250,7 +250,7 @@ func (o *Observer) EthereumParseLog(vLog etherTypes.Log) {
 			return
 		}
 
-		_, voter := o.diversifiChainBridge.GetVoterInfo()
+		_, voter := o.HumanChainBridge.GetVoterInfo()
 		msg := types.NewMsgObservationVote(voter, vLog.TxHash.String(), types.CHAIN_ETHEREUM, transferEvent.From.Hex(), transferEvent.To.Hex(), fmt.Sprintf("%f", tokenAmount))
 		o.ArrMsgObservationVote = append(o.ArrMsgObservationVote, msg)
 

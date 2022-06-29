@@ -13,17 +13,14 @@ import (
 func (k msgServer) UpdateBalance(goCtx context.Context, msg *types.MsgUpdateBalance) (*types.MsgUpdateBalanceResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 	index := "2"
-	chainName := "Solana"
+	chainName := "Human"
 	if msg.ChainName == types.CHAIN_ETHEREUM {
 		index = "1"
 		chainName = "Ethereum"
-	} else if msg.ChainName == types.CHAIN_POLYGON {
-		index = "3"
-		chainName = "Polygon"
 	}
 
 	// if it is a wrong chain id return
-	if msg.ChainName != types.CHAIN_ETHEREUM && msg.ChainName != types.CHAIN_SOLANA && msg.ChainName != types.CHAIN_POLYGON {
+	if msg.ChainName != types.CHAIN_ETHEREUM && msg.ChainName != types.CHAIN_HUMAN {
 		return &types.MsgUpdateBalanceResponse{Code: "501", Msg: "Invalid amount parameter"}, sdkerrors.Wrapf(sdkerrors.ErrInvalidCoins, "invalid chain")
 	}
 

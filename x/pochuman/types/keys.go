@@ -26,11 +26,8 @@ const (
 	// Ethereum Chain
 	CHAIN_ETHEREUM = "Ethereum"
 
-	// Solana Chain
-	CHAIN_SOLANA = "Solana"
-
-	// Solana Chain
-	CHAIN_POLYGON = "Polygon"
+	// Human Cosmos Chain
+	CHAIN_HUMAN = "Human"
 
 	// Pay Status -- Available
 	PAY_AVAILABLE = "Available"
