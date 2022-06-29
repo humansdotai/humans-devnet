@@ -1,6 +1,11 @@
 /* eslint-disable */
 import { Reader, Writer } from "protobufjs/minimal";
 import { Params } from "../pochuman/params";
+import { FeeBalance } from "../pochuman/fee_balance";
+import {
+  PageRequest,
+  PageResponse,
+} from "../cosmos/base/query/v1beta1/pagination";
 
 export const protobufPackage = "vigorousdeveloper.pochuman.pochuman";
 
@@ -11,6 +16,23 @@ export interface QueryParamsRequest {}
 export interface QueryParamsResponse {
   /** params holds all the parameters of this module. */
   params: Params | undefined;
+}
+
+export interface QueryGetFeeBalanceRequest {
+  index: string;
+}
+
+export interface QueryGetFeeBalanceResponse {
+  feeBalance: FeeBalance | undefined;
+}
+
+export interface QueryAllFeeBalanceRequest {
+  pagination: PageRequest | undefined;
+}
+
+export interface QueryAllFeeBalanceResponse {
+  feeBalance: FeeBalance[];
+  pagination: PageResponse | undefined;
 }
 
 const baseQueryParamsRequest: object = {};
@@ -110,10 +132,332 @@ export const QueryParamsResponse = {
   },
 };
 
+const baseQueryGetFeeBalanceRequest: object = { index: "" };
+
+export const QueryGetFeeBalanceRequest = {
+  encode(
+    message: QueryGetFeeBalanceRequest,
+    writer: Writer = Writer.create()
+  ): Writer {
+    if (message.index !== "") {
+      writer.uint32(10).string(message.index);
+    }
+    return writer;
+  },
+
+  decode(
+    input: Reader | Uint8Array,
+    length?: number
+  ): QueryGetFeeBalanceRequest {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = {
+      ...baseQueryGetFeeBalanceRequest,
+    } as QueryGetFeeBalanceRequest;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.index = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryGetFeeBalanceRequest {
+    const message = {
+      ...baseQueryGetFeeBalanceRequest,
+    } as QueryGetFeeBalanceRequest;
+    if (object.index !== undefined && object.index !== null) {
+      message.index = String(object.index);
+    } else {
+      message.index = "";
+    }
+    return message;
+  },
+
+  toJSON(message: QueryGetFeeBalanceRequest): unknown {
+    const obj: any = {};
+    message.index !== undefined && (obj.index = message.index);
+    return obj;
+  },
+
+  fromPartial(
+    object: DeepPartial<QueryGetFeeBalanceRequest>
+  ): QueryGetFeeBalanceRequest {
+    const message = {
+      ...baseQueryGetFeeBalanceRequest,
+    } as QueryGetFeeBalanceRequest;
+    if (object.index !== undefined && object.index !== null) {
+      message.index = object.index;
+    } else {
+      message.index = "";
+    }
+    return message;
+  },
+};
+
+const baseQueryGetFeeBalanceResponse: object = {};
+
+export const QueryGetFeeBalanceResponse = {
+  encode(
+    message: QueryGetFeeBalanceResponse,
+    writer: Writer = Writer.create()
+  ): Writer {
+    if (message.feeBalance !== undefined) {
+      FeeBalance.encode(message.feeBalance, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(
+    input: Reader | Uint8Array,
+    length?: number
+  ): QueryGetFeeBalanceResponse {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = {
+      ...baseQueryGetFeeBalanceResponse,
+    } as QueryGetFeeBalanceResponse;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.feeBalance = FeeBalance.decode(reader, reader.uint32());
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryGetFeeBalanceResponse {
+    const message = {
+      ...baseQueryGetFeeBalanceResponse,
+    } as QueryGetFeeBalanceResponse;
+    if (object.feeBalance !== undefined && object.feeBalance !== null) {
+      message.feeBalance = FeeBalance.fromJSON(object.feeBalance);
+    } else {
+      message.feeBalance = undefined;
+    }
+    return message;
+  },
+
+  toJSON(message: QueryGetFeeBalanceResponse): unknown {
+    const obj: any = {};
+    message.feeBalance !== undefined &&
+      (obj.feeBalance = message.feeBalance
+        ? FeeBalance.toJSON(message.feeBalance)
+        : undefined);
+    return obj;
+  },
+
+  fromPartial(
+    object: DeepPartial<QueryGetFeeBalanceResponse>
+  ): QueryGetFeeBalanceResponse {
+    const message = {
+      ...baseQueryGetFeeBalanceResponse,
+    } as QueryGetFeeBalanceResponse;
+    if (object.feeBalance !== undefined && object.feeBalance !== null) {
+      message.feeBalance = FeeBalance.fromPartial(object.feeBalance);
+    } else {
+      message.feeBalance = undefined;
+    }
+    return message;
+  },
+};
+
+const baseQueryAllFeeBalanceRequest: object = {};
+
+export const QueryAllFeeBalanceRequest = {
+  encode(
+    message: QueryAllFeeBalanceRequest,
+    writer: Writer = Writer.create()
+  ): Writer {
+    if (message.pagination !== undefined) {
+      PageRequest.encode(message.pagination, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(
+    input: Reader | Uint8Array,
+    length?: number
+  ): QueryAllFeeBalanceRequest {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = {
+      ...baseQueryAllFeeBalanceRequest,
+    } as QueryAllFeeBalanceRequest;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.pagination = PageRequest.decode(reader, reader.uint32());
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryAllFeeBalanceRequest {
+    const message = {
+      ...baseQueryAllFeeBalanceRequest,
+    } as QueryAllFeeBalanceRequest;
+    if (object.pagination !== undefined && object.pagination !== null) {
+      message.pagination = PageRequest.fromJSON(object.pagination);
+    } else {
+      message.pagination = undefined;
+    }
+    return message;
+  },
+
+  toJSON(message: QueryAllFeeBalanceRequest): unknown {
+    const obj: any = {};
+    message.pagination !== undefined &&
+      (obj.pagination = message.pagination
+        ? PageRequest.toJSON(message.pagination)
+        : undefined);
+    return obj;
+  },
+
+  fromPartial(
+    object: DeepPartial<QueryAllFeeBalanceRequest>
+  ): QueryAllFeeBalanceRequest {
+    const message = {
+      ...baseQueryAllFeeBalanceRequest,
+    } as QueryAllFeeBalanceRequest;
+    if (object.pagination !== undefined && object.pagination !== null) {
+      message.pagination = PageRequest.fromPartial(object.pagination);
+    } else {
+      message.pagination = undefined;
+    }
+    return message;
+  },
+};
+
+const baseQueryAllFeeBalanceResponse: object = {};
+
+export const QueryAllFeeBalanceResponse = {
+  encode(
+    message: QueryAllFeeBalanceResponse,
+    writer: Writer = Writer.create()
+  ): Writer {
+    for (const v of message.feeBalance) {
+      FeeBalance.encode(v!, writer.uint32(10).fork()).ldelim();
+    }
+    if (message.pagination !== undefined) {
+      PageResponse.encode(
+        message.pagination,
+        writer.uint32(18).fork()
+      ).ldelim();
+    }
+    return writer;
+  },
+
+  decode(
+    input: Reader | Uint8Array,
+    length?: number
+  ): QueryAllFeeBalanceResponse {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = {
+      ...baseQueryAllFeeBalanceResponse,
+    } as QueryAllFeeBalanceResponse;
+    message.feeBalance = [];
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.feeBalance.push(FeeBalance.decode(reader, reader.uint32()));
+          break;
+        case 2:
+          message.pagination = PageResponse.decode(reader, reader.uint32());
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryAllFeeBalanceResponse {
+    const message = {
+      ...baseQueryAllFeeBalanceResponse,
+    } as QueryAllFeeBalanceResponse;
+    message.feeBalance = [];
+    if (object.feeBalance !== undefined && object.feeBalance !== null) {
+      for (const e of object.feeBalance) {
+        message.feeBalance.push(FeeBalance.fromJSON(e));
+      }
+    }
+    if (object.pagination !== undefined && object.pagination !== null) {
+      message.pagination = PageResponse.fromJSON(object.pagination);
+    } else {
+      message.pagination = undefined;
+    }
+    return message;
+  },
+
+  toJSON(message: QueryAllFeeBalanceResponse): unknown {
+    const obj: any = {};
+    if (message.feeBalance) {
+      obj.feeBalance = message.feeBalance.map((e) =>
+        e ? FeeBalance.toJSON(e) : undefined
+      );
+    } else {
+      obj.feeBalance = [];
+    }
+    message.pagination !== undefined &&
+      (obj.pagination = message.pagination
+        ? PageResponse.toJSON(message.pagination)
+        : undefined);
+    return obj;
+  },
+
+  fromPartial(
+    object: DeepPartial<QueryAllFeeBalanceResponse>
+  ): QueryAllFeeBalanceResponse {
+    const message = {
+      ...baseQueryAllFeeBalanceResponse,
+    } as QueryAllFeeBalanceResponse;
+    message.feeBalance = [];
+    if (object.feeBalance !== undefined && object.feeBalance !== null) {
+      for (const e of object.feeBalance) {
+        message.feeBalance.push(FeeBalance.fromPartial(e));
+      }
+    }
+    if (object.pagination !== undefined && object.pagination !== null) {
+      message.pagination = PageResponse.fromPartial(object.pagination);
+    } else {
+      message.pagination = undefined;
+    }
+    return message;
+  },
+};
+
 /** Query defines the gRPC querier service. */
 export interface Query {
   /** Parameters queries the parameters of the module. */
   Params(request: QueryParamsRequest): Promise<QueryParamsResponse>;
+  /** Queries a FeeBalance by index. */
+  FeeBalance(
+    request: QueryGetFeeBalanceRequest
+  ): Promise<QueryGetFeeBalanceResponse>;
+  /** Queries a list of FeeBalance items. */
+  FeeBalanceAll(
+    request: QueryAllFeeBalanceRequest
+  ): Promise<QueryAllFeeBalanceResponse>;
 }
 
 export class QueryClientImpl implements Query {
@@ -129,6 +473,34 @@ export class QueryClientImpl implements Query {
       data
     );
     return promise.then((data) => QueryParamsResponse.decode(new Reader(data)));
+  }
+
+  FeeBalance(
+    request: QueryGetFeeBalanceRequest
+  ): Promise<QueryGetFeeBalanceResponse> {
+    const data = QueryGetFeeBalanceRequest.encode(request).finish();
+    const promise = this.rpc.request(
+      "vigorousdeveloper.pochuman.pochuman.Query",
+      "FeeBalance",
+      data
+    );
+    return promise.then((data) =>
+      QueryGetFeeBalanceResponse.decode(new Reader(data))
+    );
+  }
+
+  FeeBalanceAll(
+    request: QueryAllFeeBalanceRequest
+  ): Promise<QueryAllFeeBalanceResponse> {
+    const data = QueryAllFeeBalanceRequest.encode(request).finish();
+    const promise = this.rpc.request(
+      "vigorousdeveloper.pochuman.pochuman.Query",
+      "FeeBalanceAll",
+      data
+    );
+    return promise.then((data) =>
+      QueryAllFeeBalanceResponse.decode(new Reader(data))
+    );
   }
 }
 

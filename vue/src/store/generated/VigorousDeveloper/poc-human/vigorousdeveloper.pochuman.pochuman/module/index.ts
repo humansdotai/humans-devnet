@@ -4,16 +4,16 @@ import { StdFee } from "@cosmjs/launchpad";
 import { SigningStargateClient } from "@cosmjs/stargate";
 import { Registry, OfflineSigner, EncodeObject, DirectSecp256k1HdWallet } from "@cosmjs/proto-signing";
 import { Api } from "./rest";
-import { MsgKeysignVote } from "./types/pochuman/tx";
 import { MsgUpdateBalance } from "./types/pochuman/tx";
 import { MsgObservationVote } from "./types/pochuman/tx";
+import { MsgKeysignVote } from "./types/pochuman/tx";
 import { MsgRequestTransaction } from "./types/pochuman/tx";
 
 
 const types = [
-  ["/vigorousdeveloper.pochuman.pochuman.MsgKeysignVote", MsgKeysignVote],
   ["/vigorousdeveloper.pochuman.pochuman.MsgUpdateBalance", MsgUpdateBalance],
   ["/vigorousdeveloper.pochuman.pochuman.MsgObservationVote", MsgObservationVote],
+  ["/vigorousdeveloper.pochuman.pochuman.MsgKeysignVote", MsgKeysignVote],
   ["/vigorousdeveloper.pochuman.pochuman.MsgRequestTransaction", MsgRequestTransaction],
   
 ];
@@ -47,9 +47,9 @@ const txClient = async (wallet: OfflineSigner, { addr: addr }: TxClientOptions =
 
   return {
     signAndBroadcast: (msgs: EncodeObject[], { fee, memo }: SignAndBroadcastOptions = {fee: defaultFee, memo: ""}) => client.signAndBroadcast(address, msgs, fee,memo),
-    msgKeysignVote: (data: MsgKeysignVote): EncodeObject => ({ typeUrl: "/vigorousdeveloper.pochuman.pochuman.MsgKeysignVote", value: MsgKeysignVote.fromPartial( data ) }),
     msgUpdateBalance: (data: MsgUpdateBalance): EncodeObject => ({ typeUrl: "/vigorousdeveloper.pochuman.pochuman.MsgUpdateBalance", value: MsgUpdateBalance.fromPartial( data ) }),
     msgObservationVote: (data: MsgObservationVote): EncodeObject => ({ typeUrl: "/vigorousdeveloper.pochuman.pochuman.MsgObservationVote", value: MsgObservationVote.fromPartial( data ) }),
+    msgKeysignVote: (data: MsgKeysignVote): EncodeObject => ({ typeUrl: "/vigorousdeveloper.pochuman.pochuman.MsgKeysignVote", value: MsgKeysignVote.fromPartial( data ) }),
     msgRequestTransaction: (data: MsgRequestTransaction): EncodeObject => ({ typeUrl: "/vigorousdeveloper.pochuman.pochuman.MsgRequestTransaction", value: MsgRequestTransaction.fromPartial( data ) }),
     
   };
