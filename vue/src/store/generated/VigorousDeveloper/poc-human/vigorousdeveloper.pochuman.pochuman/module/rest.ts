@@ -24,6 +24,8 @@ export interface PochumanKeysignVoteData {
   txTime?: string;
 }
 
+export type PochumanMsgApproveTransactionResponse = object;
+
 export interface PochumanMsgKeysignVoteResponse {
   code?: string;
   msg?: string;

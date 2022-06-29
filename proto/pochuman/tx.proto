@@ -11,6 +11,7 @@ service Msg {
       rpc ObservationVote(MsgObservationVote) returns (MsgObservationVoteResponse);
       rpc UpdateBalance(MsgUpdateBalance) returns (MsgUpdateBalanceResponse);
       rpc KeysignVote(MsgKeysignVote) returns (MsgKeysignVoteResponse);
+  rpc ApproveTransaction(MsgApproveTransaction) returns (MsgApproveTransactionResponse);
 // this line is used by starport scaffolding # proto/tx/rpc
 }
 
@@ -64,6 +65,16 @@ message MsgKeysignVote {
 message MsgKeysignVoteResponse {
   string code = 1;
   string msg = 2;
+}
+
+message MsgApproveTransaction {
+  string creator = 1;
+  string txHash = 2;
+  string success = 3;
+  string signedKey = 4;
+}
+
+message MsgApproveTransactionResponse {
 }
 
 // this line is used by starport scaffolding # proto/tx/message

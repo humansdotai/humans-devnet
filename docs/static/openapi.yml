@@ -51851,6 +51851,8 @@ definitions:
         type: string
       txTime:
         type: string
+  vigorousdeveloper.pochuman.pochuman.MsgApproveTransactionResponse:
+    type: object
   vigorousdeveloper.pochuman.pochuman.MsgKeysignVoteResponse:
     type: object
     properties:

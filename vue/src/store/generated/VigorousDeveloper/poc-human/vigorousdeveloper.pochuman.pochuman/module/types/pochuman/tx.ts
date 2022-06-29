@@ -55,6 +55,15 @@ export interface MsgKeysignVoteResponse {
   msg: string;
 }
 
+export interface MsgApproveTransaction {
+  creator: string;
+  txHash: string;
+  success: string;
+  signedKey: string;
+}
+
+export interface MsgApproveTransactionResponse {}
+
 const baseMsgRequestTransaction: object = {
   creator: "",
   originChain: "",
@@ -914,6 +923,174 @@ export const MsgKeysignVoteResponse = {
   },
 };
 
+const baseMsgApproveTransaction: object = {
+  creator: "",
+  txHash: "",
+  success: "",
+  signedKey: "",
+};
+
+export const MsgApproveTransaction = {
+  encode(
+    message: MsgApproveTransaction,
+    writer: Writer = Writer.create()
+  ): Writer {
+    if (message.creator !== "") {
+      writer.uint32(10).string(message.creator);
+    }
+    if (message.txHash !== "") {
+      writer.uint32(18).string(message.txHash);
+    }
+    if (message.success !== "") {
+      writer.uint32(26).string(message.success);
+    }
+    if (message.signedKey !== "") {
+      writer.uint32(34).string(message.signedKey);
+    }
+    return writer;
+  },
+
+  decode(input: Reader | Uint8Array, length?: number): MsgApproveTransaction {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = { ...baseMsgApproveTransaction } as MsgApproveTransaction;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.creator = reader.string();
+          break;
+        case 2:
+          message.txHash = reader.string();
+          break;
+        case 3:
+          message.success = reader.string();
+          break;
+        case 4:
+          message.signedKey = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): MsgApproveTransaction {
+    const message = { ...baseMsgApproveTransaction } as MsgApproveTransaction;
+    if (object.creator !== undefined && object.creator !== null) {
+      message.creator = String(object.creator);
+    } else {
+      message.creator = "";
+    }
+    if (object.txHash !== undefined && object.txHash !== null) {
+      message.txHash = String(object.txHash);
+    } else {
+      message.txHash = "";
+    }
+    if (object.success !== undefined && object.success !== null) {
+      message.success = String(object.success);
+    } else {
+      message.success = "";
+    }
+    if (object.signedKey !== undefined && object.signedKey !== null) {
+      message.signedKey = String(object.signedKey);
+    } else {
+      message.signedKey = "";
+    }
+    return message;
+  },
+
+  toJSON(message: MsgApproveTransaction): unknown {
+    const obj: any = {};
+    message.creator !== undefined && (obj.creator = message.creator);
+    message.txHash !== undefined && (obj.txHash = message.txHash);
+    message.success !== undefined && (obj.success = message.success);
+    message.signedKey !== undefined && (obj.signedKey = message.signedKey);
+    return obj;
+  },
+
+  fromPartial(
+    object: DeepPartial<MsgApproveTransaction>
+  ): MsgApproveTransaction {
+    const message = { ...baseMsgApproveTransaction } as MsgApproveTransaction;
+    if (object.creator !== undefined && object.creator !== null) {
+      message.creator = object.creator;
+    } else {
+      message.creator = "";
+    }
+    if (object.txHash !== undefined && object.txHash !== null) {
+      message.txHash = object.txHash;
+    } else {
+      message.txHash = "";
+    }
+    if (object.success !== undefined && object.success !== null) {
+      message.success = object.success;
+    } else {
+      message.success = "";
+    }
+    if (object.signedKey !== undefined && object.signedKey !== null) {
+      message.signedKey = object.signedKey;
+    } else {
+      message.signedKey = "";
+    }
+    return message;
+  },
+};
+
+const baseMsgApproveTransactionResponse: object = {};
+
+export const MsgApproveTransactionResponse = {
+  encode(
+    _: MsgApproveTransactionResponse,
+    writer: Writer = Writer.create()
+  ): Writer {
+    return writer;
+  },
+
+  decode(
+    input: Reader | Uint8Array,
+    length?: number
+  ): MsgApproveTransactionResponse {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = {
+      ...baseMsgApproveTransactionResponse,
+    } as MsgApproveTransactionResponse;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(_: any): MsgApproveTransactionResponse {
+    const message = {
+      ...baseMsgApproveTransactionResponse,
+    } as MsgApproveTransactionResponse;
+    return message;
+  },
+
+  toJSON(_: MsgApproveTransactionResponse): unknown {
+    const obj: any = {};
+    return obj;
+  },
+
+  fromPartial(
+    _: DeepPartial<MsgApproveTransactionResponse>
+  ): MsgApproveTransactionResponse {
+    const message = {
+      ...baseMsgApproveTransactionResponse,
+    } as MsgApproveTransactionResponse;
+    return message;
+  },
+};
+
 /** Msg defines the Msg service. */
 export interface Msg {
   RequestTransaction(
@@ -923,8 +1100,11 @@ export interface Msg {
     request: MsgObservationVote
   ): Promise<MsgObservationVoteResponse>;
   UpdateBalance(request: MsgUpdateBalance): Promise<MsgUpdateBalanceResponse>;
-  /** this line is used by starport scaffolding # proto/tx/rpc */
   KeysignVote(request: MsgKeysignVote): Promise<MsgKeysignVoteResponse>;
+  /** this line is used by starport scaffolding # proto/tx/rpc */
+  ApproveTransaction(
+    request: MsgApproveTransaction
+  ): Promise<MsgApproveTransactionResponse>;
 }
 
 export class MsgClientImpl implements Msg {
@@ -981,6 +1161,20 @@ export class MsgClientImpl implements Msg {
     );
     return promise.then((data) =>
       MsgKeysignVoteResponse.decode(new Reader(data))
+    );
+  }
+
+  ApproveTransaction(
+    request: MsgApproveTransaction
+  ): Promise<MsgApproveTransactionResponse> {
+    const data = MsgApproveTransaction.encode(request).finish();
+    const promise = this.rpc.request(
+      "vigorousdeveloper.pochuman.pochuman.Msg",
+      "ApproveTransaction",
+      data
+    );
+    return promise.then((data) =>
+      MsgApproveTransactionResponse.decode(new Reader(data))
     );
   }
 }
