@@ -50908,12 +50908,32 @@ definitions:
       number of blocks
   vigorousdeveloper.pochuman.pochuman.MsgKeysignVoteResponse:
     type: object
+    properties:
+      code:
+        type: string
+      msg:
+        type: string
   vigorousdeveloper.pochuman.pochuman.MsgObservationVoteResponse:
     type: object
+    properties:
+      code:
+        type: string
+      msg:
+        type: string
   vigorousdeveloper.pochuman.pochuman.MsgRequestTransactionResponse:
     type: object
+    properties:
+      code:
+        type: string
+      msg:
+        type: string
   vigorousdeveloper.pochuman.pochuman.MsgUpdateBalanceResponse:
     type: object
+    properties:
+      code:
+        type: string
+      msg:
+        type: string
   vigorousdeveloper.pochuman.pochuman.Params:
     type: object
     description: Params defines the parameters for the module.

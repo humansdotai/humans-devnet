@@ -9,13 +9,25 @@
  * ---------------------------------------------------------------
  */
 
-export type PochumanMsgKeysignVoteResponse = object;
+export interface PochumanMsgKeysignVoteResponse {
+  code?: string;
+  msg?: string;
+}
 
-export type PochumanMsgObservationVoteResponse = object;
+export interface PochumanMsgObservationVoteResponse {
+  code?: string;
+  msg?: string;
+}
 
-export type PochumanMsgRequestTransactionResponse = object;
+export interface PochumanMsgRequestTransactionResponse {
+  code?: string;
+  msg?: string;
+}
 
-export type PochumanMsgUpdateBalanceResponse = object;
+export interface PochumanMsgUpdateBalanceResponse {
+  code?: string;
+  msg?: string;
+}
 
 /**
  * Params defines the parameters for the module.
