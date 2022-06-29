@@ -128,6 +128,21 @@ export interface PochumanQueryAllPoolBalanceResponse {
   pagination?: V1Beta1PageResponse;
 }
 
+export interface PochumanQueryAllTransactionDataResponse {
+  transactionData?: PochumanTransactionData[];
+
+  /**
+   * PageResponse is to be embedded in gRPC response messages where the
+   * corresponding request message has used PageRequest.
+   *
+   *  message SomeResponse {
+   *          repeated Bar results = 1;
+   *          PageResponse page = 2;
+   *  }
+   */
+  pagination?: V1Beta1PageResponse;
+}
+
 export interface PochumanQueryGetFeeBalanceResponse {
   feeBalance?: PochumanFeeBalance;
 }
@@ -144,12 +159,31 @@ export interface PochumanQueryGetPoolBalanceResponse {
   poolBalance?: PochumanPoolBalance;
 }
 
+export interface PochumanQueryGetTransactionDataResponse {
+  transactionData?: PochumanTransactionData;
+}
+
 /**
  * QueryParamsResponse is response type for the Query/Params RPC method.
  */
 export interface PochumanQueryParamsResponse {
   /** params holds all the parameters of this module. */
   params?: PochumanParams;
+}
+
+export interface PochumanTransactionData {
+  index?: string;
+  originChain?: string;
+  originAddress?: string;
+  targetChain?: string;
+  targetAddress?: string;
+  amount?: string;
+  time?: string;
+  creator?: string;
+  status?: string;
+  confirmedBlockHash?: string;
+  signedKey?: string;
+  fee?: string;
 }
 
 export interface ProtobufAny {
@@ -601,6 +635,48 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
   queryPoolBalance = (index: string, params: RequestParams = {}) =>
     this.request<PochumanQueryGetPoolBalanceResponse, RpcStatus>({
       path: `/VigorousDeveloper/poc-human/pochuman/pool_balance/${index}`,
+      method: "GET",
+      format: "json",
+      ...params,
+    });
+
+  /**
+   * No description
+   *
+   * @tags Query
+   * @name QueryTransactionDataAll
+   * @summary Queries a list of TransactionData items.
+   * @request GET:/VigorousDeveloper/poc-human/pochuman/transaction_data
+   */
+  queryTransactionDataAll = (
+    query?: {
+      "pagination.key"?: string;
+      "pagination.offset"?: string;
+      "pagination.limit"?: string;
+      "pagination.count_total"?: boolean;
+      "pagination.reverse"?: boolean;
+    },
+    params: RequestParams = {},
+  ) =>
+    this.request<PochumanQueryAllTransactionDataResponse, RpcStatus>({
+      path: `/VigorousDeveloper/poc-human/pochuman/transaction_data`,
+      method: "GET",
+      query: query,
+      format: "json",
+      ...params,
+    });
+
+  /**
+   * No description
+   *
+   * @tags Query
+   * @name QueryTransactionData
+   * @summary Queries a TransactionData by index.
+   * @request GET:/VigorousDeveloper/poc-human/pochuman/transaction_data/{index}
+   */
+  queryTransactionData = (index: string, params: RequestParams = {}) =>
+    this.request<PochumanQueryGetTransactionDataResponse, RpcStatus>({
+      path: `/VigorousDeveloper/poc-human/pochuman/transaction_data/${index}`,
       method: "GET",
       format: "json",
       ...params,

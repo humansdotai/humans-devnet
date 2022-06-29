@@ -54,6 +54,14 @@ func TestGenesisState_Validate(t *testing.T) {
 						Index: "1",
 					},
 				},
+				TransactionDataList: []types.TransactionData{
+					{
+						Index: "0",
+					},
+					{
+						Index: "1",
+					},
+				},
 				// this line is used by starport scaffolding # types/genesis/validField
 			},
 			valid: true,
@@ -104,6 +112,20 @@ func TestGenesisState_Validate(t *testing.T) {
 			desc: "duplicated poolBalance",
 			genState: &types.GenesisState{
 				PoolBalanceList: []types.PoolBalance{
+					{
+						Index: "0",
+					},
+					{
+						Index: "0",
+					},
+				},
+			},
+			valid: false,
+		},
+		{
+			desc: "duplicated transactionData",
+			genState: &types.GenesisState{
+				TransactionDataList: []types.TransactionData{
 					{
 						Index: "0",
 					},

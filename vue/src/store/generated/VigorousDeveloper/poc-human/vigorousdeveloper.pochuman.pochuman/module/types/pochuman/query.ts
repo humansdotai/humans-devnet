@@ -9,6 +9,7 @@ import {
 import { KeysignVoteData } from "../pochuman/keysign_vote_data";
 import { ObserveVote } from "../pochuman/observe_vote";
 import { PoolBalance } from "../pochuman/pool_balance";
+import { TransactionData } from "../pochuman/transaction_data";
 
 export const protobufPackage = "vigorousdeveloper.pochuman.pochuman";
 
@@ -86,6 +87,23 @@ export interface QueryAllPoolBalanceRequest {
 
 export interface QueryAllPoolBalanceResponse {
   poolBalance: PoolBalance[];
+  pagination: PageResponse | undefined;
+}
+
+export interface QueryGetTransactionDataRequest {
+  index: string;
+}
+
+export interface QueryGetTransactionDataResponse {
+  transactionData: TransactionData | undefined;
+}
+
+export interface QueryAllTransactionDataRequest {
+  pagination: PageRequest | undefined;
+}
+
+export interface QueryAllTransactionDataResponse {
+  transactionData: TransactionData[];
   pagination: PageResponse | undefined;
 }
 
@@ -1472,6 +1490,344 @@ export const QueryAllPoolBalanceResponse = {
   },
 };
 
+const baseQueryGetTransactionDataRequest: object = { index: "" };
+
+export const QueryGetTransactionDataRequest = {
+  encode(
+    message: QueryGetTransactionDataRequest,
+    writer: Writer = Writer.create()
+  ): Writer {
+    if (message.index !== "") {
+      writer.uint32(10).string(message.index);
+    }
+    return writer;
+  },
+
+  decode(
+    input: Reader | Uint8Array,
+    length?: number
+  ): QueryGetTransactionDataRequest {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = {
+      ...baseQueryGetTransactionDataRequest,
+    } as QueryGetTransactionDataRequest;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.index = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryGetTransactionDataRequest {
+    const message = {
+      ...baseQueryGetTransactionDataRequest,
+    } as QueryGetTransactionDataRequest;
+    if (object.index !== undefined && object.index !== null) {
+      message.index = String(object.index);
+    } else {
+      message.index = "";
+    }
+    return message;
+  },
+
+  toJSON(message: QueryGetTransactionDataRequest): unknown {
+    const obj: any = {};
+    message.index !== undefined && (obj.index = message.index);
+    return obj;
+  },
+
+  fromPartial(
+    object: DeepPartial<QueryGetTransactionDataRequest>
+  ): QueryGetTransactionDataRequest {
+    const message = {
+      ...baseQueryGetTransactionDataRequest,
+    } as QueryGetTransactionDataRequest;
+    if (object.index !== undefined && object.index !== null) {
+      message.index = object.index;
+    } else {
+      message.index = "";
+    }
+    return message;
+  },
+};
+
+const baseQueryGetTransactionDataResponse: object = {};
+
+export const QueryGetTransactionDataResponse = {
+  encode(
+    message: QueryGetTransactionDataResponse,
+    writer: Writer = Writer.create()
+  ): Writer {
+    if (message.transactionData !== undefined) {
+      TransactionData.encode(
+        message.transactionData,
+        writer.uint32(10).fork()
+      ).ldelim();
+    }
+    return writer;
+  },
+
+  decode(
+    input: Reader | Uint8Array,
+    length?: number
+  ): QueryGetTransactionDataResponse {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = {
+      ...baseQueryGetTransactionDataResponse,
+    } as QueryGetTransactionDataResponse;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.transactionData = TransactionData.decode(
+            reader,
+            reader.uint32()
+          );
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryGetTransactionDataResponse {
+    const message = {
+      ...baseQueryGetTransactionDataResponse,
+    } as QueryGetTransactionDataResponse;
+    if (
+      object.transactionData !== undefined &&
+      object.transactionData !== null
+    ) {
+      message.transactionData = TransactionData.fromJSON(
+        object.transactionData
+      );
+    } else {
+      message.transactionData = undefined;
+    }
+    return message;
+  },
+
+  toJSON(message: QueryGetTransactionDataResponse): unknown {
+    const obj: any = {};
+    message.transactionData !== undefined &&
+      (obj.transactionData = message.transactionData
+        ? TransactionData.toJSON(message.transactionData)
+        : undefined);
+    return obj;
+  },
+
+  fromPartial(
+    object: DeepPartial<QueryGetTransactionDataResponse>
+  ): QueryGetTransactionDataResponse {
+    const message = {
+      ...baseQueryGetTransactionDataResponse,
+    } as QueryGetTransactionDataResponse;
+    if (
+      object.transactionData !== undefined &&
+      object.transactionData !== null
+    ) {
+      message.transactionData = TransactionData.fromPartial(
+        object.transactionData
+      );
+    } else {
+      message.transactionData = undefined;
+    }
+    return message;
+  },
+};
+
+const baseQueryAllTransactionDataRequest: object = {};
+
+export const QueryAllTransactionDataRequest = {
+  encode(
+    message: QueryAllTransactionDataRequest,
+    writer: Writer = Writer.create()
+  ): Writer {
+    if (message.pagination !== undefined) {
+      PageRequest.encode(message.pagination, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(
+    input: Reader | Uint8Array,
+    length?: number
+  ): QueryAllTransactionDataRequest {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = {
+      ...baseQueryAllTransactionDataRequest,
+    } as QueryAllTransactionDataRequest;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.pagination = PageRequest.decode(reader, reader.uint32());
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryAllTransactionDataRequest {
+    const message = {
+      ...baseQueryAllTransactionDataRequest,
+    } as QueryAllTransactionDataRequest;
+    if (object.pagination !== undefined && object.pagination !== null) {
+      message.pagination = PageRequest.fromJSON(object.pagination);
+    } else {
+      message.pagination = undefined;
+    }
+    return message;
+  },
+
+  toJSON(message: QueryAllTransactionDataRequest): unknown {
+    const obj: any = {};
+    message.pagination !== undefined &&
+      (obj.pagination = message.pagination
+        ? PageRequest.toJSON(message.pagination)
+        : undefined);
+    return obj;
+  },
+
+  fromPartial(
+    object: DeepPartial<QueryAllTransactionDataRequest>
+  ): QueryAllTransactionDataRequest {
+    const message = {
+      ...baseQueryAllTransactionDataRequest,
+    } as QueryAllTransactionDataRequest;
+    if (object.pagination !== undefined && object.pagination !== null) {
+      message.pagination = PageRequest.fromPartial(object.pagination);
+    } else {
+      message.pagination = undefined;
+    }
+    return message;
+  },
+};
+
+const baseQueryAllTransactionDataResponse: object = {};
+
+export const QueryAllTransactionDataResponse = {
+  encode(
+    message: QueryAllTransactionDataResponse,
+    writer: Writer = Writer.create()
+  ): Writer {
+    for (const v of message.transactionData) {
+      TransactionData.encode(v!, writer.uint32(10).fork()).ldelim();
+    }
+    if (message.pagination !== undefined) {
+      PageResponse.encode(
+        message.pagination,
+        writer.uint32(18).fork()
+      ).ldelim();
+    }
+    return writer;
+  },
+
+  decode(
+    input: Reader | Uint8Array,
+    length?: number
+  ): QueryAllTransactionDataResponse {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = {
+      ...baseQueryAllTransactionDataResponse,
+    } as QueryAllTransactionDataResponse;
+    message.transactionData = [];
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.transactionData.push(
+            TransactionData.decode(reader, reader.uint32())
+          );
+          break;
+        case 2:
+          message.pagination = PageResponse.decode(reader, reader.uint32());
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryAllTransactionDataResponse {
+    const message = {
+      ...baseQueryAllTransactionDataResponse,
+    } as QueryAllTransactionDataResponse;
+    message.transactionData = [];
+    if (
+      object.transactionData !== undefined &&
+      object.transactionData !== null
+    ) {
+      for (const e of object.transactionData) {
+        message.transactionData.push(TransactionData.fromJSON(e));
+      }
+    }
+    if (object.pagination !== undefined && object.pagination !== null) {
+      message.pagination = PageResponse.fromJSON(object.pagination);
+    } else {
+      message.pagination = undefined;
+    }
+    return message;
+  },
+
+  toJSON(message: QueryAllTransactionDataResponse): unknown {
+    const obj: any = {};
+    if (message.transactionData) {
+      obj.transactionData = message.transactionData.map((e) =>
+        e ? TransactionData.toJSON(e) : undefined
+      );
+    } else {
+      obj.transactionData = [];
+    }
+    message.pagination !== undefined &&
+      (obj.pagination = message.pagination
+        ? PageResponse.toJSON(message.pagination)
+        : undefined);
+    return obj;
+  },
+
+  fromPartial(
+    object: DeepPartial<QueryAllTransactionDataResponse>
+  ): QueryAllTransactionDataResponse {
+    const message = {
+      ...baseQueryAllTransactionDataResponse,
+    } as QueryAllTransactionDataResponse;
+    message.transactionData = [];
+    if (
+      object.transactionData !== undefined &&
+      object.transactionData !== null
+    ) {
+      for (const e of object.transactionData) {
+        message.transactionData.push(TransactionData.fromPartial(e));
+      }
+    }
+    if (object.pagination !== undefined && object.pagination !== null) {
+      message.pagination = PageResponse.fromPartial(object.pagination);
+    } else {
+      message.pagination = undefined;
+    }
+    return message;
+  },
+};
+
 /** Query defines the gRPC querier service. */
 export interface Query {
   /** Parameters queries the parameters of the module. */
@@ -1508,6 +1864,14 @@ export interface Query {
   PoolBalanceAll(
     request: QueryAllPoolBalanceRequest
   ): Promise<QueryAllPoolBalanceResponse>;
+  /** Queries a TransactionData by index. */
+  TransactionData(
+    request: QueryGetTransactionDataRequest
+  ): Promise<QueryGetTransactionDataResponse>;
+  /** Queries a list of TransactionData items. */
+  TransactionDataAll(
+    request: QueryAllTransactionDataRequest
+  ): Promise<QueryAllTransactionDataResponse>;
 }
 
 export class QueryClientImpl implements Query {
@@ -1634,6 +1998,34 @@ export class QueryClientImpl implements Query {
     );
     return promise.then((data) =>
       QueryAllPoolBalanceResponse.decode(new Reader(data))
+    );
+  }
+
+  TransactionData(
+    request: QueryGetTransactionDataRequest
+  ): Promise<QueryGetTransactionDataResponse> {
+    const data = QueryGetTransactionDataRequest.encode(request).finish();
+    const promise = this.rpc.request(
+      "vigorousdeveloper.pochuman.pochuman.Query",
+      "TransactionData",
+      data
+    );
+    return promise.then((data) =>
+      QueryGetTransactionDataResponse.decode(new Reader(data))
+    );
+  }
+
+  TransactionDataAll(
+    request: QueryAllTransactionDataRequest
+  ): Promise<QueryAllTransactionDataResponse> {
+    const data = QueryAllTransactionDataRequest.encode(request).finish();
+    const promise = this.rpc.request(
+      "vigorousdeveloper.pochuman.pochuman.Query",
+      "TransactionDataAll",
+      data
+    );
+    return promise.then((data) =>
+      QueryAllTransactionDataResponse.decode(new Reader(data))
     );
   }
 }

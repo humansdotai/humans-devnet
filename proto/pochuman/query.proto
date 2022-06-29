@@ -9,6 +9,7 @@ import "pochuman/fee_balance.proto";
 import "pochuman/keysign_vote_data.proto";
 import "pochuman/observe_vote.proto";
 import "pochuman/pool_balance.proto";
+import "pochuman/transaction_data.proto";
 // this line is used by starport scaffolding # 1
 
 option go_package = "github.com/VigorousDeveloper/poc-human/x/pochuman/types";
@@ -57,6 +58,16 @@ service Query {
 	// Queries a list of PoolBalance items.
 	rpc PoolBalanceAll(QueryAllPoolBalanceRequest) returns (QueryAllPoolBalanceResponse) {
 		option (google.api.http).get = "/VigorousDeveloper/poc-human/pochuman/pool_balance";
+	}
+
+// Queries a TransactionData by index.
+	rpc TransactionData(QueryGetTransactionDataRequest) returns (QueryGetTransactionDataResponse) {
+		option (google.api.http).get = "/VigorousDeveloper/poc-human/pochuman/transaction_data/{index}";
+	}
+
+	// Queries a list of TransactionData items.
+	rpc TransactionDataAll(QueryAllTransactionDataRequest) returns (QueryAllTransactionDataResponse) {
+		option (google.api.http).get = "/VigorousDeveloper/poc-human/pochuman/transaction_data";
 	}
 
 // this line is used by starport scaffolding # 2
@@ -140,6 +151,24 @@ message QueryAllPoolBalanceRequest {
 
 message QueryAllPoolBalanceResponse {
 	repeated PoolBalance poolBalance = 1 [(gogoproto.nullable) = false];
+	cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+message QueryGetTransactionDataRequest {
+	  string index = 1;
+
+}
+
+message QueryGetTransactionDataResponse {
+	TransactionData transactionData = 1 [(gogoproto.nullable) = false];
+}
+
+message QueryAllTransactionDataRequest {
+	cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+message QueryAllTransactionDataResponse {
+	repeated TransactionData transactionData = 1 [(gogoproto.nullable) = false];
 	cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
 
