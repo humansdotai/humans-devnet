@@ -9,6 +9,7 @@ option go_package = "github.com/VigorousDeveloper/poc-human/x/pochuman/types";
 service Msg {
       rpc RequestTransaction(MsgRequestTransaction) returns (MsgRequestTransactionResponse);
   rpc ObservationVote(MsgObservationVote) returns (MsgObservationVoteResponse);
+  rpc UpdateBalance(MsgUpdateBalance) returns (MsgUpdateBalanceResponse);
 // this line is used by starport scaffolding # proto/tx/rpc
 }
 
@@ -35,6 +36,16 @@ message MsgObservationVote {
 }
 
 message MsgObservationVoteResponse {
+}
+
+message MsgUpdateBalance {
+  string creator = 1;
+  string chainName = 2;
+  string balance = 3;
+  string decimal = 4;
+}
+
+message MsgUpdateBalanceResponse {
 }
 
 // this line is used by starport scaffolding # proto/tx/message

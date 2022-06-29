@@ -13,6 +13,8 @@ export type PochumanMsgObservationVoteResponse = object;
 
 export type PochumanMsgRequestTransactionResponse = object;
 
+export type PochumanMsgUpdateBalanceResponse = object;
+
 /**
  * Params defines the parameters for the module.
  */

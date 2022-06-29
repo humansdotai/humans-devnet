@@ -4,13 +4,15 @@ import { StdFee } from "@cosmjs/launchpad";
 import { SigningStargateClient } from "@cosmjs/stargate";
 import { Registry, OfflineSigner, EncodeObject, DirectSecp256k1HdWallet } from "@cosmjs/proto-signing";
 import { Api } from "./rest";
-import { MsgObservationVote } from "./types/pochuman/tx";
+import { MsgUpdateBalance } from "./types/pochuman/tx";
 import { MsgRequestTransaction } from "./types/pochuman/tx";
+import { MsgObservationVote } from "./types/pochuman/tx";
 
 
 const types = [
-  ["/vigorousdeveloper.pochuman.pochuman.MsgObservationVote", MsgObservationVote],
+  ["/vigorousdeveloper.pochuman.pochuman.MsgUpdateBalance", MsgUpdateBalance],
   ["/vigorousdeveloper.pochuman.pochuman.MsgRequestTransaction", MsgRequestTransaction],
+  ["/vigorousdeveloper.pochuman.pochuman.MsgObservationVote", MsgObservationVote],
   
 ];
 export const MissingWalletError = new Error("wallet is required");
@@ -43,8 +45,9 @@ const txClient = async (wallet: OfflineSigner, { addr: addr }: TxClientOptions =
 
   return {
     signAndBroadcast: (msgs: EncodeObject[], { fee, memo }: SignAndBroadcastOptions = {fee: defaultFee, memo: ""}) => client.signAndBroadcast(address, msgs, fee,memo),
-    msgObservationVote: (data: MsgObservationVote): EncodeObject => ({ typeUrl: "/vigorousdeveloper.pochuman.pochuman.MsgObservationVote", value: MsgObservationVote.fromPartial( data ) }),
+    msgUpdateBalance: (data: MsgUpdateBalance): EncodeObject => ({ typeUrl: "/vigorousdeveloper.pochuman.pochuman.MsgUpdateBalance", value: MsgUpdateBalance.fromPartial( data ) }),
     msgRequestTransaction: (data: MsgRequestTransaction): EncodeObject => ({ typeUrl: "/vigorousdeveloper.pochuman.pochuman.MsgRequestTransaction", value: MsgRequestTransaction.fromPartial( data ) }),
+    msgObservationVote: (data: MsgObservationVote): EncodeObject => ({ typeUrl: "/vigorousdeveloper.pochuman.pochuman.MsgObservationVote", value: MsgObservationVote.fromPartial( data ) }),
     
   };
 };

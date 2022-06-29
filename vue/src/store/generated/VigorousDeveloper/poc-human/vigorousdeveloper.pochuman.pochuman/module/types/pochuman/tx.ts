@@ -26,6 +26,15 @@ export interface MsgObservationVote {
 
 export interface MsgObservationVoteResponse {}
 
+export interface MsgUpdateBalance {
+  creator: string;
+  chainName: string;
+  balance: string;
+  decimal: string;
+}
+
+export interface MsgUpdateBalanceResponse {}
+
 const baseMsgRequestTransaction: object = {
   creator: "",
   originChain: "",
@@ -454,15 +463,179 @@ export const MsgObservationVoteResponse = {
   },
 };
 
+const baseMsgUpdateBalance: object = {
+  creator: "",
+  chainName: "",
+  balance: "",
+  decimal: "",
+};
+
+export const MsgUpdateBalance = {
+  encode(message: MsgUpdateBalance, writer: Writer = Writer.create()): Writer {
+    if (message.creator !== "") {
+      writer.uint32(10).string(message.creator);
+    }
+    if (message.chainName !== "") {
+      writer.uint32(18).string(message.chainName);
+    }
+    if (message.balance !== "") {
+      writer.uint32(26).string(message.balance);
+    }
+    if (message.decimal !== "") {
+      writer.uint32(34).string(message.decimal);
+    }
+    return writer;
+  },
+
+  decode(input: Reader | Uint8Array, length?: number): MsgUpdateBalance {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = { ...baseMsgUpdateBalance } as MsgUpdateBalance;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.creator = reader.string();
+          break;
+        case 2:
+          message.chainName = reader.string();
+          break;
+        case 3:
+          message.balance = reader.string();
+          break;
+        case 4:
+          message.decimal = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): MsgUpdateBalance {
+    const message = { ...baseMsgUpdateBalance } as MsgUpdateBalance;
+    if (object.creator !== undefined && object.creator !== null) {
+      message.creator = String(object.creator);
+    } else {
+      message.creator = "";
+    }
+    if (object.chainName !== undefined && object.chainName !== null) {
+      message.chainName = String(object.chainName);
+    } else {
+      message.chainName = "";
+    }
+    if (object.balance !== undefined && object.balance !== null) {
+      message.balance = String(object.balance);
+    } else {
+      message.balance = "";
+    }
+    if (object.decimal !== undefined && object.decimal !== null) {
+      message.decimal = String(object.decimal);
+    } else {
+      message.decimal = "";
+    }
+    return message;
+  },
+
+  toJSON(message: MsgUpdateBalance): unknown {
+    const obj: any = {};
+    message.creator !== undefined && (obj.creator = message.creator);
+    message.chainName !== undefined && (obj.chainName = message.chainName);
+    message.balance !== undefined && (obj.balance = message.balance);
+    message.decimal !== undefined && (obj.decimal = message.decimal);
+    return obj;
+  },
+
+  fromPartial(object: DeepPartial<MsgUpdateBalance>): MsgUpdateBalance {
+    const message = { ...baseMsgUpdateBalance } as MsgUpdateBalance;
+    if (object.creator !== undefined && object.creator !== null) {
+      message.creator = object.creator;
+    } else {
+      message.creator = "";
+    }
+    if (object.chainName !== undefined && object.chainName !== null) {
+      message.chainName = object.chainName;
+    } else {
+      message.chainName = "";
+    }
+    if (object.balance !== undefined && object.balance !== null) {
+      message.balance = object.balance;
+    } else {
+      message.balance = "";
+    }
+    if (object.decimal !== undefined && object.decimal !== null) {
+      message.decimal = object.decimal;
+    } else {
+      message.decimal = "";
+    }
+    return message;
+  },
+};
+
+const baseMsgUpdateBalanceResponse: object = {};
+
+export const MsgUpdateBalanceResponse = {
+  encode(
+    _: MsgUpdateBalanceResponse,
+    writer: Writer = Writer.create()
+  ): Writer {
+    return writer;
+  },
+
+  decode(
+    input: Reader | Uint8Array,
+    length?: number
+  ): MsgUpdateBalanceResponse {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = {
+      ...baseMsgUpdateBalanceResponse,
+    } as MsgUpdateBalanceResponse;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(_: any): MsgUpdateBalanceResponse {
+    const message = {
+      ...baseMsgUpdateBalanceResponse,
+    } as MsgUpdateBalanceResponse;
+    return message;
+  },
+
+  toJSON(_: MsgUpdateBalanceResponse): unknown {
+    const obj: any = {};
+    return obj;
+  },
+
+  fromPartial(
+    _: DeepPartial<MsgUpdateBalanceResponse>
+  ): MsgUpdateBalanceResponse {
+    const message = {
+      ...baseMsgUpdateBalanceResponse,
+    } as MsgUpdateBalanceResponse;
+    return message;
+  },
+};
+
 /** Msg defines the Msg service. */
 export interface Msg {
   RequestTransaction(
     request: MsgRequestTransaction
   ): Promise<MsgRequestTransactionResponse>;
-  /** this line is used by starport scaffolding # proto/tx/rpc */
   ObservationVote(
     request: MsgObservationVote
   ): Promise<MsgObservationVoteResponse>;
+  /** this line is used by starport scaffolding # proto/tx/rpc */
+  UpdateBalance(request: MsgUpdateBalance): Promise<MsgUpdateBalanceResponse>;
 }
 
 export class MsgClientImpl implements Msg {
@@ -495,6 +668,18 @@ export class MsgClientImpl implements Msg {
     );
     return promise.then((data) =>
       MsgObservationVoteResponse.decode(new Reader(data))
+    );
+  }
+
+  UpdateBalance(request: MsgUpdateBalance): Promise<MsgUpdateBalanceResponse> {
+    const data = MsgUpdateBalance.encode(request).finish();
+    const promise = this.rpc.request(
+      "vigorousdeveloper.pochuman.pochuman.Msg",
+      "UpdateBalance",
+      data
+    );
+    return promise.then((data) =>
+      MsgUpdateBalanceResponse.decode(new Reader(data))
     );
   }
 }
