@@ -12,6 +12,7 @@ func DefaultGenesis() *GenesisState {
 	return &GenesisState{
 		FeeBalanceList:      []FeeBalance{},
 		KeysignVoteDataList: []KeysignVoteData{},
+		ObserveVoteList:     []ObserveVote{},
 		// this line is used by starport scaffolding # genesis/types/default
 		Params: DefaultParams(),
 	}
@@ -39,6 +40,16 @@ func (gs GenesisState) Validate() error {
 			return fmt.Errorf("duplicated index for keysignVoteData")
 		}
 		keysignVoteDataIndexMap[index] = struct{}{}
+	}
+	// Check for duplicated index in observeVote
+	observeVoteIndexMap := make(map[string]struct{})
+
+	for _, elem := range gs.ObserveVoteList {
+		index := string(ObserveVoteKey(elem.Index))
+		if _, ok := observeVoteIndexMap[index]; ok {
+			return fmt.Errorf("duplicated index for observeVote")
+		}
+		observeVoteIndexMap[index] = struct{}{}
 	}
 	// this line is used by starport scaffolding # genesis/types/validate
 

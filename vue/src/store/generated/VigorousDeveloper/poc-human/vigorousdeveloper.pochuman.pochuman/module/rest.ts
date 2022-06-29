@@ -44,6 +44,18 @@ export interface PochumanMsgUpdateBalanceResponse {
   msg?: string;
 }
 
+export interface PochumanObserveVote {
+  index?: string;
+  creator?: string;
+  txhash?: string;
+  from?: string;
+  to?: string;
+  amount?: string;
+  txtime?: string;
+  chainId?: string;
+  used?: string;
+}
+
 /**
  * Params defines the parameters for the module.
  */
@@ -79,12 +91,31 @@ export interface PochumanQueryAllKeysignVoteDataResponse {
   pagination?: V1Beta1PageResponse;
 }
 
+export interface PochumanQueryAllObserveVoteResponse {
+  observeVote?: PochumanObserveVote[];
+
+  /**
+   * PageResponse is to be embedded in gRPC response messages where the
+   * corresponding request message has used PageRequest.
+   *
+   *  message SomeResponse {
+   *          repeated Bar results = 1;
+   *          PageResponse page = 2;
+   *  }
+   */
+  pagination?: V1Beta1PageResponse;
+}
+
 export interface PochumanQueryGetFeeBalanceResponse {
   feeBalance?: PochumanFeeBalance;
 }
 
 export interface PochumanQueryGetKeysignVoteDataResponse {
   keysignVoteData?: PochumanKeysignVoteData;
+}
+
+export interface PochumanQueryGetObserveVoteResponse {
+  observeVote?: PochumanObserveVote;
 }
 
 /**
@@ -444,6 +475,48 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
   queryKeysignVoteData = (index: string, params: RequestParams = {}) =>
     this.request<PochumanQueryGetKeysignVoteDataResponse, RpcStatus>({
       path: `/VigorousDeveloper/poc-human/pochuman/keysign_vote_data/${index}`,
+      method: "GET",
+      format: "json",
+      ...params,
+    });
+
+  /**
+   * No description
+   *
+   * @tags Query
+   * @name QueryObserveVoteAll
+   * @summary Queries a list of ObserveVote items.
+   * @request GET:/VigorousDeveloper/poc-human/pochuman/observe_vote
+   */
+  queryObserveVoteAll = (
+    query?: {
+      "pagination.key"?: string;
+      "pagination.offset"?: string;
+      "pagination.limit"?: string;
+      "pagination.count_total"?: boolean;
+      "pagination.reverse"?: boolean;
+    },
+    params: RequestParams = {},
+  ) =>
+    this.request<PochumanQueryAllObserveVoteResponse, RpcStatus>({
+      path: `/VigorousDeveloper/poc-human/pochuman/observe_vote`,
+      method: "GET",
+      query: query,
+      format: "json",
+      ...params,
+    });
+
+  /**
+   * No description
+   *
+   * @tags Query
+   * @name QueryObserveVote
+   * @summary Queries a ObserveVote by index.
+   * @request GET:/VigorousDeveloper/poc-human/pochuman/observe_vote/{index}
+   */
+  queryObserveVote = (index: string, params: RequestParams = {}) =>
+    this.request<PochumanQueryGetObserveVoteResponse, RpcStatus>({
+      path: `/VigorousDeveloper/poc-human/pochuman/observe_vote/${index}`,
       method: "GET",
       format: "json",
       ...params,

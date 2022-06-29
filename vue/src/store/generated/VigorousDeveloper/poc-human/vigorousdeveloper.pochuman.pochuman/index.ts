@@ -2,10 +2,11 @@ import { txClient, queryClient, MissingWalletError , registry} from './module'
 
 import { FeeBalance } from "./module/types/pochuman/fee_balance"
 import { KeysignVoteData } from "./module/types/pochuman/keysign_vote_data"
+import { ObserveVote } from "./module/types/pochuman/observe_vote"
 import { Params } from "./module/types/pochuman/params"
 
 
-export { FeeBalance, KeysignVoteData, Params };
+export { FeeBalance, KeysignVoteData, ObserveVote, Params };
 
 async function initTxClient(vuexGetters) {
 	return await txClient(vuexGetters['common/wallet/signer'], {
@@ -48,10 +49,13 @@ const getDefaultState = () => {
 				FeeBalanceAll: {},
 				KeysignVoteData: {},
 				KeysignVoteDataAll: {},
+				ObserveVote: {},
+				ObserveVoteAll: {},
 				
 				_Structure: {
 						FeeBalance: getStructure(FeeBalance.fromPartial({})),
 						KeysignVoteData: getStructure(KeysignVoteData.fromPartial({})),
+						ObserveVote: getStructure(ObserveVote.fromPartial({})),
 						Params: getStructure(Params.fromPartial({})),
 						
 		},
@@ -110,6 +114,18 @@ export default {
 						(<any> params).query=null
 					}
 			return state.KeysignVoteDataAll[JSON.stringify(params)] ?? {}
+		},
+				getObserveVote: (state) => (params = { params: {}}) => {
+					if (!(<any> params).query) {
+						(<any> params).query=null
+					}
+			return state.ObserveVote[JSON.stringify(params)] ?? {}
+		},
+				getObserveVoteAll: (state) => (params = { params: {}}) => {
+					if (!(<any> params).query) {
+						(<any> params).query=null
+					}
+			return state.ObserveVoteAll[JSON.stringify(params)] ?? {}
 		},
 				
 		getTypeStructure: (state) => (type) => {
@@ -263,6 +279,69 @@ export default {
 		},
 		
 		
+		
+		
+		 		
+		
+		
+		async QueryObserveVote({ commit, rootGetters, getters }, { options: { subscribe, all} = { subscribe:false, all:false}, params, query=null }) {
+			try {
+				const key = params ?? {};
+				const queryClient=await initQueryClient(rootGetters)
+				let value= (await queryClient.queryObserveVote( key.index)).data
+				
+					
+				commit('QUERY', { query: 'ObserveVote', key: { params: {...key}, query}, value })
+				if (subscribe) commit('SUBSCRIBE', { action: 'QueryObserveVote', payload: { options: { all }, params: {...key},query }})
+				return getters['getObserveVote']( { params: {...key}, query}) ?? {}
+			} catch (e) {
+				throw new Error('QueryClient:QueryObserveVote API Node Unavailable. Could not perform query: ' + e.message)
+				
+			}
+		},
+		
+		
+		
+		
+		 		
+		
+		
+		async QueryObserveVoteAll({ commit, rootGetters, getters }, { options: { subscribe, all} = { subscribe:false, all:false}, params, query=null }) {
+			try {
+				const key = params ?? {};
+				const queryClient=await initQueryClient(rootGetters)
+				let value= (await queryClient.queryObserveVoteAll(query)).data
+				
+					
+				while (all && (<any> value).pagination && (<any> value).pagination.next_key!=null) {
+					let next_values=(await queryClient.queryObserveVoteAll({...query, 'pagination.key':(<any> value).pagination.next_key})).data
+					value = mergeResults(value, next_values);
+				}
+				commit('QUERY', { query: 'ObserveVoteAll', key: { params: {...key}, query}, value })
+				if (subscribe) commit('SUBSCRIBE', { action: 'QueryObserveVoteAll', payload: { options: { all }, params: {...key},query }})
+				return getters['getObserveVoteAll']( { params: {...key}, query}) ?? {}
+			} catch (e) {
+				throw new Error('QueryClient:QueryObserveVoteAll API Node Unavailable. Could not perform query: ' + e.message)
+				
+			}
+		},
+		
+		
+		async sendMsgRequestTransaction({ rootGetters }, { value, fee = [], memo = '' }) {
+			try {
+				const txClient=await initTxClient(rootGetters)
+				const msg = await txClient.msgRequestTransaction(value)
+				const result = await txClient.signAndBroadcast([msg], {fee: { amount: fee, 
+	gas: "200000" }, memo})
+				return result
+			} catch (e) {
+				if (e == MissingWalletError) {
+					throw new Error('TxClient:MsgRequestTransaction:Init Could not initialize signing client. Wallet is required.')
+				}else{
+					throw new Error('TxClient:MsgRequestTransaction:Send Could not broadcast Tx: '+ e.message)
+				}
+			}
+		},
 		async sendMsgObservationVote({ rootGetters }, { value, fee = [], memo = '' }) {
 			try {
 				const txClient=await initTxClient(rootGetters)
@@ -308,22 +387,20 @@ export default {
 				}
 			}
 		},
-		async sendMsgRequestTransaction({ rootGetters }, { value, fee = [], memo = '' }) {
+		
+		async MsgRequestTransaction({ rootGetters }, { value }) {
 			try {
 				const txClient=await initTxClient(rootGetters)
 				const msg = await txClient.msgRequestTransaction(value)
-				const result = await txClient.signAndBroadcast([msg], {fee: { amount: fee, 
-	gas: "200000" }, memo})
-				return result
+				return msg
 			} catch (e) {
 				if (e == MissingWalletError) {
 					throw new Error('TxClient:MsgRequestTransaction:Init Could not initialize signing client. Wallet is required.')
-				}else{
-					throw new Error('TxClient:MsgRequestTransaction:Send Could not broadcast Tx: '+ e.message)
+				} else{
+					throw new Error('TxClient:MsgRequestTransaction:Create Could not create message: ' + e.message)
 				}
 			}
 		},
-		
 		async MsgObservationVote({ rootGetters }, { value }) {
 			try {
 				const txClient=await initTxClient(rootGetters)
@@ -360,19 +437,6 @@ export default {
 					throw new Error('TxClient:MsgKeysignVote:Init Could not initialize signing client. Wallet is required.')
 				} else{
 					throw new Error('TxClient:MsgKeysignVote:Create Could not create message: ' + e.message)
-				}
-			}
-		},
-		async MsgRequestTransaction({ rootGetters }, { value }) {
-			try {
-				const txClient=await initTxClient(rootGetters)
-				const msg = await txClient.msgRequestTransaction(value)
-				return msg
-			} catch (e) {
-				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgRequestTransaction:Init Could not initialize signing client. Wallet is required.')
-				} else{
-					throw new Error('TxClient:MsgRequestTransaction:Create Could not create message: ' + e.message)
 				}
 			}
 		},

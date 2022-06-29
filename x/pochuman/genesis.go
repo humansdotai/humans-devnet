@@ -17,6 +17,10 @@ func InitGenesis(ctx sdk.Context, k keeper.Keeper, genState types.GenesisState) 
 	for _, elem := range genState.KeysignVoteDataList {
 		k.SetKeysignVoteData(ctx, elem)
 	}
+	// Set all the observeVote
+	for _, elem := range genState.ObserveVoteList {
+		k.SetObserveVote(ctx, elem)
+	}
 	// this line is used by starport scaffolding # genesis/module/init
 	k.SetParams(ctx, genState.Params)
 }
@@ -28,6 +32,7 @@ func ExportGenesis(ctx sdk.Context, k keeper.Keeper) *types.GenesisState {
 
 	genesis.FeeBalanceList = k.GetAllFeeBalance(ctx)
 	genesis.KeysignVoteDataList = k.GetAllKeysignVoteData(ctx)
+	genesis.ObserveVoteList = k.GetAllObserveVote(ctx)
 	// this line is used by starport scaffolding # genesis/module/export
 
 	return genesis

@@ -2,6 +2,7 @@
 import { Params } from "../pochuman/params";
 import { FeeBalance } from "../pochuman/fee_balance";
 import { KeysignVoteData } from "../pochuman/keysign_vote_data";
+import { ObserveVote } from "../pochuman/observe_vote";
 import { Writer, Reader } from "protobufjs/minimal";
 
 export const protobufPackage = "vigorousdeveloper.pochuman.pochuman";
@@ -10,8 +11,9 @@ export const protobufPackage = "vigorousdeveloper.pochuman.pochuman";
 export interface GenesisState {
   params: Params | undefined;
   feeBalanceList: FeeBalance[];
-  /** this line is used by starport scaffolding # genesis/proto/state */
   keysignVoteDataList: KeysignVoteData[];
+  /** this line is used by starport scaffolding # genesis/proto/state */
+  observeVoteList: ObserveVote[];
 }
 
 const baseGenesisState: object = {};
@@ -27,6 +29,9 @@ export const GenesisState = {
     for (const v of message.keysignVoteDataList) {
       KeysignVoteData.encode(v!, writer.uint32(26).fork()).ldelim();
     }
+    for (const v of message.observeVoteList) {
+      ObserveVote.encode(v!, writer.uint32(34).fork()).ldelim();
+    }
     return writer;
   },
 
@@ -36,6 +41,7 @@ export const GenesisState = {
     const message = { ...baseGenesisState } as GenesisState;
     message.feeBalanceList = [];
     message.keysignVoteDataList = [];
+    message.observeVoteList = [];
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -52,6 +58,11 @@ export const GenesisState = {
             KeysignVoteData.decode(reader, reader.uint32())
           );
           break;
+        case 4:
+          message.observeVoteList.push(
+            ObserveVote.decode(reader, reader.uint32())
+          );
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -64,6 +75,7 @@ export const GenesisState = {
     const message = { ...baseGenesisState } as GenesisState;
     message.feeBalanceList = [];
     message.keysignVoteDataList = [];
+    message.observeVoteList = [];
     if (object.params !== undefined && object.params !== null) {
       message.params = Params.fromJSON(object.params);
     } else {
@@ -80,6 +92,14 @@ export const GenesisState = {
     ) {
       for (const e of object.keysignVoteDataList) {
         message.keysignVoteDataList.push(KeysignVoteData.fromJSON(e));
+      }
+    }
+    if (
+      object.observeVoteList !== undefined &&
+      object.observeVoteList !== null
+    ) {
+      for (const e of object.observeVoteList) {
+        message.observeVoteList.push(ObserveVote.fromJSON(e));
       }
     }
     return message;
@@ -103,6 +123,13 @@ export const GenesisState = {
     } else {
       obj.keysignVoteDataList = [];
     }
+    if (message.observeVoteList) {
+      obj.observeVoteList = message.observeVoteList.map((e) =>
+        e ? ObserveVote.toJSON(e) : undefined
+      );
+    } else {
+      obj.observeVoteList = [];
+    }
     return obj;
   },
 
@@ -110,6 +137,7 @@ export const GenesisState = {
     const message = { ...baseGenesisState } as GenesisState;
     message.feeBalanceList = [];
     message.keysignVoteDataList = [];
+    message.observeVoteList = [];
     if (object.params !== undefined && object.params !== null) {
       message.params = Params.fromPartial(object.params);
     } else {
@@ -126,6 +154,14 @@ export const GenesisState = {
     ) {
       for (const e of object.keysignVoteDataList) {
         message.keysignVoteDataList.push(KeysignVoteData.fromPartial(e));
+      }
+    }
+    if (
+      object.observeVoteList !== undefined &&
+      object.observeVoteList !== null
+    ) {
+      for (const e of object.observeVoteList) {
+        message.observeVoteList.push(ObserveVote.fromPartial(e));
       }
     }
     return message;

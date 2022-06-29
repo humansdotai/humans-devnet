@@ -7,6 +7,7 @@ import {
   PageResponse,
 } from "../cosmos/base/query/v1beta1/pagination";
 import { KeysignVoteData } from "../pochuman/keysign_vote_data";
+import { ObserveVote } from "../pochuman/observe_vote";
 
 export const protobufPackage = "vigorousdeveloper.pochuman.pochuman";
 
@@ -50,6 +51,23 @@ export interface QueryAllKeysignVoteDataRequest {
 
 export interface QueryAllKeysignVoteDataResponse {
   keysignVoteData: KeysignVoteData[];
+  pagination: PageResponse | undefined;
+}
+
+export interface QueryGetObserveVoteRequest {
+  index: string;
+}
+
+export interface QueryGetObserveVoteResponse {
+  observeVote: ObserveVote | undefined;
+}
+
+export interface QueryAllObserveVoteRequest {
+  pagination: PageRequest | undefined;
+}
+
+export interface QueryAllObserveVoteResponse {
+  observeVote: ObserveVote[];
   pagination: PageResponse | undefined;
 }
 
@@ -802,6 +820,323 @@ export const QueryAllKeysignVoteDataResponse = {
   },
 };
 
+const baseQueryGetObserveVoteRequest: object = { index: "" };
+
+export const QueryGetObserveVoteRequest = {
+  encode(
+    message: QueryGetObserveVoteRequest,
+    writer: Writer = Writer.create()
+  ): Writer {
+    if (message.index !== "") {
+      writer.uint32(10).string(message.index);
+    }
+    return writer;
+  },
+
+  decode(
+    input: Reader | Uint8Array,
+    length?: number
+  ): QueryGetObserveVoteRequest {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = {
+      ...baseQueryGetObserveVoteRequest,
+    } as QueryGetObserveVoteRequest;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.index = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryGetObserveVoteRequest {
+    const message = {
+      ...baseQueryGetObserveVoteRequest,
+    } as QueryGetObserveVoteRequest;
+    if (object.index !== undefined && object.index !== null) {
+      message.index = String(object.index);
+    } else {
+      message.index = "";
+    }
+    return message;
+  },
+
+  toJSON(message: QueryGetObserveVoteRequest): unknown {
+    const obj: any = {};
+    message.index !== undefined && (obj.index = message.index);
+    return obj;
+  },
+
+  fromPartial(
+    object: DeepPartial<QueryGetObserveVoteRequest>
+  ): QueryGetObserveVoteRequest {
+    const message = {
+      ...baseQueryGetObserveVoteRequest,
+    } as QueryGetObserveVoteRequest;
+    if (object.index !== undefined && object.index !== null) {
+      message.index = object.index;
+    } else {
+      message.index = "";
+    }
+    return message;
+  },
+};
+
+const baseQueryGetObserveVoteResponse: object = {};
+
+export const QueryGetObserveVoteResponse = {
+  encode(
+    message: QueryGetObserveVoteResponse,
+    writer: Writer = Writer.create()
+  ): Writer {
+    if (message.observeVote !== undefined) {
+      ObserveVote.encode(
+        message.observeVote,
+        writer.uint32(10).fork()
+      ).ldelim();
+    }
+    return writer;
+  },
+
+  decode(
+    input: Reader | Uint8Array,
+    length?: number
+  ): QueryGetObserveVoteResponse {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = {
+      ...baseQueryGetObserveVoteResponse,
+    } as QueryGetObserveVoteResponse;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.observeVote = ObserveVote.decode(reader, reader.uint32());
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryGetObserveVoteResponse {
+    const message = {
+      ...baseQueryGetObserveVoteResponse,
+    } as QueryGetObserveVoteResponse;
+    if (object.observeVote !== undefined && object.observeVote !== null) {
+      message.observeVote = ObserveVote.fromJSON(object.observeVote);
+    } else {
+      message.observeVote = undefined;
+    }
+    return message;
+  },
+
+  toJSON(message: QueryGetObserveVoteResponse): unknown {
+    const obj: any = {};
+    message.observeVote !== undefined &&
+      (obj.observeVote = message.observeVote
+        ? ObserveVote.toJSON(message.observeVote)
+        : undefined);
+    return obj;
+  },
+
+  fromPartial(
+    object: DeepPartial<QueryGetObserveVoteResponse>
+  ): QueryGetObserveVoteResponse {
+    const message = {
+      ...baseQueryGetObserveVoteResponse,
+    } as QueryGetObserveVoteResponse;
+    if (object.observeVote !== undefined && object.observeVote !== null) {
+      message.observeVote = ObserveVote.fromPartial(object.observeVote);
+    } else {
+      message.observeVote = undefined;
+    }
+    return message;
+  },
+};
+
+const baseQueryAllObserveVoteRequest: object = {};
+
+export const QueryAllObserveVoteRequest = {
+  encode(
+    message: QueryAllObserveVoteRequest,
+    writer: Writer = Writer.create()
+  ): Writer {
+    if (message.pagination !== undefined) {
+      PageRequest.encode(message.pagination, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(
+    input: Reader | Uint8Array,
+    length?: number
+  ): QueryAllObserveVoteRequest {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = {
+      ...baseQueryAllObserveVoteRequest,
+    } as QueryAllObserveVoteRequest;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.pagination = PageRequest.decode(reader, reader.uint32());
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryAllObserveVoteRequest {
+    const message = {
+      ...baseQueryAllObserveVoteRequest,
+    } as QueryAllObserveVoteRequest;
+    if (object.pagination !== undefined && object.pagination !== null) {
+      message.pagination = PageRequest.fromJSON(object.pagination);
+    } else {
+      message.pagination = undefined;
+    }
+    return message;
+  },
+
+  toJSON(message: QueryAllObserveVoteRequest): unknown {
+    const obj: any = {};
+    message.pagination !== undefined &&
+      (obj.pagination = message.pagination
+        ? PageRequest.toJSON(message.pagination)
+        : undefined);
+    return obj;
+  },
+
+  fromPartial(
+    object: DeepPartial<QueryAllObserveVoteRequest>
+  ): QueryAllObserveVoteRequest {
+    const message = {
+      ...baseQueryAllObserveVoteRequest,
+    } as QueryAllObserveVoteRequest;
+    if (object.pagination !== undefined && object.pagination !== null) {
+      message.pagination = PageRequest.fromPartial(object.pagination);
+    } else {
+      message.pagination = undefined;
+    }
+    return message;
+  },
+};
+
+const baseQueryAllObserveVoteResponse: object = {};
+
+export const QueryAllObserveVoteResponse = {
+  encode(
+    message: QueryAllObserveVoteResponse,
+    writer: Writer = Writer.create()
+  ): Writer {
+    for (const v of message.observeVote) {
+      ObserveVote.encode(v!, writer.uint32(10).fork()).ldelim();
+    }
+    if (message.pagination !== undefined) {
+      PageResponse.encode(
+        message.pagination,
+        writer.uint32(18).fork()
+      ).ldelim();
+    }
+    return writer;
+  },
+
+  decode(
+    input: Reader | Uint8Array,
+    length?: number
+  ): QueryAllObserveVoteResponse {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = {
+      ...baseQueryAllObserveVoteResponse,
+    } as QueryAllObserveVoteResponse;
+    message.observeVote = [];
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.observeVote.push(ObserveVote.decode(reader, reader.uint32()));
+          break;
+        case 2:
+          message.pagination = PageResponse.decode(reader, reader.uint32());
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryAllObserveVoteResponse {
+    const message = {
+      ...baseQueryAllObserveVoteResponse,
+    } as QueryAllObserveVoteResponse;
+    message.observeVote = [];
+    if (object.observeVote !== undefined && object.observeVote !== null) {
+      for (const e of object.observeVote) {
+        message.observeVote.push(ObserveVote.fromJSON(e));
+      }
+    }
+    if (object.pagination !== undefined && object.pagination !== null) {
+      message.pagination = PageResponse.fromJSON(object.pagination);
+    } else {
+      message.pagination = undefined;
+    }
+    return message;
+  },
+
+  toJSON(message: QueryAllObserveVoteResponse): unknown {
+    const obj: any = {};
+    if (message.observeVote) {
+      obj.observeVote = message.observeVote.map((e) =>
+        e ? ObserveVote.toJSON(e) : undefined
+      );
+    } else {
+      obj.observeVote = [];
+    }
+    message.pagination !== undefined &&
+      (obj.pagination = message.pagination
+        ? PageResponse.toJSON(message.pagination)
+        : undefined);
+    return obj;
+  },
+
+  fromPartial(
+    object: DeepPartial<QueryAllObserveVoteResponse>
+  ): QueryAllObserveVoteResponse {
+    const message = {
+      ...baseQueryAllObserveVoteResponse,
+    } as QueryAllObserveVoteResponse;
+    message.observeVote = [];
+    if (object.observeVote !== undefined && object.observeVote !== null) {
+      for (const e of object.observeVote) {
+        message.observeVote.push(ObserveVote.fromPartial(e));
+      }
+    }
+    if (object.pagination !== undefined && object.pagination !== null) {
+      message.pagination = PageResponse.fromPartial(object.pagination);
+    } else {
+      message.pagination = undefined;
+    }
+    return message;
+  },
+};
+
 /** Query defines the gRPC querier service. */
 export interface Query {
   /** Parameters queries the parameters of the module. */
@@ -822,6 +1157,14 @@ export interface Query {
   KeysignVoteDataAll(
     request: QueryAllKeysignVoteDataRequest
   ): Promise<QueryAllKeysignVoteDataResponse>;
+  /** Queries a ObserveVote by index. */
+  ObserveVote(
+    request: QueryGetObserveVoteRequest
+  ): Promise<QueryGetObserveVoteResponse>;
+  /** Queries a list of ObserveVote items. */
+  ObserveVoteAll(
+    request: QueryAllObserveVoteRequest
+  ): Promise<QueryAllObserveVoteResponse>;
 }
 
 export class QueryClientImpl implements Query {
@@ -892,6 +1235,34 @@ export class QueryClientImpl implements Query {
     );
     return promise.then((data) =>
       QueryAllKeysignVoteDataResponse.decode(new Reader(data))
+    );
+  }
+
+  ObserveVote(
+    request: QueryGetObserveVoteRequest
+  ): Promise<QueryGetObserveVoteResponse> {
+    const data = QueryGetObserveVoteRequest.encode(request).finish();
+    const promise = this.rpc.request(
+      "vigorousdeveloper.pochuman.pochuman.Query",
+      "ObserveVote",
+      data
+    );
+    return promise.then((data) =>
+      QueryGetObserveVoteResponse.decode(new Reader(data))
+    );
+  }
+
+  ObserveVoteAll(
+    request: QueryAllObserveVoteRequest
+  ): Promise<QueryAllObserveVoteResponse> {
+    const data = QueryAllObserveVoteRequest.encode(request).finish();
+    const promise = this.rpc.request(
+      "vigorousdeveloper.pochuman.pochuman.Query",
+      "ObserveVoteAll",
+      data
+    );
+    return promise.then((data) =>
+      QueryAllObserveVoteResponse.decode(new Reader(data))
     );
   }
 }

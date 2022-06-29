@@ -7,6 +7,7 @@ import "cosmos/base/query/v1beta1/pagination.proto";
 import "pochuman/params.proto";
 import "pochuman/fee_balance.proto";
 import "pochuman/keysign_vote_data.proto";
+import "pochuman/observe_vote.proto";
 // this line is used by starport scaffolding # 1
 
 option go_package = "github.com/VigorousDeveloper/poc-human/x/pochuman/types";
@@ -35,6 +36,16 @@ service Query {
 	// Queries a list of KeysignVoteData items.
 	rpc KeysignVoteDataAll(QueryAllKeysignVoteDataRequest) returns (QueryAllKeysignVoteDataResponse) {
 		option (google.api.http).get = "/VigorousDeveloper/poc-human/pochuman/keysign_vote_data";
+	}
+
+// Queries a ObserveVote by index.
+	rpc ObserveVote(QueryGetObserveVoteRequest) returns (QueryGetObserveVoteResponse) {
+		option (google.api.http).get = "/VigorousDeveloper/poc-human/pochuman/observe_vote/{index}";
+	}
+
+	// Queries a list of ObserveVote items.
+	rpc ObserveVoteAll(QueryAllObserveVoteRequest) returns (QueryAllObserveVoteResponse) {
+		option (google.api.http).get = "/VigorousDeveloper/poc-human/pochuman/observe_vote";
 	}
 
 // this line is used by starport scaffolding # 2
@@ -82,6 +93,24 @@ message QueryAllKeysignVoteDataRequest {
 
 message QueryAllKeysignVoteDataResponse {
 	repeated KeysignVoteData keysignVoteData = 1 [(gogoproto.nullable) = false];
+	cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+message QueryGetObserveVoteRequest {
+	  string index = 1;
+
+}
+
+message QueryGetObserveVoteResponse {
+	ObserveVote observeVote = 1 [(gogoproto.nullable) = false];
+}
+
+message QueryAllObserveVoteRequest {
+	cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+message QueryAllObserveVoteResponse {
+	repeated ObserveVote observeVote = 1 [(gogoproto.nullable) = false];
 	cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
 

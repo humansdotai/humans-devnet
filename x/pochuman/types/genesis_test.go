@@ -38,6 +38,14 @@ func TestGenesisState_Validate(t *testing.T) {
 						Index: "1",
 					},
 				},
+				ObserveVoteList: []types.ObserveVote{
+					{
+						Index: "0",
+					},
+					{
+						Index: "1",
+					},
+				},
 				// this line is used by starport scaffolding # types/genesis/validField
 			},
 			valid: true,
@@ -60,6 +68,20 @@ func TestGenesisState_Validate(t *testing.T) {
 			desc: "duplicated keysignVoteData",
 			genState: &types.GenesisState{
 				KeysignVoteDataList: []types.KeysignVoteData{
+					{
+						Index: "0",
+					},
+					{
+						Index: "0",
+					},
+				},
+			},
+			valid: false,
+		},
+		{
+			desc: "duplicated observeVote",
+			genState: &types.GenesisState{
+				ObserveVoteList: []types.ObserveVote{
 					{
 						Index: "0",
 					},
