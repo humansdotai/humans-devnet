@@ -62,7 +62,7 @@ func main() {
 		ChainId:         "test",
 		ChainHost:       "127.0.0.1:1317",
 		ChainRPC:        "127.0.0.1:26657",
-		ChainHomeFolder: "~/.diversifi/",
+		ChainHomeFolder: "~/.poc-human/",
 	}
 
 	HumanChainBridge, err := diverclient.NewHumanChainBridge(k, cfg, signer, pubKey, addr)
