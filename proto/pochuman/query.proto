@@ -6,6 +6,7 @@ import "google/api/annotations.proto";
 import "cosmos/base/query/v1beta1/pagination.proto";
 import "pochuman/params.proto";
 import "pochuman/fee_balance.proto";
+import "pochuman/keysign_vote_data.proto";
 // this line is used by starport scaffolding # 1
 
 option go_package = "github.com/VigorousDeveloper/poc-human/x/pochuman/types";
@@ -24,6 +25,16 @@ service Query {
 	// Queries a list of FeeBalance items.
 	rpc FeeBalanceAll(QueryAllFeeBalanceRequest) returns (QueryAllFeeBalanceResponse) {
 		option (google.api.http).get = "/VigorousDeveloper/poc-human/pochuman/fee_balance";
+	}
+
+// Queries a KeysignVoteData by index.
+	rpc KeysignVoteData(QueryGetKeysignVoteDataRequest) returns (QueryGetKeysignVoteDataResponse) {
+		option (google.api.http).get = "/VigorousDeveloper/poc-human/pochuman/keysign_vote_data/{index}";
+	}
+
+	// Queries a list of KeysignVoteData items.
+	rpc KeysignVoteDataAll(QueryAllKeysignVoteDataRequest) returns (QueryAllKeysignVoteDataResponse) {
+		option (google.api.http).get = "/VigorousDeveloper/poc-human/pochuman/keysign_vote_data";
 	}
 
 // this line is used by starport scaffolding # 2
@@ -53,6 +64,24 @@ message QueryAllFeeBalanceRequest {
 
 message QueryAllFeeBalanceResponse {
 	repeated FeeBalance feeBalance = 1 [(gogoproto.nullable) = false];
+	cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+message QueryGetKeysignVoteDataRequest {
+	  string index = 1;
+
+}
+
+message QueryGetKeysignVoteDataResponse {
+	KeysignVoteData keysignVoteData = 1 [(gogoproto.nullable) = false];
+}
+
+message QueryAllKeysignVoteDataRequest {
+	cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+message QueryAllKeysignVoteDataResponse {
+	repeated KeysignVoteData keysignVoteData = 1 [(gogoproto.nullable) = false];
 	cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
 

@@ -10,7 +10,8 @@ const DefaultIndex uint64 = 1
 // DefaultGenesis returns the default Capability genesis state
 func DefaultGenesis() *GenesisState {
 	return &GenesisState{
-		FeeBalanceList: []FeeBalance{},
+		FeeBalanceList:      []FeeBalance{},
+		KeysignVoteDataList: []KeysignVoteData{},
 		// this line is used by starport scaffolding # genesis/types/default
 		Params: DefaultParams(),
 	}
@@ -28,6 +29,16 @@ func (gs GenesisState) Validate() error {
 			return fmt.Errorf("duplicated index for feeBalance")
 		}
 		feeBalanceIndexMap[index] = struct{}{}
+	}
+	// Check for duplicated index in keysignVoteData
+	keysignVoteDataIndexMap := make(map[string]struct{})
+
+	for _, elem := range gs.KeysignVoteDataList {
+		index := string(KeysignVoteDataKey(elem.Index))
+		if _, ok := keysignVoteDataIndexMap[index]; ok {
+			return fmt.Errorf("duplicated index for keysignVoteData")
+		}
+		keysignVoteDataIndexMap[index] = struct{}{}
 	}
 	// this line is used by starport scaffolding # genesis/types/validate
 

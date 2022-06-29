@@ -16,6 +16,14 @@ export interface PochumanFeeBalance {
   decimal?: string;
 }
 
+export interface PochumanKeysignVoteData {
+  index?: string;
+  txHash?: string;
+  pubKey?: string;
+  voter?: string;
+  txTime?: string;
+}
+
 export interface PochumanMsgKeysignVoteResponse {
   code?: string;
   msg?: string;
@@ -56,8 +64,27 @@ export interface PochumanQueryAllFeeBalanceResponse {
   pagination?: V1Beta1PageResponse;
 }
 
+export interface PochumanQueryAllKeysignVoteDataResponse {
+  keysignVoteData?: PochumanKeysignVoteData[];
+
+  /**
+   * PageResponse is to be embedded in gRPC response messages where the
+   * corresponding request message has used PageRequest.
+   *
+   *  message SomeResponse {
+   *          repeated Bar results = 1;
+   *          PageResponse page = 2;
+   *  }
+   */
+  pagination?: V1Beta1PageResponse;
+}
+
 export interface PochumanQueryGetFeeBalanceResponse {
   feeBalance?: PochumanFeeBalance;
+}
+
+export interface PochumanQueryGetKeysignVoteDataResponse {
+  keysignVoteData?: PochumanKeysignVoteData;
 }
 
 /**
@@ -375,6 +402,48 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
   queryFeeBalance = (index: string, params: RequestParams = {}) =>
     this.request<PochumanQueryGetFeeBalanceResponse, RpcStatus>({
       path: `/VigorousDeveloper/poc-human/pochuman/fee_balance/${index}`,
+      method: "GET",
+      format: "json",
+      ...params,
+    });
+
+  /**
+   * No description
+   *
+   * @tags Query
+   * @name QueryKeysignVoteDataAll
+   * @summary Queries a list of KeysignVoteData items.
+   * @request GET:/VigorousDeveloper/poc-human/pochuman/keysign_vote_data
+   */
+  queryKeysignVoteDataAll = (
+    query?: {
+      "pagination.key"?: string;
+      "pagination.offset"?: string;
+      "pagination.limit"?: string;
+      "pagination.count_total"?: boolean;
+      "pagination.reverse"?: boolean;
+    },
+    params: RequestParams = {},
+  ) =>
+    this.request<PochumanQueryAllKeysignVoteDataResponse, RpcStatus>({
+      path: `/VigorousDeveloper/poc-human/pochuman/keysign_vote_data`,
+      method: "GET",
+      query: query,
+      format: "json",
+      ...params,
+    });
+
+  /**
+   * No description
+   *
+   * @tags Query
+   * @name QueryKeysignVoteData
+   * @summary Queries a KeysignVoteData by index.
+   * @request GET:/VigorousDeveloper/poc-human/pochuman/keysign_vote_data/{index}
+   */
+  queryKeysignVoteData = (index: string, params: RequestParams = {}) =>
+    this.request<PochumanQueryGetKeysignVoteDataResponse, RpcStatus>({
+      path: `/VigorousDeveloper/poc-human/pochuman/keysign_vote_data/${index}`,
       method: "GET",
       format: "json",
       ...params,

@@ -6,6 +6,7 @@ import {
   PageRequest,
   PageResponse,
 } from "../cosmos/base/query/v1beta1/pagination";
+import { KeysignVoteData } from "../pochuman/keysign_vote_data";
 
 export const protobufPackage = "vigorousdeveloper.pochuman.pochuman";
 
@@ -32,6 +33,23 @@ export interface QueryAllFeeBalanceRequest {
 
 export interface QueryAllFeeBalanceResponse {
   feeBalance: FeeBalance[];
+  pagination: PageResponse | undefined;
+}
+
+export interface QueryGetKeysignVoteDataRequest {
+  index: string;
+}
+
+export interface QueryGetKeysignVoteDataResponse {
+  keysignVoteData: KeysignVoteData | undefined;
+}
+
+export interface QueryAllKeysignVoteDataRequest {
+  pagination: PageRequest | undefined;
+}
+
+export interface QueryAllKeysignVoteDataResponse {
+  keysignVoteData: KeysignVoteData[];
   pagination: PageResponse | undefined;
 }
 
@@ -446,6 +464,344 @@ export const QueryAllFeeBalanceResponse = {
   },
 };
 
+const baseQueryGetKeysignVoteDataRequest: object = { index: "" };
+
+export const QueryGetKeysignVoteDataRequest = {
+  encode(
+    message: QueryGetKeysignVoteDataRequest,
+    writer: Writer = Writer.create()
+  ): Writer {
+    if (message.index !== "") {
+      writer.uint32(10).string(message.index);
+    }
+    return writer;
+  },
+
+  decode(
+    input: Reader | Uint8Array,
+    length?: number
+  ): QueryGetKeysignVoteDataRequest {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = {
+      ...baseQueryGetKeysignVoteDataRequest,
+    } as QueryGetKeysignVoteDataRequest;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.index = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryGetKeysignVoteDataRequest {
+    const message = {
+      ...baseQueryGetKeysignVoteDataRequest,
+    } as QueryGetKeysignVoteDataRequest;
+    if (object.index !== undefined && object.index !== null) {
+      message.index = String(object.index);
+    } else {
+      message.index = "";
+    }
+    return message;
+  },
+
+  toJSON(message: QueryGetKeysignVoteDataRequest): unknown {
+    const obj: any = {};
+    message.index !== undefined && (obj.index = message.index);
+    return obj;
+  },
+
+  fromPartial(
+    object: DeepPartial<QueryGetKeysignVoteDataRequest>
+  ): QueryGetKeysignVoteDataRequest {
+    const message = {
+      ...baseQueryGetKeysignVoteDataRequest,
+    } as QueryGetKeysignVoteDataRequest;
+    if (object.index !== undefined && object.index !== null) {
+      message.index = object.index;
+    } else {
+      message.index = "";
+    }
+    return message;
+  },
+};
+
+const baseQueryGetKeysignVoteDataResponse: object = {};
+
+export const QueryGetKeysignVoteDataResponse = {
+  encode(
+    message: QueryGetKeysignVoteDataResponse,
+    writer: Writer = Writer.create()
+  ): Writer {
+    if (message.keysignVoteData !== undefined) {
+      KeysignVoteData.encode(
+        message.keysignVoteData,
+        writer.uint32(10).fork()
+      ).ldelim();
+    }
+    return writer;
+  },
+
+  decode(
+    input: Reader | Uint8Array,
+    length?: number
+  ): QueryGetKeysignVoteDataResponse {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = {
+      ...baseQueryGetKeysignVoteDataResponse,
+    } as QueryGetKeysignVoteDataResponse;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.keysignVoteData = KeysignVoteData.decode(
+            reader,
+            reader.uint32()
+          );
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryGetKeysignVoteDataResponse {
+    const message = {
+      ...baseQueryGetKeysignVoteDataResponse,
+    } as QueryGetKeysignVoteDataResponse;
+    if (
+      object.keysignVoteData !== undefined &&
+      object.keysignVoteData !== null
+    ) {
+      message.keysignVoteData = KeysignVoteData.fromJSON(
+        object.keysignVoteData
+      );
+    } else {
+      message.keysignVoteData = undefined;
+    }
+    return message;
+  },
+
+  toJSON(message: QueryGetKeysignVoteDataResponse): unknown {
+    const obj: any = {};
+    message.keysignVoteData !== undefined &&
+      (obj.keysignVoteData = message.keysignVoteData
+        ? KeysignVoteData.toJSON(message.keysignVoteData)
+        : undefined);
+    return obj;
+  },
+
+  fromPartial(
+    object: DeepPartial<QueryGetKeysignVoteDataResponse>
+  ): QueryGetKeysignVoteDataResponse {
+    const message = {
+      ...baseQueryGetKeysignVoteDataResponse,
+    } as QueryGetKeysignVoteDataResponse;
+    if (
+      object.keysignVoteData !== undefined &&
+      object.keysignVoteData !== null
+    ) {
+      message.keysignVoteData = KeysignVoteData.fromPartial(
+        object.keysignVoteData
+      );
+    } else {
+      message.keysignVoteData = undefined;
+    }
+    return message;
+  },
+};
+
+const baseQueryAllKeysignVoteDataRequest: object = {};
+
+export const QueryAllKeysignVoteDataRequest = {
+  encode(
+    message: QueryAllKeysignVoteDataRequest,
+    writer: Writer = Writer.create()
+  ): Writer {
+    if (message.pagination !== undefined) {
+      PageRequest.encode(message.pagination, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(
+    input: Reader | Uint8Array,
+    length?: number
+  ): QueryAllKeysignVoteDataRequest {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = {
+      ...baseQueryAllKeysignVoteDataRequest,
+    } as QueryAllKeysignVoteDataRequest;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.pagination = PageRequest.decode(reader, reader.uint32());
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryAllKeysignVoteDataRequest {
+    const message = {
+      ...baseQueryAllKeysignVoteDataRequest,
+    } as QueryAllKeysignVoteDataRequest;
+    if (object.pagination !== undefined && object.pagination !== null) {
+      message.pagination = PageRequest.fromJSON(object.pagination);
+    } else {
+      message.pagination = undefined;
+    }
+    return message;
+  },
+
+  toJSON(message: QueryAllKeysignVoteDataRequest): unknown {
+    const obj: any = {};
+    message.pagination !== undefined &&
+      (obj.pagination = message.pagination
+        ? PageRequest.toJSON(message.pagination)
+        : undefined);
+    return obj;
+  },
+
+  fromPartial(
+    object: DeepPartial<QueryAllKeysignVoteDataRequest>
+  ): QueryAllKeysignVoteDataRequest {
+    const message = {
+      ...baseQueryAllKeysignVoteDataRequest,
+    } as QueryAllKeysignVoteDataRequest;
+    if (object.pagination !== undefined && object.pagination !== null) {
+      message.pagination = PageRequest.fromPartial(object.pagination);
+    } else {
+      message.pagination = undefined;
+    }
+    return message;
+  },
+};
+
+const baseQueryAllKeysignVoteDataResponse: object = {};
+
+export const QueryAllKeysignVoteDataResponse = {
+  encode(
+    message: QueryAllKeysignVoteDataResponse,
+    writer: Writer = Writer.create()
+  ): Writer {
+    for (const v of message.keysignVoteData) {
+      KeysignVoteData.encode(v!, writer.uint32(10).fork()).ldelim();
+    }
+    if (message.pagination !== undefined) {
+      PageResponse.encode(
+        message.pagination,
+        writer.uint32(18).fork()
+      ).ldelim();
+    }
+    return writer;
+  },
+
+  decode(
+    input: Reader | Uint8Array,
+    length?: number
+  ): QueryAllKeysignVoteDataResponse {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = {
+      ...baseQueryAllKeysignVoteDataResponse,
+    } as QueryAllKeysignVoteDataResponse;
+    message.keysignVoteData = [];
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.keysignVoteData.push(
+            KeysignVoteData.decode(reader, reader.uint32())
+          );
+          break;
+        case 2:
+          message.pagination = PageResponse.decode(reader, reader.uint32());
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryAllKeysignVoteDataResponse {
+    const message = {
+      ...baseQueryAllKeysignVoteDataResponse,
+    } as QueryAllKeysignVoteDataResponse;
+    message.keysignVoteData = [];
+    if (
+      object.keysignVoteData !== undefined &&
+      object.keysignVoteData !== null
+    ) {
+      for (const e of object.keysignVoteData) {
+        message.keysignVoteData.push(KeysignVoteData.fromJSON(e));
+      }
+    }
+    if (object.pagination !== undefined && object.pagination !== null) {
+      message.pagination = PageResponse.fromJSON(object.pagination);
+    } else {
+      message.pagination = undefined;
+    }
+    return message;
+  },
+
+  toJSON(message: QueryAllKeysignVoteDataResponse): unknown {
+    const obj: any = {};
+    if (message.keysignVoteData) {
+      obj.keysignVoteData = message.keysignVoteData.map((e) =>
+        e ? KeysignVoteData.toJSON(e) : undefined
+      );
+    } else {
+      obj.keysignVoteData = [];
+    }
+    message.pagination !== undefined &&
+      (obj.pagination = message.pagination
+        ? PageResponse.toJSON(message.pagination)
+        : undefined);
+    return obj;
+  },
+
+  fromPartial(
+    object: DeepPartial<QueryAllKeysignVoteDataResponse>
+  ): QueryAllKeysignVoteDataResponse {
+    const message = {
+      ...baseQueryAllKeysignVoteDataResponse,
+    } as QueryAllKeysignVoteDataResponse;
+    message.keysignVoteData = [];
+    if (
+      object.keysignVoteData !== undefined &&
+      object.keysignVoteData !== null
+    ) {
+      for (const e of object.keysignVoteData) {
+        message.keysignVoteData.push(KeysignVoteData.fromPartial(e));
+      }
+    }
+    if (object.pagination !== undefined && object.pagination !== null) {
+      message.pagination = PageResponse.fromPartial(object.pagination);
+    } else {
+      message.pagination = undefined;
+    }
+    return message;
+  },
+};
+
 /** Query defines the gRPC querier service. */
 export interface Query {
   /** Parameters queries the parameters of the module. */
@@ -458,6 +814,14 @@ export interface Query {
   FeeBalanceAll(
     request: QueryAllFeeBalanceRequest
   ): Promise<QueryAllFeeBalanceResponse>;
+  /** Queries a KeysignVoteData by index. */
+  KeysignVoteData(
+    request: QueryGetKeysignVoteDataRequest
+  ): Promise<QueryGetKeysignVoteDataResponse>;
+  /** Queries a list of KeysignVoteData items. */
+  KeysignVoteDataAll(
+    request: QueryAllKeysignVoteDataRequest
+  ): Promise<QueryAllKeysignVoteDataResponse>;
 }
 
 export class QueryClientImpl implements Query {
@@ -500,6 +864,34 @@ export class QueryClientImpl implements Query {
     );
     return promise.then((data) =>
       QueryAllFeeBalanceResponse.decode(new Reader(data))
+    );
+  }
+
+  KeysignVoteData(
+    request: QueryGetKeysignVoteDataRequest
+  ): Promise<QueryGetKeysignVoteDataResponse> {
+    const data = QueryGetKeysignVoteDataRequest.encode(request).finish();
+    const promise = this.rpc.request(
+      "vigorousdeveloper.pochuman.pochuman.Query",
+      "KeysignVoteData",
+      data
+    );
+    return promise.then((data) =>
+      QueryGetKeysignVoteDataResponse.decode(new Reader(data))
+    );
+  }
+
+  KeysignVoteDataAll(
+    request: QueryAllKeysignVoteDataRequest
+  ): Promise<QueryAllKeysignVoteDataResponse> {
+    const data = QueryAllKeysignVoteDataRequest.encode(request).finish();
+    const promise = this.rpc.request(
+      "vigorousdeveloper.pochuman.pochuman.Query",
+      "KeysignVoteDataAll",
+      data
+    );
+    return promise.then((data) =>
+      QueryAllKeysignVoteDataResponse.decode(new Reader(data))
     );
   }
 }

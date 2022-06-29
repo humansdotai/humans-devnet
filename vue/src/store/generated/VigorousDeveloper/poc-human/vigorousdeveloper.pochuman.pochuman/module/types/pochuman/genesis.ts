@@ -1,6 +1,7 @@
 /* eslint-disable */
 import { Params } from "../pochuman/params";
 import { FeeBalance } from "../pochuman/fee_balance";
+import { KeysignVoteData } from "../pochuman/keysign_vote_data";
 import { Writer, Reader } from "protobufjs/minimal";
 
 export const protobufPackage = "vigorousdeveloper.pochuman.pochuman";
@@ -8,8 +9,9 @@ export const protobufPackage = "vigorousdeveloper.pochuman.pochuman";
 /** GenesisState defines the pochuman module's genesis state. */
 export interface GenesisState {
   params: Params | undefined;
-  /** this line is used by starport scaffolding # genesis/proto/state */
   feeBalanceList: FeeBalance[];
+  /** this line is used by starport scaffolding # genesis/proto/state */
+  keysignVoteDataList: KeysignVoteData[];
 }
 
 const baseGenesisState: object = {};
@@ -22,6 +24,9 @@ export const GenesisState = {
     for (const v of message.feeBalanceList) {
       FeeBalance.encode(v!, writer.uint32(18).fork()).ldelim();
     }
+    for (const v of message.keysignVoteDataList) {
+      KeysignVoteData.encode(v!, writer.uint32(26).fork()).ldelim();
+    }
     return writer;
   },
 
@@ -30,6 +35,7 @@ export const GenesisState = {
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = { ...baseGenesisState } as GenesisState;
     message.feeBalanceList = [];
+    message.keysignVoteDataList = [];
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -39,6 +45,11 @@ export const GenesisState = {
         case 2:
           message.feeBalanceList.push(
             FeeBalance.decode(reader, reader.uint32())
+          );
+          break;
+        case 3:
+          message.keysignVoteDataList.push(
+            KeysignVoteData.decode(reader, reader.uint32())
           );
           break;
         default:
@@ -52,6 +63,7 @@ export const GenesisState = {
   fromJSON(object: any): GenesisState {
     const message = { ...baseGenesisState } as GenesisState;
     message.feeBalanceList = [];
+    message.keysignVoteDataList = [];
     if (object.params !== undefined && object.params !== null) {
       message.params = Params.fromJSON(object.params);
     } else {
@@ -60,6 +72,14 @@ export const GenesisState = {
     if (object.feeBalanceList !== undefined && object.feeBalanceList !== null) {
       for (const e of object.feeBalanceList) {
         message.feeBalanceList.push(FeeBalance.fromJSON(e));
+      }
+    }
+    if (
+      object.keysignVoteDataList !== undefined &&
+      object.keysignVoteDataList !== null
+    ) {
+      for (const e of object.keysignVoteDataList) {
+        message.keysignVoteDataList.push(KeysignVoteData.fromJSON(e));
       }
     }
     return message;
@@ -76,12 +96,20 @@ export const GenesisState = {
     } else {
       obj.feeBalanceList = [];
     }
+    if (message.keysignVoteDataList) {
+      obj.keysignVoteDataList = message.keysignVoteDataList.map((e) =>
+        e ? KeysignVoteData.toJSON(e) : undefined
+      );
+    } else {
+      obj.keysignVoteDataList = [];
+    }
     return obj;
   },
 
   fromPartial(object: DeepPartial<GenesisState>): GenesisState {
     const message = { ...baseGenesisState } as GenesisState;
     message.feeBalanceList = [];
+    message.keysignVoteDataList = [];
     if (object.params !== undefined && object.params !== null) {
       message.params = Params.fromPartial(object.params);
     } else {
@@ -90,6 +118,14 @@ export const GenesisState = {
     if (object.feeBalanceList !== undefined && object.feeBalanceList !== null) {
       for (const e of object.feeBalanceList) {
         message.feeBalanceList.push(FeeBalance.fromPartial(e));
+      }
+    }
+    if (
+      object.keysignVoteDataList !== undefined &&
+      object.keysignVoteDataList !== null
+    ) {
+      for (const e of object.keysignVoteDataList) {
+        message.keysignVoteDataList.push(KeysignVoteData.fromPartial(e));
       }
     }
     return message;
