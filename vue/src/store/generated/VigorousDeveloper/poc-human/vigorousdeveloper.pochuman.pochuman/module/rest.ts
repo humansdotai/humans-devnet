@@ -9,6 +9,10 @@
  * ---------------------------------------------------------------
  */
 
+export type PochumanMsgObservationVoteResponse = object;
+
+export type PochumanMsgRequestTransactionResponse = object;
+
 /**
  * Params defines the parameters for the module.
  */

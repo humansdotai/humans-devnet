@@ -7,7 +7,34 @@ option go_package = "github.com/VigorousDeveloper/poc-human/x/pochuman/types";
 
 // Msg defines the Msg service.
 service Msg {
-    // this line is used by starport scaffolding # proto/tx/rpc
+      rpc RequestTransaction(MsgRequestTransaction) returns (MsgRequestTransactionResponse);
+  rpc ObservationVote(MsgObservationVote) returns (MsgObservationVoteResponse);
+// this line is used by starport scaffolding # proto/tx/rpc
+}
+
+message MsgRequestTransaction {
+  string creator = 1;
+  string originChain = 2;
+  string originAddress = 3;
+  string targetChain = 4;
+  string targetAddress = 5;
+  string amount = 6;
+  string fee = 7;
+}
+
+message MsgRequestTransactionResponse {
+}
+
+message MsgObservationVote {
+  string creator = 1;
+  string txHash = 2;
+  string chainName = 3;
+  string from = 4;
+  string to = 5;
+  string amount = 6;
+}
+
+message MsgObservationVoteResponse {
 }
 
 // this line is used by starport scaffolding # proto/tx/message

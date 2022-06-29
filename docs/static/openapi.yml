@@ -50906,6 +50906,10 @@ definitions:
     title: >-
       SignatureCounts contains information about signature reporting for a
       number of blocks
+  vigorousdeveloper.pochuman.pochuman.MsgObservationVoteResponse:
+    type: object
+  vigorousdeveloper.pochuman.pochuman.MsgRequestTransactionResponse:
+    type: object
   vigorousdeveloper.pochuman.pochuman.Params:
     type: object
     description: Params defines the parameters for the module.
