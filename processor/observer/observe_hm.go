@@ -3,9 +3,10 @@ package observer
 import (
 	"context"
 	"fmt"
+	"time"
 
 	"github.com/VigorousDeveloper/poc-human/x/pochuman/types"
-	coretypes "github.com/tendermint/tendermint/rpc/core/types"
+	// "github.com/tendermint/tendermint/rpc/coretypes"
 )
 
 // Fetches the USDC balance of Ethereum pool account
@@ -31,8 +32,18 @@ func (o *Observer) HumanTransferTokenToTarget(txdata *types.TransactionData, mon
 // Keep listening to WSS and fetch transaction deposited to the pool
 func (o *Observer) ProcessTxInsHmExternal() {
 	ctx := o.HumanChainBridge.GetContext()
-	sub, err := ctx.Client.Subscribe(context.Background(), "subscriber", "tm.even='Tx'")
+	client := ctx.Client
+	err := client.Start()
+	if err != nil {
+		return
+	}
+	defer client.Stop()
 
+	ctx0, cancel := context.WithTimeout(context.Background(), 1*time.Second)
+	defer cancel()
+
+	query := "tm.event = 'Tx'"
+	txs, err := ctx.Client.Subscribe(ctx0, "test-client", query)
 	if err != nil {
 		return
 	}
@@ -41,20 +52,22 @@ func (o *Observer) ProcessTxInsHmExternal() {
 		select {
 		case <-o.stopChan:
 			return
-		case vLog := <-sub:
-			o.HumanParseLog(vLog)
+		case tx := <-txs:
+			fmt.Println(tx)
+			// 	o.HumanParseLog(tx)
 		}
 	}
 }
 
-func (o *Observer) HumanParseLog(vLog coretypes.ResultEvent) {
+// func (o *Observer) HumanParseLog(txs coretypes.ResultEvent) {
+// 	// for e := range txs {
+// 	// 	fmt.Println("got", e.Data.(ttypes.EventDataTx))
+// 	// }
 
-	fmt.Println(vLog)
+// 	_, voter := o.HumanChainBridge.GetVoterInfo()
+// 	msg := types.NewMsgObservationVote(voter, "vLog.TxHash.String()", types.CHAIN_HUMAN, "transferEvent.From.Hex()", "transferEvent.To.Hex()", fmt.Sprintf("%f", 100.0))
+// 	o.ArrMsgObservationVote = append(o.ArrMsgObservationVote, msg)
 
-	_, voter := o.HumanChainBridge.GetVoterInfo()
-	msg := types.NewMsgObservationVote(voter, "vLog.TxHash.String()", types.CHAIN_HUMAN, "transferEvent.From.Hex()", "transferEvent.To.Hex()", fmt.Sprintf("%f", 100.0))
-	o.ArrMsgObservationVote = append(o.ArrMsgObservationVote, msg)
-
-	// Send true to HmPoolchange channel
-	o.HmPoolChanged <- true
-}
+// 	// Send true to HmPoolchange channel
+// 	o.HmPoolChanged <- true
+// }
