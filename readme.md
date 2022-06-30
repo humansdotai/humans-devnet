@@ -65,19 +65,33 @@ After=network-online.target
 
 [Service]
 Restart=on-failure
+
 RestartSec=3
+
 User=venus
+
 Group=venus
+
 Environment=DAEMON_NAME=poc-humand
+
 Environment=DAEMON_HOME=/home/venus/.poc-human
+
 Environment=DAEMON_ALLOW_DOWNLOAD_BINARIES=on
+
 Environment=DAEMON_RESTART_AFTER_UPGRADE=on
+
 PermissionsStartOnly=true
+
 ExecStart=/usr/bin/pochumand-manager start --pruning="nothing" --rpc.laddr "tcp://0.0.0.0:26657"
+
 StandardOutput=file:/var/log/poc-humand/poc-humand.log
+
 StandardError=file:/var/log/poc-humand/poc-humand_error.log
+
 ExecReload=/bin/kill -HUP $MAINPID
+
 KillSignal=SIGTERM
+
 LimitNOFILE=4096
 
 [Install]
@@ -85,6 +99,7 @@ WantedBy=multi-user.target
 
 # Create the service file "/etc/systemd/system/processord.service" with the following content
 sudo nano /etc/systemd/system/processord.service
+
 # paste following content
 [Unit]
 Description=processord
