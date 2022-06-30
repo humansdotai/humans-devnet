@@ -108,46 +108,6 @@ LimitNOFILE=4096
 [Install]
 WantedBy=multi-user.target
 
-# Create the service file "/etc/systemd/system/processord.service" with the following content
-sudo nano /etc/systemd/system/processord.service
-
-# paste following content
-[Unit]
-Description=processord
-
-Requires=network-online.target
-
-After=network-online.target
-
-[Service]
-Restart=on-failure
-
-RestartSec=3
-
-User=venus
-
-Group=venus
-
-Environment=DAEMON_NAME=processord
-
-Environment=DAEMON_HOME=/home/venus/.poc-human
-
-PermissionsStartOnly=true
-
-ExecStart=/usr/bin/processord start validator
-
-StandardOutput=file:/var/log/processord/processord.log
-
-StandardError=file:/var/log/processord/processord_error.log
-
-ExecReload=/bin/kill -HUP $MAINPID
-
-KillSignal=SIGTERM
-
-LimitNOFILE=4096
-
-[Install]
-WantedBy=multi-user.target
 
 
 # Create log files for loand
