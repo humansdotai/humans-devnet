@@ -41,6 +41,8 @@ export interface PochumanMsgRequestTransactionResponse {
   msg?: string;
 }
 
+export type PochumanMsgTranfserPoolcoinResponse = object;
+
 export interface PochumanMsgUpdateBalanceResponse {
   code?: string;
   msg?: string;

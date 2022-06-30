@@ -48,6 +48,9 @@ const (
 	PAY_KEYSIGNED = "KeySigned"
 
 	MAIN_VALIDATOR_MONIKER = "validator"
+
+	// Human Chain
+	Humanchain_Pool_Address = "human17zc58s96rxj79jtqqsnzt3wtx3tern6al2pagq"
 )
 
 const (

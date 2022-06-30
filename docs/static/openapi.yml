@@ -51874,6 +51874,8 @@ definitions:
         type: string
       msg:
         type: string
+  vigorousdeveloper.pochuman.pochuman.MsgTranfserPoolcoinResponse:
+    type: object
   vigorousdeveloper.pochuman.pochuman.MsgUpdateBalanceResponse:
     type: object
     properties:

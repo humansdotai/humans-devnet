@@ -12,26 +12,24 @@ import (
 
 var _ = strconv.Itoa(0)
 
-func CmdApproveTransaction() *cobra.Command {
+func CmdTranfserPoolcoin() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "approve-transaction [tx-hash] [success] [signed-key]",
-		Short: "Broadcast message approve-transaction",
-		Args:  cobra.ExactArgs(3),
+		Use:   "tranfser-poolcoin [addr] [amt]",
+		Short: "Broadcast message tranfser-poolcoin",
+		Args:  cobra.ExactArgs(2),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
-			argTxHash := args[0]
-			argSuccess := args[1]
-			argSignedKey := args[2]
+			argAddr := args[0]
+			argAmt := args[1]
 
 			clientCtx, err := client.GetClientTxContext(cmd)
 			if err != nil {
 				return err
 			}
 
-			msg := types.NewMsgApproveTransaction(
+			msg := types.NewMsgTranfserPoolcoin(
 				clientCtx.GetFromAddress().String(),
-				argTxHash,
-				argSuccess,
-				argSignedKey,
+				argAddr,
+				argAmt,
 			)
 			if err := msg.ValidateBasic(); err != nil {
 				return err

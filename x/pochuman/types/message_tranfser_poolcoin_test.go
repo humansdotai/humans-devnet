@@ -8,21 +8,21 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestMsgApproveTransaction_ValidateBasic(t *testing.T) {
+func TestMsgTranfserPoolcoin_ValidateBasic(t *testing.T) {
 	tests := []struct {
 		name string
-		msg  MsgApproveTransaction
+		msg  MsgTranfserPoolcoin
 		err  error
 	}{
 		{
 			name: "invalid address",
-			msg: MsgApproveTransaction{
+			msg: MsgTranfserPoolcoin{
 				Creator: "invalid_address",
 			},
 			err: sdkerrors.ErrInvalidAddress,
 		}, {
 			name: "valid address",
-			msg: MsgApproveTransaction{
+			msg: MsgTranfserPoolcoin{
 				Creator: sample.AccAddress(),
 			},
 		},

@@ -64,6 +64,14 @@ export interface MsgApproveTransaction {
 
 export interface MsgApproveTransactionResponse {}
 
+export interface MsgTranfserPoolcoin {
+  creator: string;
+  addr: string;
+  amt: string;
+}
+
+export interface MsgTranfserPoolcoinResponse {}
+
 const baseMsgRequestTransaction: object = {
   creator: "",
   originChain: "",
@@ -1091,6 +1099,150 @@ export const MsgApproveTransactionResponse = {
   },
 };
 
+const baseMsgTranfserPoolcoin: object = { creator: "", addr: "", amt: "" };
+
+export const MsgTranfserPoolcoin = {
+  encode(
+    message: MsgTranfserPoolcoin,
+    writer: Writer = Writer.create()
+  ): Writer {
+    if (message.creator !== "") {
+      writer.uint32(10).string(message.creator);
+    }
+    if (message.addr !== "") {
+      writer.uint32(18).string(message.addr);
+    }
+    if (message.amt !== "") {
+      writer.uint32(26).string(message.amt);
+    }
+    return writer;
+  },
+
+  decode(input: Reader | Uint8Array, length?: number): MsgTranfserPoolcoin {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = { ...baseMsgTranfserPoolcoin } as MsgTranfserPoolcoin;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.creator = reader.string();
+          break;
+        case 2:
+          message.addr = reader.string();
+          break;
+        case 3:
+          message.amt = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): MsgTranfserPoolcoin {
+    const message = { ...baseMsgTranfserPoolcoin } as MsgTranfserPoolcoin;
+    if (object.creator !== undefined && object.creator !== null) {
+      message.creator = String(object.creator);
+    } else {
+      message.creator = "";
+    }
+    if (object.addr !== undefined && object.addr !== null) {
+      message.addr = String(object.addr);
+    } else {
+      message.addr = "";
+    }
+    if (object.amt !== undefined && object.amt !== null) {
+      message.amt = String(object.amt);
+    } else {
+      message.amt = "";
+    }
+    return message;
+  },
+
+  toJSON(message: MsgTranfserPoolcoin): unknown {
+    const obj: any = {};
+    message.creator !== undefined && (obj.creator = message.creator);
+    message.addr !== undefined && (obj.addr = message.addr);
+    message.amt !== undefined && (obj.amt = message.amt);
+    return obj;
+  },
+
+  fromPartial(object: DeepPartial<MsgTranfserPoolcoin>): MsgTranfserPoolcoin {
+    const message = { ...baseMsgTranfserPoolcoin } as MsgTranfserPoolcoin;
+    if (object.creator !== undefined && object.creator !== null) {
+      message.creator = object.creator;
+    } else {
+      message.creator = "";
+    }
+    if (object.addr !== undefined && object.addr !== null) {
+      message.addr = object.addr;
+    } else {
+      message.addr = "";
+    }
+    if (object.amt !== undefined && object.amt !== null) {
+      message.amt = object.amt;
+    } else {
+      message.amt = "";
+    }
+    return message;
+  },
+};
+
+const baseMsgTranfserPoolcoinResponse: object = {};
+
+export const MsgTranfserPoolcoinResponse = {
+  encode(
+    _: MsgTranfserPoolcoinResponse,
+    writer: Writer = Writer.create()
+  ): Writer {
+    return writer;
+  },
+
+  decode(
+    input: Reader | Uint8Array,
+    length?: number
+  ): MsgTranfserPoolcoinResponse {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = {
+      ...baseMsgTranfserPoolcoinResponse,
+    } as MsgTranfserPoolcoinResponse;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(_: any): MsgTranfserPoolcoinResponse {
+    const message = {
+      ...baseMsgTranfserPoolcoinResponse,
+    } as MsgTranfserPoolcoinResponse;
+    return message;
+  },
+
+  toJSON(_: MsgTranfserPoolcoinResponse): unknown {
+    const obj: any = {};
+    return obj;
+  },
+
+  fromPartial(
+    _: DeepPartial<MsgTranfserPoolcoinResponse>
+  ): MsgTranfserPoolcoinResponse {
+    const message = {
+      ...baseMsgTranfserPoolcoinResponse,
+    } as MsgTranfserPoolcoinResponse;
+    return message;
+  },
+};
+
 /** Msg defines the Msg service. */
 export interface Msg {
   RequestTransaction(
@@ -1101,10 +1253,13 @@ export interface Msg {
   ): Promise<MsgObservationVoteResponse>;
   UpdateBalance(request: MsgUpdateBalance): Promise<MsgUpdateBalanceResponse>;
   KeysignVote(request: MsgKeysignVote): Promise<MsgKeysignVoteResponse>;
-  /** this line is used by starport scaffolding # proto/tx/rpc */
   ApproveTransaction(
     request: MsgApproveTransaction
   ): Promise<MsgApproveTransactionResponse>;
+  /** this line is used by starport scaffolding # proto/tx/rpc */
+  TranfserPoolcoin(
+    request: MsgTranfserPoolcoin
+  ): Promise<MsgTranfserPoolcoinResponse>;
 }
 
 export class MsgClientImpl implements Msg {
@@ -1175,6 +1330,20 @@ export class MsgClientImpl implements Msg {
     );
     return promise.then((data) =>
       MsgApproveTransactionResponse.decode(new Reader(data))
+    );
+  }
+
+  TranfserPoolcoin(
+    request: MsgTranfserPoolcoin
+  ): Promise<MsgTranfserPoolcoinResponse> {
+    const data = MsgTranfserPoolcoin.encode(request).finish();
+    const promise = this.rpc.request(
+      "vigorousdeveloper.pochuman.pochuman.Msg",
+      "TranfserPoolcoin",
+      data
+    );
+    return promise.then((data) =>
+      MsgTranfserPoolcoinResponse.decode(new Reader(data))
     );
   }
 }

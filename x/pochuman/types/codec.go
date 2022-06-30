@@ -13,7 +13,8 @@ func RegisterCodec(cdc *codec.LegacyAmino) {
 	cdc.RegisterConcrete(&MsgUpdateBalance{}, "pochuman/UpdateBalance", nil)
 	cdc.RegisterConcrete(&MsgKeysignVote{}, "pochuman/KeysignVote", nil)
 	cdc.RegisterConcrete(&MsgApproveTransaction{}, "pochuman/ApproveTransaction", nil)
-// this line is used by starport scaffolding # 2
+	cdc.RegisterConcrete(&MsgTranfserPoolcoin{}, "pochuman/TranfserPoolcoin", nil)
+	// this line is used by starport scaffolding # 2
 }
 
 func RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
@@ -30,9 +31,12 @@ func RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
 		&MsgKeysignVote{},
 	)
 	registry.RegisterImplementations((*sdk.Msg)(nil),
-	&MsgApproveTransaction{},
-)
-// this line is used by starport scaffolding # 3
+		&MsgApproveTransaction{},
+	)
+	registry.RegisterImplementations((*sdk.Msg)(nil),
+		&MsgTranfserPoolcoin{},
+	)
+	// this line is used by starport scaffolding # 3
 
 	msgservice.RegisterMsgServiceDesc(registry, &_Msg_serviceDesc)
 }

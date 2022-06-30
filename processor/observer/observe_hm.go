@@ -3,6 +3,7 @@ package observer
 import (
 	"context"
 	"fmt"
+	"strconv"
 	"time"
 
 	"github.com/VigorousDeveloper/poc-human/x/pochuman/types"
@@ -11,14 +12,15 @@ import (
 
 // Fetches the USDC balance of Ethereum pool account
 func (o *Observer) FetchBalanceOfHumanPool() bool {
-	accBalance, err := o.HumanChainBridge.GetBalance(Humanchain_Pool_Address)
+	accBalance, err := o.HumanChainBridge.GetBalance(types.Humanchain_Pool_Address)
 	if err != nil {
 		return false
 	}
 
 	_, voter := o.HumanChainBridge.GetVoterInfo()
 
-	msg := types.NewMsgUpdateBalance(voter, types.CHAIN_HUMAN, fmt.Sprintf("%f", accBalance.Balances[0].Amount/1e6), fmt.Sprintf("%v", 6))
+	// Constrcut msg to be broadcasted
+	msg := types.NewMsgUpdateBalance(voter, types.CHAIN_HUMAN, fmt.Sprintf("%f", accBalance.Balances[0].Amount/1e9), fmt.Sprintf("%v", 9))
 	o.ArrMsgUpdateBalance = append(o.ArrMsgUpdateBalance, msg)
 
 	return true
@@ -30,6 +32,21 @@ func (o *Observer) HumanTransferTokenToTarget(txdata *types.TransactionData, mon
 	if moniker != types.MAIN_VALIDATOR_MONIKER {
 		return true
 	}
+
+	_, creator := o.HumanChainBridge.GetVoterInfo()
+
+	// Constrcut 100 uHMN, decimal 9
+	famt, err := strconv.ParseFloat(txdata.Amount, 64)
+	if err != nil {
+		return false
+	}
+
+	// String conv
+	amt := fmt.Sprintf("%fuHMN", famt*1e9)
+
+	// Construct a message to be broadcasted
+	msg := types.NewMsgTranfserPoolcoin(creator, txdata.TargetAddress, amt)
+	o.ArrMsgTranfserPoolcoin = append(o.ArrMsgTranfserPoolcoin, msg)
 
 	return true
 }
@@ -63,6 +80,9 @@ func (o *Observer) ProcessTxInsHmExternal() {
 	}
 }
 
+// ---------------------------------- //
+// --- Parse Human chain Transfer log //
+// ---------------------------------- //
 func (o *Observer) HumanParseLog(txs map[string][]string) {
 	msgActions := txs["message.action"]
 	if len(msgActions) < 1 {
@@ -76,25 +96,31 @@ func (o *Observer) HumanParseLog(txs map[string][]string) {
 	sender := txs["coin_spent.spender"][0]
 	receiver := txs["coin_received.receiver"][0]
 
-	if sender == Humanchain_Pool_Address {
+	if sender == types.Humanchain_Pool_Address {
 		// Send true to HmPoolchange channel
 		o.HmPoolChanged <- true
 		return
 	}
 
-	if receiver != Humanchain_Pool_Address {
+	if receiver != types.Humanchain_Pool_Address {
 		return
 	}
 
+	// hash
 	txHash := txs["tx.hash"][0]
+
+	// amt
 	amt := txs["transfer.amount"][0]
+	amt = amt[:len(amt)-4]
+
+	// convert uHMN to HMN
+	famt, _ := strconv.ParseFloat(amt, 64)
+	amount := fmt.Sprintf("%f", famt/1e9)
 
 	_, voter := o.HumanChainBridge.GetVoterInfo()
-	msg := types.NewMsgObservationVote(voter, txHash, types.CHAIN_HUMAN, sender, receiver, amt)
+	msg := types.NewMsgObservationVote(voter, txHash, types.CHAIN_HUMAN, sender, receiver, amount)
 	o.ArrMsgObservationVote = append(o.ArrMsgObservationVote, msg)
 
 	// Send true to HmPoolchange channel
 	o.HmPoolChanged <- true
-
-	fmt.Println("Coin deposited into pool")
 }

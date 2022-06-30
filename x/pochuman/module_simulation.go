@@ -44,6 +44,10 @@ const (
 	// TODO: Determine the simulation weight value
 	defaultWeightMsgApproveTransaction int = 100
 
+	opWeightMsgTranfserPoolcoin = "op_weight_msg_tranfser_poolcoin"
+	// TODO: Determine the simulation weight value
+	defaultWeightMsgTranfserPoolcoin int = 100
+
 	// this line is used by starport scaffolding # simapp/module/const
 )
 
@@ -131,6 +135,17 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 	operations = append(operations, simulation.NewWeightedOperation(
 		weightMsgApproveTransaction,
 		pochumansimulation.SimulateMsgApproveTransaction(am.accountKeeper, am.bankKeeper, am.keeper),
+	))
+
+	var weightMsgTranfserPoolcoin int
+	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgTranfserPoolcoin, &weightMsgTranfserPoolcoin, nil,
+		func(_ *rand.Rand) {
+			weightMsgTranfserPoolcoin = defaultWeightMsgTranfserPoolcoin
+		},
+	)
+	operations = append(operations, simulation.NewWeightedOperation(
+		weightMsgTranfserPoolcoin,
+		pochumansimulation.SimulateMsgTranfserPoolcoin(am.accountKeeper, am.bankKeeper, am.keeper),
 	))
 
 	// this line is used by starport scaffolding # simapp/module/operation
