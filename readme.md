@@ -1,4 +1,4 @@
-#Install Golang:
+# Install Golang:
 
 // Install latest go version https://golang.org/doc/install
 wget -q -O - https://raw.githubusercontent.com/canha/golang-tools-install-script/master/goinstall.sh | bash -s -- --version 1.18
