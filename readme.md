@@ -18,11 +18,14 @@ make install
 clear
 
 mkdir -p ~/.poc-human/upgrade_manager/upgrades
+
 mkdir -p ~/.poc-human/upgrade_manager/genesis/bin
 
 # symlink genesis binary to upgrade
 cp $(which poc-humand) ~/.poc-human/upgrade_manager/genesis/bin
+
 sudo cp $(which pochumand-manager) /usr/bin
+
 sudo cp $(which processord) /usr/bin
 
 # Initialize the validator, where "validator" is a moniker name
@@ -42,7 +45,9 @@ echo "betray theory cargo way left cricket doll room donkey wire reunion fall le
 
 # Add genesis accounts
 poc-humand add-genesis-account $(poc-humand keys show validator -a --keyring-backend test) 90000000000000uhmn
+
 poc-humand add-genesis-account $(poc-humand keys show validator1 -a --keyring-backend test) 40000000000000uhmn
+
 poc-humand add-genesis-account $(poc-humand keys show test1 -a --keyring-backend test) 50000000000000uhmn
 
 # Generate CreateValidator signed transaction
@@ -60,7 +65,9 @@ sudo nano /etc/systemd/system/pochumand.service
 # paste following content
 [Unit]
 Description=pochumand
+
 Requires=network-online.target
+
 After=network-online.target
 
 [Service]
@@ -103,22 +110,36 @@ sudo nano /etc/systemd/system/processord.service
 # paste following content
 [Unit]
 Description=processord
+
 Requires=network-online.target
+
 After=network-online.target
 
 [Service]
 Restart=on-failure
+
 RestartSec=3
+
 User=venus
+
 Group=venus
+
 Environment=DAEMON_NAME=processord
+
 Environment=DAEMON_HOME=/home/venus/.poc-human
+
 PermissionsStartOnly=true
+
 ExecStart=/usr/bin/processord start validator
+
 StandardOutput=file:/var/log/processord/processord.log
+
 StandardError=file:/var/log/processord/processord_error.log
+
 ExecReload=/bin/kill -HUP $MAINPID
+
 KillSignal=SIGTERM
+
 LimitNOFILE=4096
 
 [Install]
