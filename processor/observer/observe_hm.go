@@ -11,9 +11,14 @@ import (
 
 // Fetches the USDC balance of Ethereum pool account
 func (o *Observer) FetchBalanceOfHumanPool() bool {
+	accBalance, err := o.HumanChainBridge.GetBalance(Humanchain_Pool_Address)
+	if err != nil {
+		return false
+	}
+
 	_, voter := o.HumanChainBridge.GetVoterInfo()
 
-	msg := types.NewMsgUpdateBalance(voter, types.CHAIN_HUMAN, fmt.Sprintf("%f", 5.0), fmt.Sprintf("%v", 5))
+	msg := types.NewMsgUpdateBalance(voter, types.CHAIN_HUMAN, fmt.Sprintf("%f", accBalance.Balances[0].Amount/1e6), fmt.Sprintf("%v", 6))
 	o.ArrMsgUpdateBalance = append(o.ArrMsgUpdateBalance, msg)
 
 	return true
@@ -53,21 +58,43 @@ func (o *Observer) ProcessTxInsHmExternal() {
 		case <-o.stopChan:
 			return
 		case tx := <-txs:
-			fmt.Println(tx)
-			// 	o.HumanParseLog(tx)
+			o.HumanParseLog(tx.Events)
 		}
 	}
 }
 
-// func (o *Observer) HumanParseLog(txs coretypes.ResultEvent) {
-// 	// for e := range txs {
-// 	// 	fmt.Println("got", e.Data.(ttypes.EventDataTx))
-// 	// }
+func (o *Observer) HumanParseLog(txs map[string][]string) {
+	msgActions := txs["message.action"]
+	if len(msgActions) < 1 {
+		return
+	}
+	msgAction := msgActions[0]
+	if msgAction != "/cosmos.bank.v1beta1.MsgSend" {
+		return
+	}
 
-// 	_, voter := o.HumanChainBridge.GetVoterInfo()
-// 	msg := types.NewMsgObservationVote(voter, "vLog.TxHash.String()", types.CHAIN_HUMAN, "transferEvent.From.Hex()", "transferEvent.To.Hex()", fmt.Sprintf("%f", 100.0))
-// 	o.ArrMsgObservationVote = append(o.ArrMsgObservationVote, msg)
+	sender := txs["coin_spent.spender"][0]
+	receiver := txs["coin_received.receiver"][0]
 
-// 	// Send true to HmPoolchange channel
-// 	o.HmPoolChanged <- true
-// }
+	if sender == Humanchain_Pool_Address {
+		// Send true to HmPoolchange channel
+		o.HmPoolChanged <- true
+		return
+	}
+
+	if receiver != Humanchain_Pool_Address {
+		return
+	}
+
+	txHash := txs["tx.hash"][0]
+	amt := txs["transfer.amount"][0]
+
+	_, voter := o.HumanChainBridge.GetVoterInfo()
+	msg := types.NewMsgObservationVote(voter, txHash, types.CHAIN_HUMAN, sender, receiver, amt)
+	o.ArrMsgObservationVote = append(o.ArrMsgObservationVote, msg)
+
+	// Send true to HmPoolchange channel
+	o.HmPoolChanged <- true
+
+	fmt.Println("Coin deposited into pool")
+}

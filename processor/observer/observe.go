@@ -55,6 +55,9 @@ const (
 
 	// Ethereum Pool Account Private Key
 	Ethereum_Pool_Account_Private_Key = "4b11634f979c262e33def94f52a0a82e57d0db5d7f94efd2844a1892623e063c"
+
+	// Human Chain
+	Humanchain_Pool_Address = "human17zc58s96rxj79jtqqsnzt3wtx3tern6al2pagq"
 )
 
 // NewObserver create a new instance of Observer for chain

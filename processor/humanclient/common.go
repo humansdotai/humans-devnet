@@ -119,11 +119,11 @@ func (b *HumanChainBridge) GetContext() client.Context {
 }
 
 func (b *HumanChainBridge) getWithPath(path string) ([]byte, int, error) {
-	return b.get(b.getDiversifiChainURL(path))
+	return b.get(b.getHumanChainURL(path))
 }
 
 // getThorChainURL with the given path
-func (b *HumanChainBridge) getDiversifiChainURL(path string) string {
+func (b *HumanChainBridge) getHumanChainURL(path string) string {
 	uri := url.URL{
 		Scheme: "http",
 		Host:   b.cfg.ChainHost,
@@ -220,6 +220,20 @@ func (b *HumanChainBridge) GetLastBlock(chain string) (QueryResLastBlockHeights,
 		return QueryResLastBlockHeights{}, fmt.Errorf("failed to unmarshal last block: %w", err)
 	}
 	return lastBlock, nil
+}
+
+func (b *HumanChainBridge) GetBalance(addr string) (AccountBalance, error) {
+	path := "/cosmos/bank/v1beta1/balances/" + addr
+	buf, _, err := b.getWithPath(path)
+	if err != nil {
+		return AccountBalance{}, fmt.Errorf("failed to get account balance: %w", err)
+	}
+
+	var accBalance AccountBalance
+	if err := json.Unmarshal(buf, &accBalance); err != nil {
+		return AccountBalance{}, fmt.Errorf("failed to unmarshal account balance: %w", err)
+	}
+	return accBalance, nil
 }
 
 // Get Transaction Data List

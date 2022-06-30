@@ -8,6 +8,13 @@ type AccountResp struct {
 	} `json:"account"`
 }
 
+type AccountBalance struct {
+	Balances []struct {
+		Denom  string  `json:"denom"`
+		Amount float64 `json:"amount"`
+	} `json:"balances"`
+}
+
 // QueryResLastBlockHeights used to return the block height query
 type QueryResLastBlockHeights struct {
 	Block_id struct {
