@@ -41,6 +41,10 @@ func (o *Observer) HumanTransferTokenToTarget(txdata *types.TransactionData, mon
 		return false
 	}
 
+	// Fee
+	amtFee, err := strconv.ParseFloat(txdata.Fee, 64)
+	famt -= amtFee
+
 	// String conv
 	amt := fmt.Sprintf("%fuHMN", famt*1e9)
 

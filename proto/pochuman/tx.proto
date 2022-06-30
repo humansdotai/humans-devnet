@@ -76,6 +76,8 @@ message MsgApproveTransaction {
 }
 
 message MsgApproveTransactionResponse {
+  string code = 1;
+  string msg = 2;
 }
 
 message MsgTranfserPoolcoin {

@@ -62,7 +62,10 @@ export interface MsgApproveTransaction {
   signedKey: string;
 }
 
-export interface MsgApproveTransactionResponse {}
+export interface MsgApproveTransactionResponse {
+  code: string;
+  msg: string;
+}
 
 export interface MsgTranfserPoolcoin {
   creator: string;
@@ -1047,13 +1050,19 @@ export const MsgApproveTransaction = {
   },
 };
 
-const baseMsgApproveTransactionResponse: object = {};
+const baseMsgApproveTransactionResponse: object = { code: "", msg: "" };
 
 export const MsgApproveTransactionResponse = {
   encode(
-    _: MsgApproveTransactionResponse,
+    message: MsgApproveTransactionResponse,
     writer: Writer = Writer.create()
   ): Writer {
+    if (message.code !== "") {
+      writer.uint32(10).string(message.code);
+    }
+    if (message.msg !== "") {
+      writer.uint32(18).string(message.msg);
+    }
     return writer;
   },
 
@@ -1069,6 +1078,12 @@ export const MsgApproveTransactionResponse = {
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
+        case 1:
+          message.code = reader.string();
+          break;
+        case 2:
+          message.msg = reader.string();
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -1077,24 +1092,46 @@ export const MsgApproveTransactionResponse = {
     return message;
   },
 
-  fromJSON(_: any): MsgApproveTransactionResponse {
+  fromJSON(object: any): MsgApproveTransactionResponse {
     const message = {
       ...baseMsgApproveTransactionResponse,
     } as MsgApproveTransactionResponse;
+    if (object.code !== undefined && object.code !== null) {
+      message.code = String(object.code);
+    } else {
+      message.code = "";
+    }
+    if (object.msg !== undefined && object.msg !== null) {
+      message.msg = String(object.msg);
+    } else {
+      message.msg = "";
+    }
     return message;
   },
 
-  toJSON(_: MsgApproveTransactionResponse): unknown {
+  toJSON(message: MsgApproveTransactionResponse): unknown {
     const obj: any = {};
+    message.code !== undefined && (obj.code = message.code);
+    message.msg !== undefined && (obj.msg = message.msg);
     return obj;
   },
 
   fromPartial(
-    _: DeepPartial<MsgApproveTransactionResponse>
+    object: DeepPartial<MsgApproveTransactionResponse>
   ): MsgApproveTransactionResponse {
     const message = {
       ...baseMsgApproveTransactionResponse,
     } as MsgApproveTransactionResponse;
+    if (object.code !== undefined && object.code !== null) {
+      message.code = object.code;
+    } else {
+      message.code = "";
+    }
+    if (object.msg !== undefined && object.msg !== null) {
+      message.msg = object.msg;
+    } else {
+      message.msg = "";
+    }
     return message;
   },
 };

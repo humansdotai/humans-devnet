@@ -51853,6 +51853,11 @@ definitions:
         type: string
   vigorousdeveloper.pochuman.pochuman.MsgApproveTransactionResponse:
     type: object
+    properties:
+      code:
+        type: string
+      msg:
+        type: string
   vigorousdeveloper.pochuman.pochuman.MsgKeysignVoteResponse:
     type: object
     properties:

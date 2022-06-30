@@ -69,7 +69,7 @@ func (k msgServer) RequestTransaction(goCtx context.Context, msg *types.MsgReque
 	}
 
 	// take service fee from the payer
-	fee := sdk.Coins{sdk.NewInt64Coin("uKMA", 1e9)}
+	fee := sdk.Coins{sdk.NewInt64Coin("uHMN", 1e9)}
 	err = k.bankKeeper.SendCoinsFromAccountToModule(ctx, payer, types.ModuleName, fee)
 	if err != nil {
 		return nil, sdkerrors.Wrapf(sdkerrors.ErrInvalidCoins, "invalid coins (%s)", err)
