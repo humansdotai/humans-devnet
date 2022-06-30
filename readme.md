@@ -1,21 +1,24 @@
 # Install Golang:
 
-// Install latest go version https://golang.org/doc/install
+// Install latest 
+go version https://golang.org/doc/install
+
 wget -q -O - https://raw.githubusercontent.com/canha/golang-tools-install-script/master/goinstall.sh | bash -s -- --version 1.18
+
 source ~/.profile
 
 // to verify that Golang installed
 go version
+
 // Should return go version go1.18 linux/amd64
 
 #Running a Validator node
 
-Install the executables
+# Install the executables
 
 sudo rm -rf ~/.poc-human
-make install
 
-clear
+make install
 
 mkdir -p ~/.poc-human/upgrade_manager/upgrades
 
@@ -62,7 +65,8 @@ sed -i 's/stake/uhmn/g' ~/.poc-human/config/genesis.json
 
 # Create the service file "/etc/systemd/system/pochumand.service" with the following content
 sudo nano /etc/systemd/system/pochumand.service
-# paste following content
+
+# Paste following content
 [Unit]
 Description=pochumand
 
