@@ -1,52 +1,122 @@
-# pochuman
-**pochuman** is a blockchain built using Cosmos SDK and Tendermint and created with [Ignite CLI](https://ignite.com/cli).
+Install Golang:
 
-## Get started
+// Install latest go version https://golang.org/doc/install
+wget -q -O - https://raw.githubusercontent.com/canha/golang-tools-install-script/master/goinstall.sh | bash -s -- --version 1.18
+source ~/.profile
 
-```
-ignite chain serve
-```
+// to verify that Golang installed
+go version
+// Should return go version go1.18 linux/amd64
 
-`serve` command installs dependencies, builds, initializes, and starts your blockchain in development.
+Running a Validator node
 
-### Configure
+Install the executables
 
-Your blockchain in development can be configured with `config.yml`. To learn more, see the [Ignite CLI docs](https://docs.ignite.com).
+sudo rm -rf ~/.poc-human
+make install
 
-### Web Frontend
+clear
 
-Ignite CLI has scaffolded a Vue.js-based web app in the `vue` directory. Run the following commands to install dependencies and start the app:
+mkdir -p ~/.poc-human/upgrade_manager/upgrades
+mkdir -p ~/.poc-human/upgrade_manager/genesis/bin
 
-```
-cd vue
-npm install
-npm run serve
-```
+## symlink genesis binary to upgrade
+cp $(which poc-humand) ~/.poc-human/upgrade_manager/genesis/bin
+sudo cp $(which pochumand-manager) /usr/bin
+sudo cp $(which processord) /usr/bin
 
-The frontend app is built using the `@starport/vue` and `@starport/vuex` packages. For details, see the [monorepo for Ignite front-end development](https://github.com/ignite-hq/web).
+# Initialize the validator, where "validator" is a moniker name
+poc-humand init validator --chain-id test
+ 
+# Validator
+# mun17zc58s96rxj79jtqqsnzt3wtx3tern6areu43g
+echo "pet apart myth reflect stuff force attract taste caught fit exact ice slide sheriff state since unusual gaze practice course mesh magnet ozone purchase" | poc-humand keys add validator --keyring-backend test --recover
 
-## Release
-To release a new version of your blockchain, create and push a new tag with `v` prefix. A new draft release with the configured targets will be created.
+# Validator1
+# mun14u53eghrurpeyx5cm47vm3qwugtmhcpnstfx9t
+echo "bottom soccer blue sniff use improve rough use amateur senior transfer quarter" | poc-humand keys add validator1 --keyring-backend test --recover
 
-```
-git tag v0.1
-git push origin v0.1
-```
+# Test 1
+# mun1dfjns5lk748pzrd79z4zp9k22mrchm2a5t2f6u
+echo "betray theory cargo way left cricket doll room donkey wire reunion fall left surprise hamster corn village happy bulb token artist twelve whisper expire" | poc-humand keys add test1 --keyring-backend test --recover
 
-After a draft release is created, make your final changes from the release page and publish it.
+# Add genesis accounts
+poc-humand add-genesis-account $(poc-humand keys show validator -a --keyring-backend test) 90000000000000uhmn
+poc-humand add-genesis-account $(poc-humand keys show validator1 -a --keyring-backend test) 40000000000000uhmn
+poc-humand add-genesis-account $(poc-humand keys show test1 -a --keyring-backend test) 50000000000000uhmn
 
-### Install
-To install the latest version of your blockchain node's binary, execute the following command on your machine:
+# Generate CreateValidator signed transaction
+poc-humand gentx validator 50000000000000uhmn --keyring-backend test --chain-id test
 
-```
-curl https://get.ignite.com/VigorousDeveloper/poc-human@latest! | sudo bash
-```
-`VigorousDeveloper/poc-human` should match the `username` and `repo_name` of the Github repository to which the source code was pushed. Learn more about [the install process](https://github.com/allinbits/starport-installer).
+# Collect genesis transactions
+poc-humand collect-gentxs
 
-## Learn more
+# replace stake to TMUN
+sed -i 's/stake/uhmn/g' ~/.poc-human/config/genesis.json
 
-- [Ignite CLI](https://ignite.com/cli)
-- [Tutorials](https://docs.ignite.com/guide)
-- [Ignite CLI docs](https://docs.ignite.com)
-- [Cosmos SDK docs](https://docs.cosmos.network)
-- [Developer Chat](https://discord.gg/ignite)
+
+# Create the service file "/etc/systemd/system/pochumand.service" with the following content
+sudo nano /etc/systemd/system/pochumand.service
+# paste following content
+[Unit]
+Description=pochumand
+Requires=network-online.target
+After=network-online.target
+
+[Service]
+Restart=on-failure
+RestartSec=3
+User=venus
+Group=venus
+Environment=DAEMON_NAME=poc-humand
+Environment=DAEMON_HOME=/home/venus/.poc-human
+Environment=DAEMON_ALLOW_DOWNLOAD_BINARIES=on
+Environment=DAEMON_RESTART_AFTER_UPGRADE=on
+PermissionsStartOnly=true
+ExecStart=/usr/bin/pochumand-manager start --pruning="nothing" --rpc.laddr "tcp://0.0.0.0:26657"
+StandardOutput=file:/var/log/poc-humand/poc-humand.log
+StandardError=file:/var/log/poc-humand/poc-humand_error.log
+ExecReload=/bin/kill -HUP $MAINPID
+KillSignal=SIGTERM
+LimitNOFILE=4096
+
+[Install]
+WantedBy=multi-user.target
+
+# Create the service file "/etc/systemd/system/processord.service" with the following content
+sudo nano /etc/systemd/system/processord.service
+# paste following content
+[Unit]
+Description=processord
+Requires=network-online.target
+After=network-online.target
+
+[Service]
+Restart=on-failure
+RestartSec=3
+User=venus
+Group=venus
+Environment=DAEMON_NAME=processord
+Environment=DAEMON_HOME=/home/venus/.poc-human
+PermissionsStartOnly=true
+ExecStart=/usr/bin/processord start validator
+StandardOutput=file:/var/log/processord/processord.log
+StandardError=file:/var/log/processord/processord_error.log
+ExecReload=/bin/kill -HUP $MAINPID
+KillSignal=SIGTERM
+LimitNOFILE=4096
+
+[Install]
+WantedBy=multi-user.target
+
+
+# Create log files for loand
+make log-files
+
+sudo systemctl enable pochumand
+sudo systemctl enable processord
+sudo systemctl start pochumand
+sudo systemctl start processord
+
+sudo systemctl status pochumand
+sudo systemctl status processord
