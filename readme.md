@@ -34,16 +34,16 @@ sudo cp $(which processord) /usr/bin
 # Initialize the validator, where "validator" is a moniker name
 poc-humand init validator --chain-id test
  
-# Validator
-# mun17zc58s96rxj79jtqqsnzt3wtx3tern6areu43g
+## Validator
+## mun17zc58s96rxj79jtqqsnzt3wtx3tern6areu43g
 echo "pet apart myth reflect stuff force attract taste caught fit exact ice slide sheriff state since unusual gaze practice course mesh magnet ozone purchase" | poc-humand keys add validator --keyring-backend test --recover
 
 # Validator1
 # mun14u53eghrurpeyx5cm47vm3qwugtmhcpnstfx9t
 echo "bottom soccer blue sniff use improve rough use amateur senior transfer quarter" | poc-humand keys add validator1 --keyring-backend test --recover
 
-# Test 1
-# mun1dfjns5lk748pzrd79z4zp9k22mrchm2a5t2f6u
+## Test 1
+## mun1dfjns5lk748pzrd79z4zp9k22mrchm2a5t2f6u
 echo "betray theory cargo way left cricket doll room donkey wire reunion fall left surprise hamster corn village happy bulb token artist twelve whisper expire" | poc-humand keys add test1 --keyring-backend test --recover
 
 # Add genesis accounts
