@@ -24,7 +24,7 @@ mkdir -p ~/.poc-human/upgrade_manager/upgrades
 
 mkdir -p ~/.poc-human/upgrade_manager/genesis/bin
 
-# symlink genesis binary to upgrade
+# Symlink genesis binary to upgrade
 cp $(which poc-humand) ~/.poc-human/upgrade_manager/genesis/bin
 
 sudo cp $(which pochumand-manager) /usr/bin
@@ -38,8 +38,8 @@ poc-humand init validator --chain-id test
 ## mun17zc58s96rxj79jtqqsnzt3wtx3tern6areu43g
 echo "pet apart myth reflect stuff force attract taste caught fit exact ice slide sheriff state since unusual gaze practice course mesh magnet ozone purchase" | poc-humand keys add validator --keyring-backend test --recover
 
-# Validator1
-# mun14u53eghrurpeyx5cm47vm3qwugtmhcpnstfx9t
+## Validator1
+## mun14u53eghrurpeyx5cm47vm3qwugtmhcpnstfx9t
 echo "bottom soccer blue sniff use improve rough use amateur senior transfer quarter" | poc-humand keys add validator1 --keyring-backend test --recover
 
 ## Test 1
