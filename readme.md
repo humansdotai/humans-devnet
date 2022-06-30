@@ -150,8 +150,11 @@ WantedBy=multi-user.target
 make log-files
 
 sudo systemctl enable pochumand
+
 sudo systemctl enable processord
+
 sudo systemctl start pochumand
+
 sudo systemctl start processord
 
 sudo systemctl status pochumand
