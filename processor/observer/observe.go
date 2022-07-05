@@ -40,6 +40,9 @@ type Observer struct {
 
 	EthSocketErr chan bool
 	HmSocketErr  chan bool
+
+	EthTxHasVoted []string
+	HumTxHasVoted []string
 }
 
 const (
@@ -84,6 +87,8 @@ func NewObserver(chainBridge *diverclient.HumanChainBridge, dataPath string) (*O
 		ArrMsgObservationVote: make([]*types.MsgObservationVote, 0),
 		EthSocketErr:          make(chan bool),
 		HmSocketErr:           make(chan bool),
+		EthTxHasVoted:         make([]string, 0),
+		HumTxHasVoted:         make([]string, 0),
 	}, nil
 }
 

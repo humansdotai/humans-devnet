@@ -48,11 +48,14 @@ func (o *Observer) HumanTransferTokenToTarget(txdata *types.TransactionData, mon
 	famt -= amtFee
 
 	// String conv
-	amt := fmt.Sprintf("%fuHMN", famt*1e9)
+	amt := fmt.Sprintf("%duhmn", (int64)(famt*1e9))
 
 	// Construct a message to be broadcasted
 	msg := types.NewMsgTranfserPoolcoin(creator, txdata.TargetAddress, amt)
 	o.ArrMsgTranfserPoolcoin = append(o.ArrMsgTranfserPoolcoin, msg)
+
+	// Send true to HumanPoolchange channel
+	o.HmPoolChanged <- true
 
 	return true
 }
@@ -96,13 +99,20 @@ func (o *Observer) HumanParseLog(txs map[string][]string) {
 	if len(msgActions) < 1 {
 		return
 	}
+
 	msgAction := msgActions[0]
 	if msgAction != "/cosmos.bank.v1beta1.MsgSend" {
 		return
 	}
 
+	// hash
+	txHash := txs["tx.hash"][0]
+	if o.continsHash(o.HumTxHasVoted, txHash) {
+		return
+	}
+
 	sender := txs["coin_spent.spender"][0]
-	receiver := txs["coin_received.receiver"][0]
+	receiver := txs["coin_received.receiver"][1]
 
 	if sender == types.Humanchain_Pool_Address {
 		// Send true to HmPoolchange channel
@@ -114,16 +124,15 @@ func (o *Observer) HumanParseLog(txs map[string][]string) {
 		return
 	}
 
-	// hash
-	txHash := txs["tx.hash"][0]
-
 	// amt
-	amt := txs["transfer.amount"][0]
+	amt := txs["transfer.amount"][1]
 	amt = amt[:len(amt)-4]
 
 	// convert uHMN to HMN
 	famt, _ := strconv.ParseFloat(amt, 64)
 	amount := fmt.Sprintf("%f", famt/1e9)
+
+	o.HumTxHasVoted = append(o.HumTxHasVoted, txHash)
 
 	_, voter := o.HumanChainBridge.GetVoterInfo()
 	msg := types.NewMsgObservationVote(voter, txHash, types.CHAIN_HUMAN, sender, receiver, amount)

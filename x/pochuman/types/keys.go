@@ -50,12 +50,12 @@ const (
 	MAIN_VALIDATOR_MONIKER = "validator"
 
 	// Human Chain
-	Humanchain_Pool_Address = "human1dfjns5lk748pzrd79z4zp9k22mrchm2axtg8at"
+	Humanchain_Pool_Address = "human14u53eghrurpeyx5cm47vm3qwugtmhcpnvc5wur"
 )
 
 const (
 	VOTE_DIFF        = 60 * 5 // 5 min
-	VALID_CNT_SIGNER = 3      // should be 2-3 if it's 4 nodes
+	VALID_CNT_SIGNER = 1      // should be 2-3 if it's 4 nodes
 )
 
 var (

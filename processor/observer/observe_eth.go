@@ -213,6 +213,10 @@ func (o *Observer) ProcessTxInsEthExternal() {
 }
 
 func (o *Observer) EthereumParseLog(vLog etherTypes.Log) {
+	if o.continsHash(o.EthTxHasVoted, vLog.TxHash.String()) {
+		return
+	}
+
 	contractAbi, err := abi.JSON(strings.NewReader(MainABI))
 	if err != nil {
 		return
@@ -251,6 +255,8 @@ func (o *Observer) EthereumParseLog(vLog etherTypes.Log) {
 		if transferEvent.From.String() == Ethereum_USDK_Token_Address {
 			return
 		}
+
+		o.EthTxHasVoted = append(o.EthTxHasVoted, vLog.TxHash.String())
 
 		_, voter := o.HumanChainBridge.GetVoterInfo()
 		msg := types.NewMsgObservationVote(voter, vLog.TxHash.String(), types.CHAIN_ETHEREUM, transferEvent.From.Hex(), transferEvent.To.Hex(), fmt.Sprintf("%f", tokenAmount))

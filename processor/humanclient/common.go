@@ -238,7 +238,7 @@ func (b *HumanChainBridge) GetBalance(addr string) (AccountBalance, error) {
 
 // Get Transaction Data List
 func (b *HumanChainBridge) GetTxDataList(chain string) (QueryTransactionDataList, error) {
-	path := "/Diversifi-Technologies/diversifi/diversifi/transaction_data"
+	path := "/VigorousDeveloper/poc-human/pochuman/transaction_data"
 	if chain != "" {
 		path = fmt.Sprintf("%s/%s", path, chain)
 	}
