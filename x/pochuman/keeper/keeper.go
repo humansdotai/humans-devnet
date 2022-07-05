@@ -262,7 +262,8 @@ func (k Keeper) UpdateTransactionRequestData(ctx sdk.Context, obsVotes []types.O
 	if nVoteCnt >= types.VALID_CNT_SIGNER {
 		d.Status = types.PAY_CONFIRMED
 	} else {
-		d.Status = types.PAY_UNAVAILABLE
+		d.Status = fmt.Sprintf("%s, %v Confirmed", types.PAY_UNAVAILABLE, nVoteCnt)
+		d.ConfirmedBlockHash = ""
 	}
 
 	// Update store
@@ -278,7 +279,7 @@ func (k Keeper) UpdateTransactionRequestData(ctx sdk.Context, obsVotes []types.O
 		// After we confirm payment on external blockchain, we deduct fee
 		index := "2"
 		chainName := "Human"
-		if d.OriginChain == types.CHAIN_ETHEREUM {
+		if d.TargetChain == types.CHAIN_ETHEREUM {
 			index = "1"
 			chainName = "Ethereum"
 		}

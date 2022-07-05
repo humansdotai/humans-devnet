@@ -62,19 +62,6 @@ func (k msgServer) RequestTransaction(goCtx context.Context, msg *types.MsgReque
 		}
 	}
 
-	// Convert player address strings to sdk.AccAddress
-	payer, err := sdk.AccAddressFromBech32(msg.Creator)
-	if err != nil {
-		return nil, sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid creator address (%s)", err)
-	}
-
-	// take service fee from the payer
-	fee := sdk.Coins{sdk.NewInt64Coin("uHMN", 1e9)}
-	err = k.bankKeeper.SendCoinsFromAccountToModule(ctx, payer, types.ModuleName, fee)
-	if err != nil {
-		return nil, sdkerrors.Wrapf(sdkerrors.ErrInvalidCoins, "invalid coins (%s)", err)
-	}
-
 	n := k.GetReqTransactionStoreCount(ctx)
 	index := fmt.Sprintf("%d", n+1)
 

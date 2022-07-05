@@ -111,5 +111,4 @@ proto-check-breaking:
 
 # Create log files
 log-files:
-	sudo mkdir -p /var/log/diversifid && sudo touch /var/log/diversifid/diversifid.log && sudo touch /var/log/diversifid/diversifid_error.log
-	sudo mkdir -p /var/log/processord && sudo touch /var/log/processord/processord.log && sudo touch /var/log/processord/processord_error.log
+	sudo mkdir -p /var/log/poc-humand && sudo touch /var/log/poc-humand/poc-humand.log && sudo touch /var/log/poc-humand/poc-humand_error.log

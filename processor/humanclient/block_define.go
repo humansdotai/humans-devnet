@@ -10,8 +10,8 @@ type AccountResp struct {
 
 type AccountBalance struct {
 	Balances []struct {
-		Denom  string  `json:"denom"`
-		Amount float64 `json:"amount"`
+		Denom  string `json:"denom"`
+		Amount string `json:"amount"`
 	} `json:"balances"`
 }
 

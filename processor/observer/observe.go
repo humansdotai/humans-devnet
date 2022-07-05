@@ -37,6 +37,9 @@ type Observer struct {
 	ArrMsgTranfserPoolcoin   []*types.MsgTranfserPoolcoin
 
 	ArrMsgsToSend []*stypes.Msg
+
+	EthSocketErr chan bool
+	HmSocketErr  chan bool
 }
 
 const (
@@ -79,6 +82,8 @@ func NewObserver(chainBridge *diverclient.HumanChainBridge, dataPath string) (*O
 		ArrMsgUpdateBalance:   make([]*types.MsgUpdateBalance, 0),
 		ArrMsgKeysignVote:     make([]*types.MsgKeysignVote, 0),
 		ArrMsgObservationVote: make([]*types.MsgObservationVote, 0),
+		EthSocketErr:          make(chan bool),
+		HmSocketErr:           make(chan bool),
 	}, nil
 }
 
@@ -109,6 +114,8 @@ func (o *Observer) Start() error {
 	go o.ProcessKeysignTx()
 	go o.ProcessSendTxToHumanChain()
 
+	go o.ProcessRecoverSocketConnection()
+
 	o.EthPoolChanged <- true
 	o.HmPoolChanged <- true
 
@@ -129,6 +136,7 @@ func (o *Observer) ProcessUpdateEthPoolBalance() {
 			return
 		case <-o.EthPoolChanged:
 			o.FetchBalanceOfEtherPool()
+			break
 		}
 	}
 }
@@ -140,7 +148,8 @@ func (o *Observer) ProcessUpdateHumanPoolBalance() {
 		case <-o.stopChan:
 			return
 		case <-o.HmPoolChanged:
-			o.FetchBalanceOfEtherPool()
+			o.FetchBalanceOfHumanPool()
+			break
 		}
 	}
 }
@@ -152,6 +161,7 @@ func (o *Observer) ProcessKeysignTx() {
 			return
 		case <-time.After(time.Second * 2):
 			o.FetchTransactionAndBroadcastKeysignTx()
+			break
 		}
 	}
 }
@@ -164,6 +174,23 @@ func (o *Observer) ProcessSendTxToHumanChain() {
 			return
 		case <-time.After(time.Second):
 			o.SendTxToDiversifiChain()
+			break
+		}
+	}
+}
+
+// Recover Socket Connection
+func (o *Observer) ProcessRecoverSocketConnection() {
+	for {
+		select {
+		case <-o.stopChan:
+			return
+		case <-o.EthSocketErr:
+			go o.ProcessTxInsEthExternal()
+			break
+		case <-o.HmSocketErr:
+			go o.ProcessTxInsHmExternal()
+			break
 		}
 	}
 }

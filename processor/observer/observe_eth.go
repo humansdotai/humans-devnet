@@ -204,6 +204,8 @@ func (o *Observer) ProcessTxInsEthExternal() {
 			return
 		case <-sub.Err():
 			time.Sleep(time.Second * 5)
+			o.EthSocketErr <- true
+			return
 		case vLog := <-logs:
 			o.EthereumParseLog(vLog)
 		}

@@ -19,8 +19,10 @@ func (o *Observer) FetchBalanceOfHumanPool() bool {
 
 	_, voter := o.HumanChainBridge.GetVoterInfo()
 
+	famt, _ := strconv.ParseFloat(accBalance.Balances[0].Amount, 64)
+
 	// Constrcut msg to be broadcasted
-	msg := types.NewMsgUpdateBalance(voter, types.CHAIN_HUMAN, fmt.Sprintf("%f", accBalance.Balances[0].Amount/1e9), fmt.Sprintf("%v", 9))
+	msg := types.NewMsgUpdateBalance(voter, types.CHAIN_HUMAN, fmt.Sprintf("%f", famt/1e9), fmt.Sprintf("%v", 9))
 	o.ArrMsgUpdateBalance = append(o.ArrMsgUpdateBalance, msg)
 
 	return true
@@ -71,6 +73,8 @@ func (o *Observer) ProcessTxInsHmExternal() {
 	query := "tm.event = 'Tx'"
 	txs, err := ctx.Client.Subscribe(ctx0, "test-client", query)
 	if err != nil {
+		time.Sleep(time.Second * 5)
+		o.HmSocketErr <- true
 		return
 	}
 

@@ -50,7 +50,7 @@ const (
 	MAIN_VALIDATOR_MONIKER = "validator"
 
 	// Human Chain
-	Humanchain_Pool_Address = "human17zc58s96rxj79jtqqsnzt3wtx3tern6al2pagq"
+	Humanchain_Pool_Address = "human1dfjns5lk748pzrd79z4zp9k22mrchm2axtg8at"
 )
 
 const (
