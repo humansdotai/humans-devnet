@@ -71,7 +71,7 @@ poc-humand gentx validator 50000000000000uhmn --keyring-backend test --chain-id 
 poc-humand collect-gentxs
 ```
 
-## replace stake to TMUN
+## replace stake to uhmn
 
 ```
 sed -i 's/stake/uhmn/g' ~/.poc-human/config/genesis.json
