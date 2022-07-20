@@ -19,7 +19,7 @@ import (
 var _ = strconv.IntSize
 
 func TestKeysignVoteDataQuerySingle(t *testing.T) {
-	keeper, ctx := keepertest.PochumanKeeper(t)
+	keeper, ctx := keepertest.HumansKeeper(t)
 	wctx := sdk.WrapSDKContext(ctx)
 	msgs := createNKeysignVoteData(keeper, ctx, 2)
 	for _, tc := range []struct {
@@ -70,7 +70,7 @@ func TestKeysignVoteDataQuerySingle(t *testing.T) {
 }
 
 func TestKeysignVoteDataQueryPaginated(t *testing.T) {
-	keeper, ctx := keepertest.PochumanKeeper(t)
+	keeper, ctx := keepertest.HumansKeeper(t)
 	wctx := sdk.WrapSDKContext(ctx)
 	msgs := createNKeysignVoteData(keeper, ctx, 5)
 

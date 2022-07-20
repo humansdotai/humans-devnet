@@ -26,7 +26,7 @@ func createNTransactionData(keeper *keeper.Keeper, ctx sdk.Context, n int) []typ
 }
 
 func TestTransactionDataGet(t *testing.T) {
-	keeper, ctx := keepertest.PochumanKeeper(t)
+	keeper, ctx := keepertest.HumansKeeper(t)
 	items := createNTransactionData(keeper, ctx, 10)
 	for _, item := range items {
 		rst, found := keeper.GetTransactionData(ctx,
@@ -40,7 +40,7 @@ func TestTransactionDataGet(t *testing.T) {
 	}
 }
 func TestTransactionDataRemove(t *testing.T) {
-	keeper, ctx := keepertest.PochumanKeeper(t)
+	keeper, ctx := keepertest.HumansKeeper(t)
 	items := createNTransactionData(keeper, ctx, 10)
 	for _, item := range items {
 		keeper.RemoveTransactionData(ctx,
@@ -54,7 +54,7 @@ func TestTransactionDataRemove(t *testing.T) {
 }
 
 func TestTransactionDataGetAll(t *testing.T) {
-	keeper, ctx := keepertest.PochumanKeeper(t)
+	keeper, ctx := keepertest.HumansKeeper(t)
 	items := createNTransactionData(keeper, ctx, 10)
 	require.ElementsMatch(t,
 		nullify.Fill(items),

@@ -26,7 +26,7 @@ func createNObserveVote(keeper *keeper.Keeper, ctx sdk.Context, n int) []types.O
 }
 
 func TestObserveVoteGet(t *testing.T) {
-	keeper, ctx := keepertest.PochumanKeeper(t)
+	keeper, ctx := keepertest.HumansKeeper(t)
 	items := createNObserveVote(keeper, ctx, 10)
 	for _, item := range items {
 		rst, found := keeper.GetObserveVote(ctx,
@@ -40,7 +40,7 @@ func TestObserveVoteGet(t *testing.T) {
 	}
 }
 func TestObserveVoteRemove(t *testing.T) {
-	keeper, ctx := keepertest.PochumanKeeper(t)
+	keeper, ctx := keepertest.HumansKeeper(t)
 	items := createNObserveVote(keeper, ctx, 10)
 	for _, item := range items {
 		keeper.RemoveObserveVote(ctx,
@@ -54,7 +54,7 @@ func TestObserveVoteRemove(t *testing.T) {
 }
 
 func TestObserveVoteGetAll(t *testing.T) {
-	keeper, ctx := keepertest.PochumanKeeper(t)
+	keeper, ctx := keepertest.HumansKeeper(t)
 	items := createNObserveVote(keeper, ctx, 10)
 	require.ElementsMatch(t,
 		nullify.Fill(items),

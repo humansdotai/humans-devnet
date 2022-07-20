@@ -32,7 +32,7 @@ mkdir -p ~/.humans/upgrade_manager/genesis/bin
 
 ```
 cp $(which humansd) ~/.humans/upgrade_manager/genesis/bin
-sudo cp $(which pochumand-manager) /usr/bin
+sudo cp $(which humansd-manager) /usr/bin
 sudo cp $(which processord) /usr/bin
 ```
 
@@ -56,14 +56,14 @@ echo "betray theory cargo way left cricket doll room donkey wire reunion fall le
 ## Add genesis accounts
 
 ```
-humansd add-genesis-account $(humansd keys show validator -a --keyring-backend test) 90000000000000uhmn
-humansd add-genesis-account $(humansd keys show validator1 -a --keyring-backend test) 40000000000000uhmn
-humansd add-genesis-account $(humansd keys show test1 -a --keyring-backend test) 50000000000000uhmn
+humansd add-genesis-account $(humansd keys show validator -a --keyring-backend test) 90000000000000uheart
+humansd add-genesis-account $(humansd keys show validator1 -a --keyring-backend test) 40000000000000uheart
+humansd add-genesis-account $(humansd keys show test1 -a --keyring-backend test) 50000000000000uheart
 ```
 
 ## Generate CreateValidator signed transaction
 ```
-humansd gentx validator 50000000000000uhmn --keyring-backend test --chain-id test
+humansd gentx validator 50000000000000uheart --keyring-backend test --chain-id test
 ```
 
 ## Collect genesis transactions
@@ -71,20 +71,20 @@ humansd gentx validator 50000000000000uhmn --keyring-backend test --chain-id tes
 humansd collect-gentxs
 ```
 
-## replace stake to uhmn
+## replace stake to uheart
 
 ```
-sed -i 's/stake/uhmn/g' ~/.humans/config/genesis.json
+sed -i 's/stake/uheart/g' ~/.humans/config/genesis.json
 ```
 
-## Create the service file "/etc/systemd/system/pochumand.service" with the following content
+## Create the service file "/etc/systemd/system/humansd.service" with the following content
 ```
-sudo nano /etc/systemd/system/pochumand.service
+sudo nano /etc/systemd/system/humansd.service
 
 ## Paste following content
 
 [Unit]
-Description=pochumand
+Description=humansd
 
 Requires=network-online.target
 
@@ -109,7 +109,7 @@ Environment=DAEMON_RESTART_AFTER_UPGRADE=on
 
 PermissionsStartOnly=true
 
-ExecStart=/usr/bin/pochumand-manager start --pruning="nothing" --rpc.laddr "tcp://0.0.0.0:26657"
+ExecStart=/usr/bin/humansd-manager start --pruning="nothing" --rpc.laddr "tcp://0.0.0.0:26657"
 
 StandardOutput=file:/var/log/humansd/humansd.log
 
@@ -131,11 +131,11 @@ WantedBy=multi-user.target
 ```
 make log-files
 
-sudo systemctl enable pochumand
+sudo systemctl enable humansd
 sudo systemctl enable processord
-sudo systemctl start pochumand
+sudo systemctl start humansd
 sudo systemctl start processord
 
-sudo systemctl status pochumand
+sudo systemctl status humansd
 sudo systemctl status processord
 ```

@@ -4,7 +4,7 @@ import (
 	"math/rand"
 
 	"github.com/VigorousDeveloper/humans/testutil/sample"
-	pochumansimulation "github.com/VigorousDeveloper/humans/x/humans/simulation"
+	humanssimulation "github.com/VigorousDeveloper/humans/x/humans/simulation"
 	"github.com/VigorousDeveloper/humans/x/humans/types"
 	"github.com/cosmos/cosmos-sdk/baseapp"
 	simappparams "github.com/cosmos/cosmos-sdk/simapp/params"
@@ -17,7 +17,7 @@ import (
 // avoid unused import issue
 var (
 	_ = sample.AccAddress
-	_ = pochumansimulation.FindAccount
+	_ = humanssimulation.FindAccount
 	_ = simappparams.StakePerAccount
 	_ = simulation.MsgEntryKind
 	_ = baseapp.Paramspace
@@ -57,11 +57,11 @@ func (AppModule) GenerateGenesisState(simState *module.SimulationState) {
 	for i, acc := range simState.Accounts {
 		accs[i] = acc.Address.String()
 	}
-	pochumanGenesis := types.GenesisState{
+	humansGenesis := types.GenesisState{
 		Params: types.DefaultParams(),
 		// this line is used by starport scaffolding # simapp/module/genesisState
 	}
-	simState.GenState[types.ModuleName] = simState.Cdc.MustMarshalJSON(&pochumanGenesis)
+	simState.GenState[types.ModuleName] = simState.Cdc.MustMarshalJSON(&humansGenesis)
 }
 
 // ProposalContents doesn't return any content functions for governance proposals
@@ -90,7 +90,7 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 	)
 	operations = append(operations, simulation.NewWeightedOperation(
 		weightMsgRequestTransaction,
-		pochumansimulation.SimulateMsgRequestTransaction(am.accountKeeper, am.bankKeeper, am.keeper),
+		humanssimulation.SimulateMsgRequestTransaction(am.accountKeeper, am.bankKeeper, am.keeper),
 	))
 
 	var weightMsgObservationVote int
@@ -101,7 +101,7 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 	)
 	operations = append(operations, simulation.NewWeightedOperation(
 		weightMsgObservationVote,
-		pochumansimulation.SimulateMsgObservationVote(am.accountKeeper, am.bankKeeper, am.keeper),
+		humanssimulation.SimulateMsgObservationVote(am.accountKeeper, am.bankKeeper, am.keeper),
 	))
 
 	var weightMsgUpdateBalance int
@@ -112,7 +112,7 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 	)
 	operations = append(operations, simulation.NewWeightedOperation(
 		weightMsgUpdateBalance,
-		pochumansimulation.SimulateMsgUpdateBalance(am.accountKeeper, am.bankKeeper, am.keeper),
+		humanssimulation.SimulateMsgUpdateBalance(am.accountKeeper, am.bankKeeper, am.keeper),
 	))
 
 	var weightMsgKeysignVote int
@@ -123,7 +123,7 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 	)
 	operations = append(operations, simulation.NewWeightedOperation(
 		weightMsgKeysignVote,
-		pochumansimulation.SimulateMsgKeysignVote(am.accountKeeper, am.bankKeeper, am.keeper),
+		humanssimulation.SimulateMsgKeysignVote(am.accountKeeper, am.bankKeeper, am.keeper),
 	))
 
 	var weightMsgApproveTransaction int
@@ -134,7 +134,7 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 	)
 	operations = append(operations, simulation.NewWeightedOperation(
 		weightMsgApproveTransaction,
-		pochumansimulation.SimulateMsgApproveTransaction(am.accountKeeper, am.bankKeeper, am.keeper),
+		humanssimulation.SimulateMsgApproveTransaction(am.accountKeeper, am.bankKeeper, am.keeper),
 	))
 
 	var weightMsgTranfserPoolcoin int
@@ -145,7 +145,7 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 	)
 	operations = append(operations, simulation.NewWeightedOperation(
 		weightMsgTranfserPoolcoin,
-		pochumansimulation.SimulateMsgTranfserPoolcoin(am.accountKeeper, am.bankKeeper, am.keeper),
+		humanssimulation.SimulateMsgTranfserPoolcoin(am.accountKeeper, am.bankKeeper, am.keeper),
 	))
 
 	// this line is used by starport scaffolding # simapp/module/operation

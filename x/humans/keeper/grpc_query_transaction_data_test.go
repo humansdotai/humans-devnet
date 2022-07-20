@@ -19,7 +19,7 @@ import (
 var _ = strconv.IntSize
 
 func TestTransactionDataQuerySingle(t *testing.T) {
-	keeper, ctx := keepertest.PochumanKeeper(t)
+	keeper, ctx := keepertest.HumansKeeper(t)
 	wctx := sdk.WrapSDKContext(ctx)
 	msgs := createNTransactionData(keeper, ctx, 2)
 	for _, tc := range []struct {
@@ -70,7 +70,7 @@ func TestTransactionDataQuerySingle(t *testing.T) {
 }
 
 func TestTransactionDataQueryPaginated(t *testing.T) {
-	keeper, ctx := keepertest.PochumanKeeper(t)
+	keeper, ctx := keepertest.HumansKeeper(t)
 	wctx := sdk.WrapSDKContext(ctx)
 	msgs := createNTransactionData(keeper, ctx, 5)
 

@@ -17,7 +17,7 @@ import (
 	tmdb "github.com/tendermint/tm-db"
 )
 
-func PochumanKeeper(t testing.TB) (*keeper.Keeper, sdk.Context) {
+func HumansKeeper(t testing.TB) (*keeper.Keeper, sdk.Context) {
 	storeKey := sdk.NewKVStoreKey(types.StoreKey)
 	memStoreKey := storetypes.NewMemoryStoreKey(types.MemStoreKey)
 
@@ -34,7 +34,7 @@ func PochumanKeeper(t testing.TB) (*keeper.Keeper, sdk.Context) {
 		types.Amino,
 		storeKey,
 		memStoreKey,
-		"PochumanParams",
+		"HumansParams",
 	)
 	k := keeper.NewKeeper(
 		cdc,

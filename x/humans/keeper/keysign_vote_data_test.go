@@ -26,7 +26,7 @@ func createNKeysignVoteData(keeper *keeper.Keeper, ctx sdk.Context, n int) []typ
 }
 
 func TestKeysignVoteDataGet(t *testing.T) {
-	keeper, ctx := keepertest.PochumanKeeper(t)
+	keeper, ctx := keepertest.HumansKeeper(t)
 	items := createNKeysignVoteData(keeper, ctx, 10)
 	for _, item := range items {
 		rst, found := keeper.GetKeysignVoteData(ctx,
@@ -40,7 +40,7 @@ func TestKeysignVoteDataGet(t *testing.T) {
 	}
 }
 func TestKeysignVoteDataRemove(t *testing.T) {
-	keeper, ctx := keepertest.PochumanKeeper(t)
+	keeper, ctx := keepertest.HumansKeeper(t)
 	items := createNKeysignVoteData(keeper, ctx, 10)
 	for _, item := range items {
 		keeper.RemoveKeysignVoteData(ctx,
@@ -54,7 +54,7 @@ func TestKeysignVoteDataRemove(t *testing.T) {
 }
 
 func TestKeysignVoteDataGetAll(t *testing.T) {
-	keeper, ctx := keepertest.PochumanKeeper(t)
+	keeper, ctx := keepertest.HumansKeeper(t)
 	items := createNKeysignVoteData(keeper, ctx, 10)
 	require.ElementsMatch(t,
 		nullify.Fill(items),

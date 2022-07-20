@@ -19,7 +19,7 @@ import (
 var _ = strconv.IntSize
 
 func TestPoolBalanceQuerySingle(t *testing.T) {
-	keeper, ctx := keepertest.PochumanKeeper(t)
+	keeper, ctx := keepertest.HumansKeeper(t)
 	wctx := sdk.WrapSDKContext(ctx)
 	msgs := createNPoolBalance(keeper, ctx, 2)
 	for _, tc := range []struct {
@@ -70,7 +70,7 @@ func TestPoolBalanceQuerySingle(t *testing.T) {
 }
 
 func TestPoolBalanceQueryPaginated(t *testing.T) {
-	keeper, ctx := keepertest.PochumanKeeper(t)
+	keeper, ctx := keepertest.HumansKeeper(t)
 	wctx := sdk.WrapSDKContext(ctx)
 	msgs := createNPoolBalance(keeper, ctx, 5)
 

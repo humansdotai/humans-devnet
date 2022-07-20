@@ -26,7 +26,7 @@ func createNPoolBalance(keeper *keeper.Keeper, ctx sdk.Context, n int) []types.P
 }
 
 func TestPoolBalanceGet(t *testing.T) {
-	keeper, ctx := keepertest.PochumanKeeper(t)
+	keeper, ctx := keepertest.HumansKeeper(t)
 	items := createNPoolBalance(keeper, ctx, 10)
 	for _, item := range items {
 		rst, found := keeper.GetPoolBalance(ctx,
@@ -40,7 +40,7 @@ func TestPoolBalanceGet(t *testing.T) {
 	}
 }
 func TestPoolBalanceRemove(t *testing.T) {
-	keeper, ctx := keepertest.PochumanKeeper(t)
+	keeper, ctx := keepertest.HumansKeeper(t)
 	items := createNPoolBalance(keeper, ctx, 10)
 	for _, item := range items {
 		keeper.RemovePoolBalance(ctx,
@@ -54,7 +54,7 @@ func TestPoolBalanceRemove(t *testing.T) {
 }
 
 func TestPoolBalanceGetAll(t *testing.T) {
-	keeper, ctx := keepertest.PochumanKeeper(t)
+	keeper, ctx := keepertest.HumansKeeper(t)
 	items := createNPoolBalance(keeper, ctx, 10)
 	require.ElementsMatch(t,
 		nullify.Fill(items),

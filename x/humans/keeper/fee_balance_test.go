@@ -26,7 +26,7 @@ func createNFeeBalance(keeper *keeper.Keeper, ctx sdk.Context, n int) []types.Fe
 }
 
 func TestFeeBalanceGet(t *testing.T) {
-	keeper, ctx := keepertest.PochumanKeeper(t)
+	keeper, ctx := keepertest.HumansKeeper(t)
 	items := createNFeeBalance(keeper, ctx, 10)
 	for _, item := range items {
 		rst, found := keeper.GetFeeBalance(ctx,
@@ -40,7 +40,7 @@ func TestFeeBalanceGet(t *testing.T) {
 	}
 }
 func TestFeeBalanceRemove(t *testing.T) {
-	keeper, ctx := keepertest.PochumanKeeper(t)
+	keeper, ctx := keepertest.HumansKeeper(t)
 	items := createNFeeBalance(keeper, ctx, 10)
 	for _, item := range items {
 		keeper.RemoveFeeBalance(ctx,
@@ -54,7 +54,7 @@ func TestFeeBalanceRemove(t *testing.T) {
 }
 
 func TestFeeBalanceGetAll(t *testing.T) {
-	keeper, ctx := keepertest.PochumanKeeper(t)
+	keeper, ctx := keepertest.HumansKeeper(t)
 	items := createNFeeBalance(keeper, ctx, 10)
 	require.ElementsMatch(t,
 		nullify.Fill(items),

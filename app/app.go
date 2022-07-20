@@ -96,9 +96,9 @@ import (
 	monitoringptypes "github.com/tendermint/spn/x/monitoringp/types"
 
 	"github.com/VigorousDeveloper/humans/docs"
-	pochumanmodule "github.com/VigorousDeveloper/humans/x/humans"
-	pochumanmodulekeeper "github.com/VigorousDeveloper/humans/x/humans/keeper"
-	pochumanmoduletypes "github.com/VigorousDeveloper/humans/x/humans/types"
+	humansmodule "github.com/VigorousDeveloper/humans/x/humans"
+	humansmodulekeeper "github.com/VigorousDeveloper/humans/x/humans/keeper"
+	humansmoduletypes "github.com/VigorousDeveloper/humans/x/humans/types"
 
 	"github.com/VigorousDeveloper/humans/x/mint"
 	mintkeeper "github.com/VigorousDeveloper/humans/x/mint/keeper"
@@ -157,7 +157,7 @@ var (
 		transfer.AppModuleBasic{},
 		vesting.AppModuleBasic{},
 		monitoringp.AppModuleBasic{},
-		pochumanmodule.AppModuleBasic{},
+		humansmodule.AppModuleBasic{},
 		// this line is used by starport scaffolding # stargate/app/moduleBasic
 	)
 
@@ -170,7 +170,7 @@ var (
 		stakingtypes.NotBondedPoolName: {authtypes.Burner, authtypes.Staking},
 		govtypes.ModuleName:            {authtypes.Burner},
 		ibctransfertypes.ModuleName:    {authtypes.Minter, authtypes.Burner},
-		pochumanmoduletypes.ModuleName: {authtypes.Minter, authtypes.Burner, authtypes.Staking},
+		humansmoduletypes.ModuleName:   {authtypes.Minter, authtypes.Burner, authtypes.Staking},
 		// this line is used by starport scaffolding # stargate/app/maccPerms
 	}
 )
@@ -232,7 +232,7 @@ type App struct {
 	ScopedTransferKeeper   capabilitykeeper.ScopedKeeper
 	ScopedMonitoringKeeper capabilitykeeper.ScopedKeeper
 
-	PochumanKeeper pochumanmodulekeeper.Keeper
+	HumansKeeper humansmodulekeeper.Keeper
 	// this line is used by starport scaffolding # stargate/app/keeperDeclaration
 
 	// mm is the module manager
@@ -269,7 +269,7 @@ func New(
 		minttypes.StoreKey, distrtypes.StoreKey, slashingtypes.StoreKey,
 		govtypes.StoreKey, paramstypes.StoreKey, ibchost.StoreKey, upgradetypes.StoreKey, feegrant.StoreKey,
 		evidencetypes.StoreKey, ibctransfertypes.StoreKey, capabilitytypes.StoreKey, monitoringptypes.StoreKey,
-		pochumanmoduletypes.StoreKey,
+		humansmoduletypes.StoreKey,
 		// this line is used by starport scaffolding # stargate/app/storeKey
 	)
 	tkeys := sdk.NewTransientStoreKeys(paramstypes.TStoreKey)
@@ -388,15 +388,15 @@ func New(
 	)
 	monitoringModule := monitoringp.NewAppModule(appCodec, app.MonitoringKeeper)
 
-	app.PochumanKeeper = *pochumanmodulekeeper.NewKeeper(
+	app.HumansKeeper = *humansmodulekeeper.NewKeeper(
 		appCodec,
-		keys[pochumanmoduletypes.StoreKey],
-		keys[pochumanmoduletypes.MemStoreKey],
-		app.GetSubspace(pochumanmoduletypes.ModuleName),
+		keys[humansmoduletypes.StoreKey],
+		keys[humansmoduletypes.MemStoreKey],
+		app.GetSubspace(humansmoduletypes.ModuleName),
 
 		app.BankKeeper,
 	)
-	pochumanModule := pochumanmodule.NewAppModule(appCodec, app.PochumanKeeper, app.AccountKeeper, app.BankKeeper)
+	humansmodule := humansmodule.NewAppModule(appCodec, app.HumansKeeper, app.AccountKeeper, app.BankKeeper)
 
 	// this line is used by starport scaffolding # stargate/app/keeperDefinition
 
@@ -439,7 +439,7 @@ func New(
 		params.NewAppModule(app.ParamsKeeper),
 		transferModule,
 		monitoringModule,
-		pochumanModule,
+		humansmodule,
 		// this line is used by starport scaffolding # stargate/app/appModule
 	)
 
@@ -467,7 +467,7 @@ func New(
 		feegrant.ModuleName,
 		paramstypes.ModuleName,
 		monitoringptypes.ModuleName,
-		pochumanmoduletypes.ModuleName,
+		humansmoduletypes.ModuleName,
 		// this line is used by starport scaffolding # stargate/app/beginBlockers
 	)
 
@@ -491,7 +491,7 @@ func New(
 		ibchost.ModuleName,
 		ibctransfertypes.ModuleName,
 		monitoringptypes.ModuleName,
-		pochumanmoduletypes.ModuleName,
+		humansmoduletypes.ModuleName,
 		// this line is used by starport scaffolding # stargate/app/endBlockers
 	)
 
@@ -520,7 +520,7 @@ func New(
 		ibctransfertypes.ModuleName,
 		feegrant.ModuleName,
 		monitoringptypes.ModuleName,
-		pochumanmoduletypes.ModuleName,
+		humansmoduletypes.ModuleName,
 		// this line is used by starport scaffolding # stargate/app/initGenesis
 	)
 
@@ -545,7 +545,7 @@ func New(
 		ibc.NewAppModule(app.IBCKeeper),
 		transferModule,
 		monitoringModule,
-		pochumanModule,
+		humansmodule,
 		// this line is used by starport scaffolding # stargate/app/appModule
 	)
 	app.sm.RegisterStoreDecoders()
@@ -735,7 +735,7 @@ func initParamsKeeper(appCodec codec.BinaryCodec, legacyAmino *codec.LegacyAmino
 	paramsKeeper.Subspace(ibctransfertypes.ModuleName)
 	paramsKeeper.Subspace(ibchost.ModuleName)
 	paramsKeeper.Subspace(monitoringptypes.ModuleName)
-	paramsKeeper.Subspace(pochumanmoduletypes.ModuleName)
+	paramsKeeper.Subspace(humansmoduletypes.ModuleName)
 	// this line is used by starport scaffolding # stargate/app/paramSubspace
 
 	return paramsKeeper

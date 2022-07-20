@@ -21,7 +21,7 @@ const (
 	QuerierRoute = ModuleName
 
 	// MemStoreKey defines the in-memory store key
-	MemStoreKey = "mem_pochuman"
+	MemStoreKey = "mem_humans"
 
 	// Ethereum Chain
 	CHAIN_ETHEREUM = "Ethereum"

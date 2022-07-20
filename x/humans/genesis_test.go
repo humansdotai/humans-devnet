@@ -1,4 +1,4 @@
-package pochuman_test
+package humans_test
 
 import (
 	"testing"
@@ -57,7 +57,7 @@ func TestGenesis(t *testing.T) {
 		// this line is used by starport scaffolding # genesis/test/state
 	}
 
-	k, ctx := keepertest.PochumanKeeper(t)
+	k, ctx := keepertest.HumansKeeper(t)
 	humans.InitGenesis(ctx, *k, genesisState)
 	got := humans.ExportGenesis(ctx, *k)
 	require.NotNil(t, got)
