@@ -3,8 +3,8 @@ package main
 import (
 	"os"
 
+	"github.com/VigorousDeveloper/humans/app"
 	svrcmd "github.com/cosmos/cosmos-sdk/server/cmd"
-	"github.com/humansdotai/humans/app"
 	"github.com/ignite-hq/cli/ignite/pkg/cosmoscmd"
 )
 

@@ -4,10 +4,10 @@ import (
 	"context"
 	"testing"
 
+	keepertest "github.com/VigorousDeveloper/humans/testutil/keeper"
+	"github.com/VigorousDeveloper/humans/x/humans/keeper"
+	"github.com/VigorousDeveloper/humans/x/humans/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	keepertest "github.com/humansdotai/humans/testutil/keeper"
-	"github.com/humansdotai/humans/x/humans/keeper"
-	"github.com/humansdotai/humans/x/humans/types"
 )
 
 func setupMsgServer(t testing.TB) (types.MsgServer, context.Context) {

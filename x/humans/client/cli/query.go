@@ -10,7 +10,7 @@ import (
 	// "github.com/cosmos/cosmos-sdk/client/flags"
 	// sdk "github.com/cosmos/cosmos-sdk/types"
 
-	"github.com/humansdotai/humans/x/humans/types"
+	"github.com/VigorousDeveloper/humans/x/humans/types"
 )
 
 // GetQueryCmd returns the cli query commands for this module
@@ -25,6 +25,16 @@ func GetQueryCmd(queryRoute string) *cobra.Command {
 	}
 
 	cmd.AddCommand(CmdQueryParams())
+	cmd.AddCommand(CmdListFeeBalance())
+	cmd.AddCommand(CmdShowFeeBalance())
+	cmd.AddCommand(CmdListKeysignVoteData())
+	cmd.AddCommand(CmdShowKeysignVoteData())
+	cmd.AddCommand(CmdListObserveVote())
+	cmd.AddCommand(CmdShowObserveVote())
+	cmd.AddCommand(CmdListPoolBalance())
+	cmd.AddCommand(CmdShowPoolBalance())
+	cmd.AddCommand(CmdListTransactionData())
+	cmd.AddCommand(CmdShowTransactionData())
 	// this line is used by starport scaffolding # 1
 
 	return cmd

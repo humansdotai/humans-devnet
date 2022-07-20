@@ -1,52 +1,141 @@
-# humans
-**humans** is a blockchain built using Cosmos SDK and Tendermint and created with [Ignite CLI](https://ignite.com/cli).
-
-## Get started
+# Install prerequisities
+## Install Golang:
 
 ```
-ignite chain serve
+// Install latest 
+go version https://golang.org/doc/install
+
+wget -q -O - https://raw.githubusercontent.com/canha/golang-tools-install-script/master/goinstall.sh | bash -s -- --version 1.18
+
+source ~/.profile
+
+// to verify that Golang installed
+go version
+
+// Should return go version go1.18 linux/amd64
 ```
 
-`serve` command installs dependencies, builds, initializes, and starts your blockchain in development.
+# Running a Validator node
 
-### Configure
-
-Your blockchain in development can be configured with `config.yml`. To learn more, see the [Ignite CLI docs](https://docs.ignite.com).
-
-### Web Frontend
-
-Ignite CLI has scaffolded a Vue.js-based web app in the `vue` directory. Run the following commands to install dependencies and start the app:
-
+## Install the executables
 ```
-cd vue
-npm install
-npm run serve
+sudo rm -rf ~/.humans
+
+make install
+
+mkdir -p ~/.humans/upgrade_manager/upgrades
+
+mkdir -p ~/.humans/upgrade_manager/genesis/bin
 ```
 
-The frontend app is built using the `@starport/vue` and `@starport/vuex` packages. For details, see the [monorepo for Ignite front-end development](https://github.com/ignite-hq/web).
-
-## Release
-To release a new version of your blockchain, create and push a new tag with `v` prefix. A new draft release with the configured targets will be created.
+## Symlink genesis binary to upgrade
 
 ```
-git tag v0.1
-git push origin v0.1
+cp $(which humansd) ~/.humans/upgrade_manager/genesis/bin
+sudo cp $(which humansd-manager) /usr/bin
+sudo cp $(which processord) /usr/bin
 ```
 
-After a draft release is created, make your final changes from the release page and publish it.
+## Initialize the validator, where "validator" is a moniker name
+```
+humansd init validator --chain-id test
 
-### Install
-To install the latest version of your blockchain node's binary, execute the following command on your machine:
+### Validator
+### human17zc58s96rxj79jtqqsnzt3wtx3tern6areu43g
+echo "pet apart myth reflect stuff force attract taste caught fit exact ice slide sheriff state since unusual gaze practice course mesh magnet ozone purchase" | humansd keys add validator --keyring-backend test --recover
+
+### Pool
+### human14u53eghrurpeyx5cm47vm3qwugtmhcpnstfx9t
+echo "bottom soccer blue sniff use improve rough use amateur senior transfer quarter" | humansd keys add validator1 --keyring-backend test --recover
+
+### Test 1
+### human1dfjns5lk748pzrd79z4zp9k22mrchm2a5t2f6u
+echo "betray theory cargo way left cricket doll room donkey wire reunion fall left surprise hamster corn village happy bulb token artist twelve whisper expire" | humansd keys add test1 --keyring-backend test --recover
+```
+
+## Add genesis accounts
 
 ```
-curl https://get.ignite.com/humansdotai/humans@latest! | sudo bash
+humansd add-genesis-account $(humansd keys show validator -a --keyring-backend test) 90000000000000uheart
+humansd add-genesis-account $(humansd keys show validator1 -a --keyring-backend test) 40000000000000uheart
+humansd add-genesis-account $(humansd keys show test1 -a --keyring-backend test) 50000000000000uheart
 ```
-`humansdotai/humans` should match the `username` and `repo_name` of the Github repository to which the source code was pushed. Learn more about [the install process](https://github.com/allinbits/starport-installer).
 
-## Learn more
+## Generate CreateValidator signed transaction
+```
+humansd gentx validator 50000000000000uheart --keyring-backend test --chain-id test
+```
 
-- [Ignite CLI](https://ignite.com/cli)
-- [Tutorials](https://docs.ignite.com/guide)
-- [Ignite CLI docs](https://docs.ignite.com)
-- [Cosmos SDK docs](https://docs.cosmos.network)
-- [Developer Chat](https://discord.gg/ignite)
+## Collect genesis transactions
+```
+humansd collect-gentxs
+```
+
+## replace stake to uheart
+
+```
+sed -i 's/stake/uheart/g' ~/.humans/config/genesis.json
+```
+
+## Create the service file "/etc/systemd/system/humansd.service" with the following content
+```
+sudo nano /etc/systemd/system/humansd.service
+
+## Paste following content
+
+[Unit]
+Description=humansd
+
+Requires=network-online.target
+
+After=network-online.target
+
+[Service]
+Restart=on-failure
+
+RestartSec=3
+
+User=venus
+
+Group=venus
+
+Environment=DAEMON_NAME=humansd
+
+Environment=DAEMON_HOME=/home/venus/.humans
+
+Environment=DAEMON_ALLOW_DOWNLOAD_BINARIES=on
+
+Environment=DAEMON_RESTART_AFTER_UPGRADE=on
+
+PermissionsStartOnly=true
+
+ExecStart=/usr/bin/humansd-manager start --pruning="nothing" --rpc.laddr "tcp://0.0.0.0:26657"
+
+StandardOutput=file:/var/log/humansd/humansd.log
+
+StandardError=file:/var/log/humansd/humansd_error.log
+
+ExecReload=/bin/kill -HUP $MAINPID
+
+KillSignal=SIGTERM
+
+LimitNOFILE=4096
+
+[Install]
+WantedBy=multi-user.target
+```
+
+
+## Create log files for loand
+
+```
+make log-files
+
+sudo systemctl enable humansd
+sudo systemctl enable processord
+sudo systemctl start humansd
+sudo systemctl start processord
+
+sudo systemctl status humansd
+sudo systemctl status processord
+```
