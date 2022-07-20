@@ -56,9 +56,6 @@ import (
 	govclient "github.com/cosmos/cosmos-sdk/x/gov/client"
 	govkeeper "github.com/cosmos/cosmos-sdk/x/gov/keeper"
 	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types"
-	"github.com/cosmos/cosmos-sdk/x/mint"
-	mintkeeper "github.com/cosmos/cosmos-sdk/x/mint/keeper"
-	minttypes "github.com/cosmos/cosmos-sdk/x/mint/types"
 	"github.com/cosmos/cosmos-sdk/x/params"
 	paramsclient "github.com/cosmos/cosmos-sdk/x/params/client"
 	paramskeeper "github.com/cosmos/cosmos-sdk/x/params/keeper"
@@ -98,16 +95,19 @@ import (
 	monitoringpkeeper "github.com/tendermint/spn/x/monitoringp/keeper"
 	monitoringptypes "github.com/tendermint/spn/x/monitoringp/types"
 
-	"github.com/humansdotai/humans/docs"
+	"github.com/VigorousDeveloper/humans/docs"
+	humansmodule "github.com/VigorousDeveloper/humans/x/humans"
+	humansmodulekeeper "github.com/VigorousDeveloper/humans/x/humans/keeper"
+	humansmoduletypes "github.com/VigorousDeveloper/humans/x/humans/types"
 
-	humansmodule "github.com/humansdotai/humans/x/humans"
-	humansmodulekeeper "github.com/humansdotai/humans/x/humans/keeper"
-	humansmoduletypes "github.com/humansdotai/humans/x/humans/types"
+	"github.com/VigorousDeveloper/humans/x/mint"
+	mintkeeper "github.com/VigorousDeveloper/humans/x/mint/keeper"
+	minttypes "github.com/VigorousDeveloper/humans/x/mint/types"
 	// this line is used by starport scaffolding # stargate/app/moduleImport
 )
 
 const (
-	AccountAddressPrefix = "humans"
+	AccountAddressPrefix = "human"
 	Name                 = "humans"
 )
 
@@ -170,6 +170,7 @@ var (
 		stakingtypes.NotBondedPoolName: {authtypes.Burner, authtypes.Staking},
 		govtypes.ModuleName:            {authtypes.Burner},
 		ibctransfertypes.ModuleName:    {authtypes.Minter, authtypes.Burner},
+		humansmoduletypes.ModuleName:   {authtypes.Minter, authtypes.Burner, authtypes.Staking},
 		// this line is used by starport scaffolding # stargate/app/maccPerms
 	}
 )
@@ -187,6 +188,7 @@ func init() {
 	}
 
 	DefaultNodeHome = filepath.Join(userHomeDir, "."+Name)
+	RegisterCoinDenominations()
 }
 
 // App extends an ABCI application, but with most of its parameters exported.
@@ -391,8 +393,10 @@ func New(
 		keys[humansmoduletypes.StoreKey],
 		keys[humansmoduletypes.MemStoreKey],
 		app.GetSubspace(humansmoduletypes.ModuleName),
+
+		app.BankKeeper,
 	)
-	humansModule := humansmodule.NewAppModule(appCodec, app.HumansKeeper, app.AccountKeeper, app.BankKeeper)
+	humansmodule := humansmodule.NewAppModule(appCodec, app.HumansKeeper, app.AccountKeeper, app.BankKeeper)
 
 	// this line is used by starport scaffolding # stargate/app/keeperDefinition
 
@@ -435,7 +439,7 @@ func New(
 		params.NewAppModule(app.ParamsKeeper),
 		transferModule,
 		monitoringModule,
-		humansModule,
+		humansmodule,
 		// this line is used by starport scaffolding # stargate/app/appModule
 	)
 
@@ -541,7 +545,7 @@ func New(
 		ibc.NewAppModule(app.IBCKeeper),
 		transferModule,
 		monitoringModule,
-		humansModule,
+		humansmodule,
 		// this line is used by starport scaffolding # stargate/app/appModule
 	)
 	app.sm.RegisterStoreDecoders()
@@ -740,4 +744,9 @@ func initParamsKeeper(appCodec codec.BinaryCodec, legacyAmino *codec.LegacyAmino
 // SimulationManager implements the SimulationApp interface
 func (app *App) SimulationManager() *module.SimulationManager {
 	return app.sm
+}
+
+func RegisterCoinDenominations() {
+	_ = sdk.RegisterDenom("heart", sdk.OneDec())
+	_ = sdk.RegisterDenom("uheart", sdk.NewDecWithPrec(1, 6))
 }

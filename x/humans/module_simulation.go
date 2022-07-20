@@ -3,15 +3,15 @@ package humans
 import (
 	"math/rand"
 
+	"github.com/VigorousDeveloper/humans/testutil/sample"
+	humanssimulation "github.com/VigorousDeveloper/humans/x/humans/simulation"
+	"github.com/VigorousDeveloper/humans/x/humans/types"
 	"github.com/cosmos/cosmos-sdk/baseapp"
 	simappparams "github.com/cosmos/cosmos-sdk/simapp/params"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
 	"github.com/cosmos/cosmos-sdk/x/simulation"
-	"github.com/humansdotai/humans/testutil/sample"
-	humanssimulation "github.com/humansdotai/humans/x/humans/simulation"
-	"github.com/humansdotai/humans/x/humans/types"
 )
 
 // avoid unused import issue
@@ -24,7 +24,31 @@ var (
 )
 
 const (
-// this line is used by starport scaffolding # simapp/module/const
+	opWeightMsgRequestTransaction = "op_weight_msg_request_transaction"
+	// TODO: Determine the simulation weight value
+	defaultWeightMsgRequestTransaction int = 100
+
+	opWeightMsgObservationVote = "op_weight_msg_observation_vote"
+	// TODO: Determine the simulation weight value
+	defaultWeightMsgObservationVote int = 100
+
+	opWeightMsgUpdateBalance = "op_weight_msg_update_balance"
+	// TODO: Determine the simulation weight value
+	defaultWeightMsgUpdateBalance int = 100
+
+	opWeightMsgKeysignVote = "op_weight_msg_keysign_vote"
+	// TODO: Determine the simulation weight value
+	defaultWeightMsgKeysignVote int = 100
+
+	opWeightMsgApproveTransaction = "op_weight_msg_approve_transaction"
+	// TODO: Determine the simulation weight value
+	defaultWeightMsgApproveTransaction int = 100
+
+	opWeightMsgTranfserPoolcoin = "op_weight_msg_tranfser_poolcoin"
+	// TODO: Determine the simulation weight value
+	defaultWeightMsgTranfserPoolcoin int = 100
+
+	// this line is used by starport scaffolding # simapp/module/const
 )
 
 // GenerateGenesisState creates a randomized GenState of the module
@@ -57,6 +81,72 @@ func (am AppModule) RegisterStoreDecoder(_ sdk.StoreDecoderRegistry) {}
 // WeightedOperations returns the all the gov module operations with their respective weights.
 func (am AppModule) WeightedOperations(simState module.SimulationState) []simtypes.WeightedOperation {
 	operations := make([]simtypes.WeightedOperation, 0)
+
+	var weightMsgRequestTransaction int
+	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgRequestTransaction, &weightMsgRequestTransaction, nil,
+		func(_ *rand.Rand) {
+			weightMsgRequestTransaction = defaultWeightMsgRequestTransaction
+		},
+	)
+	operations = append(operations, simulation.NewWeightedOperation(
+		weightMsgRequestTransaction,
+		humanssimulation.SimulateMsgRequestTransaction(am.accountKeeper, am.bankKeeper, am.keeper),
+	))
+
+	var weightMsgObservationVote int
+	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgObservationVote, &weightMsgObservationVote, nil,
+		func(_ *rand.Rand) {
+			weightMsgObservationVote = defaultWeightMsgObservationVote
+		},
+	)
+	operations = append(operations, simulation.NewWeightedOperation(
+		weightMsgObservationVote,
+		humanssimulation.SimulateMsgObservationVote(am.accountKeeper, am.bankKeeper, am.keeper),
+	))
+
+	var weightMsgUpdateBalance int
+	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgUpdateBalance, &weightMsgUpdateBalance, nil,
+		func(_ *rand.Rand) {
+			weightMsgUpdateBalance = defaultWeightMsgUpdateBalance
+		},
+	)
+	operations = append(operations, simulation.NewWeightedOperation(
+		weightMsgUpdateBalance,
+		humanssimulation.SimulateMsgUpdateBalance(am.accountKeeper, am.bankKeeper, am.keeper),
+	))
+
+	var weightMsgKeysignVote int
+	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgKeysignVote, &weightMsgKeysignVote, nil,
+		func(_ *rand.Rand) {
+			weightMsgKeysignVote = defaultWeightMsgKeysignVote
+		},
+	)
+	operations = append(operations, simulation.NewWeightedOperation(
+		weightMsgKeysignVote,
+		humanssimulation.SimulateMsgKeysignVote(am.accountKeeper, am.bankKeeper, am.keeper),
+	))
+
+	var weightMsgApproveTransaction int
+	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgApproveTransaction, &weightMsgApproveTransaction, nil,
+		func(_ *rand.Rand) {
+			weightMsgApproveTransaction = defaultWeightMsgApproveTransaction
+		},
+	)
+	operations = append(operations, simulation.NewWeightedOperation(
+		weightMsgApproveTransaction,
+		humanssimulation.SimulateMsgApproveTransaction(am.accountKeeper, am.bankKeeper, am.keeper),
+	))
+
+	var weightMsgTranfserPoolcoin int
+	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgTranfserPoolcoin, &weightMsgTranfserPoolcoin, nil,
+		func(_ *rand.Rand) {
+			weightMsgTranfserPoolcoin = defaultWeightMsgTranfserPoolcoin
+		},
+	)
+	operations = append(operations, simulation.NewWeightedOperation(
+		weightMsgTranfserPoolcoin,
+		humanssimulation.SimulateMsgTranfserPoolcoin(am.accountKeeper, am.bankKeeper, am.keeper),
+	))
 
 	// this line is used by starport scaffolding # simapp/module/operation
 
