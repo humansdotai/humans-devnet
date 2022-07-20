@@ -4,21 +4,21 @@ import { StdFee } from "@cosmjs/launchpad";
 import { SigningStargateClient } from "@cosmjs/stargate";
 import { Registry, OfflineSigner, EncodeObject, DirectSecp256k1HdWallet } from "@cosmjs/proto-signing";
 import { Api } from "./rest";
-import { MsgRequestTransaction } from "./types/pochuman/tx";
-import { MsgTranfserPoolcoin } from "./types/pochuman/tx";
-import { MsgKeysignVote } from "./types/pochuman/tx";
-import { MsgApproveTransaction } from "./types/pochuman/tx";
-import { MsgObservationVote } from "./types/pochuman/tx";
-import { MsgUpdateBalance } from "./types/pochuman/tx";
+import { MsgRequestTransaction } from "./types/humans/tx";
+import { MsgTranfserPoolcoin } from "./types/humans/tx";
+import { MsgKeysignVote } from "./types/humans/tx";
+import { MsgApproveTransaction } from "./types/humans/tx";
+import { MsgObservationVote } from "./types/humans/tx";
+import { MsgUpdateBalance } from "./types/humans/tx";
 
 
 const types = [
-  ["/vigorousdeveloper.pochuman.pochuman.MsgRequestTransaction", MsgRequestTransaction],
-  ["/vigorousdeveloper.pochuman.pochuman.MsgTranfserPoolcoin", MsgTranfserPoolcoin],
-  ["/vigorousdeveloper.pochuman.pochuman.MsgKeysignVote", MsgKeysignVote],
-  ["/vigorousdeveloper.pochuman.pochuman.MsgApproveTransaction", MsgApproveTransaction],
-  ["/vigorousdeveloper.pochuman.pochuman.MsgObservationVote", MsgObservationVote],
-  ["/vigorousdeveloper.pochuman.pochuman.MsgUpdateBalance", MsgUpdateBalance],
+  ["/vigorousdeveloper.humans.humans.MsgRequestTransaction", MsgRequestTransaction],
+  ["/vigorousdeveloper.humans.humans.MsgTranfserPoolcoin", MsgTranfserPoolcoin],
+  ["/vigorousdeveloper.humans.humans.MsgKeysignVote", MsgKeysignVote],
+  ["/vigorousdeveloper.humans.humans.MsgApproveTransaction", MsgApproveTransaction],
+  ["/vigorousdeveloper.humans.humans.MsgObservationVote", MsgObservationVote],
+  ["/vigorousdeveloper.humans.humans.MsgUpdateBalance", MsgUpdateBalance],
   
 ];
 export const MissingWalletError = new Error("wallet is required");
@@ -51,12 +51,12 @@ const txClient = async (wallet: OfflineSigner, { addr: addr }: TxClientOptions =
 
   return {
     signAndBroadcast: (msgs: EncodeObject[], { fee, memo }: SignAndBroadcastOptions = {fee: defaultFee, memo: ""}) => client.signAndBroadcast(address, msgs, fee,memo),
-    msgRequestTransaction: (data: MsgRequestTransaction): EncodeObject => ({ typeUrl: "/vigorousdeveloper.pochuman.pochuman.MsgRequestTransaction", value: MsgRequestTransaction.fromPartial( data ) }),
-    msgTranfserPoolcoin: (data: MsgTranfserPoolcoin): EncodeObject => ({ typeUrl: "/vigorousdeveloper.pochuman.pochuman.MsgTranfserPoolcoin", value: MsgTranfserPoolcoin.fromPartial( data ) }),
-    msgKeysignVote: (data: MsgKeysignVote): EncodeObject => ({ typeUrl: "/vigorousdeveloper.pochuman.pochuman.MsgKeysignVote", value: MsgKeysignVote.fromPartial( data ) }),
-    msgApproveTransaction: (data: MsgApproveTransaction): EncodeObject => ({ typeUrl: "/vigorousdeveloper.pochuman.pochuman.MsgApproveTransaction", value: MsgApproveTransaction.fromPartial( data ) }),
-    msgObservationVote: (data: MsgObservationVote): EncodeObject => ({ typeUrl: "/vigorousdeveloper.pochuman.pochuman.MsgObservationVote", value: MsgObservationVote.fromPartial( data ) }),
-    msgUpdateBalance: (data: MsgUpdateBalance): EncodeObject => ({ typeUrl: "/vigorousdeveloper.pochuman.pochuman.MsgUpdateBalance", value: MsgUpdateBalance.fromPartial( data ) }),
+    msgRequestTransaction: (data: MsgRequestTransaction): EncodeObject => ({ typeUrl: "/vigorousdeveloper.humans.humans.MsgRequestTransaction", value: MsgRequestTransaction.fromPartial( data ) }),
+    msgTranfserPoolcoin: (data: MsgTranfserPoolcoin): EncodeObject => ({ typeUrl: "/vigorousdeveloper.humans.humans.MsgTranfserPoolcoin", value: MsgTranfserPoolcoin.fromPartial( data ) }),
+    msgKeysignVote: (data: MsgKeysignVote): EncodeObject => ({ typeUrl: "/vigorousdeveloper.humans.humans.MsgKeysignVote", value: MsgKeysignVote.fromPartial( data ) }),
+    msgApproveTransaction: (data: MsgApproveTransaction): EncodeObject => ({ typeUrl: "/vigorousdeveloper.humans.humans.MsgApproveTransaction", value: MsgApproveTransaction.fromPartial( data ) }),
+    msgObservationVote: (data: MsgObservationVote): EncodeObject => ({ typeUrl: "/vigorousdeveloper.humans.humans.MsgObservationVote", value: MsgObservationVote.fromPartial( data ) }),
+    msgUpdateBalance: (data: MsgUpdateBalance): EncodeObject => ({ typeUrl: "/vigorousdeveloper.humans.humans.MsgUpdateBalance", value: MsgUpdateBalance.fromPartial( data ) }),
     
   };
 };

@@ -1,11 +1,11 @@
 import { txClient, queryClient, MissingWalletError , registry} from './module'
 
-import { FeeBalance } from "./module/types/pochuman/fee_balance"
-import { KeysignVoteData } from "./module/types/pochuman/keysign_vote_data"
-import { ObserveVote } from "./module/types/pochuman/observe_vote"
-import { Params } from "./module/types/pochuman/params"
-import { PoolBalance } from "./module/types/pochuman/pool_balance"
-import { TransactionData } from "./module/types/pochuman/transaction_data"
+import { FeeBalance } from "./module/types/humans/fee_balance"
+import { KeysignVoteData } from "./module/types/humans/keysign_vote_data"
+import { ObserveVote } from "./module/types/humans/observe_vote"
+import { Params } from "./module/types/humans/params"
+import { PoolBalance } from "./module/types/humans/pool_balance"
+import { TransactionData } from "./module/types/humans/transaction_data"
 
 
 export { FeeBalance, KeysignVoteData, ObserveVote, Params, PoolBalance, TransactionData };
@@ -169,7 +169,7 @@ export default {
 	},
 	actions: {
 		init({ dispatch, rootGetters }) {
-			console.log('Vuex module: vigorousdeveloper.pochuman.pochuman initialized!')
+			console.log('Vuex module: vigorousdeveloper.humans.humans initialized!')
 			if (rootGetters['common/env/client']) {
 				rootGetters['common/env/client'].on('newblock', () => {
 					dispatch('StoreUpdate')

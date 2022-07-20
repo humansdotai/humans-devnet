@@ -1,9 +1,9 @@
 syntax = "proto3";
-package vigorousdeveloper.pochuman.pochuman;
+package vigorousdeveloper.humans.humans;
 
 import "gogoproto/gogo.proto";
 
-option go_package = "github.com/VigorousDeveloper/poc-human/x/pochuman/types";
+option go_package = "github.com/VigorousDeveloper/humans/x/humans/types";
 
 // Params defines the parameters for the module.
 message Params {

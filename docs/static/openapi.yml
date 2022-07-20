@@ -29697,7 +29697,7 @@ paths:
                   additionalProperties: {}
       tags:
         - Query
-  /VigorousDeveloper/poc-human/pochuman/fee_balance:
+  /VigorousDeveloper/humans/humans/fee_balance:
     get:
       summary: Queries a list of FeeBalance items.
       operationId: VigorousdeveloperPochumanPochumanFeeBalanceAll
@@ -29824,7 +29824,7 @@ paths:
           type: boolean
       tags:
         - Query
-  '/VigorousDeveloper/poc-human/pochuman/fee_balance/{index}':
+  '/VigorousDeveloper/humans/humans/fee_balance/{index}':
     get:
       summary: Queries a FeeBalance by index.
       operationId: VigorousdeveloperPochumanPochumanFeeBalance
@@ -29870,7 +29870,7 @@ paths:
           type: string
       tags:
         - Query
-  /VigorousDeveloper/poc-human/pochuman/keysign_vote_data:
+  /VigorousDeveloper/humans/humans/keysign_vote_data:
     get:
       summary: Queries a list of KeysignVoteData items.
       operationId: VigorousdeveloperPochumanPochumanKeysignVoteDataAll
@@ -29999,7 +29999,7 @@ paths:
           type: boolean
       tags:
         - Query
-  '/VigorousDeveloper/poc-human/pochuman/keysign_vote_data/{index}':
+  '/VigorousDeveloper/humans/humans/keysign_vote_data/{index}':
     get:
       summary: Queries a KeysignVoteData by index.
       operationId: VigorousdeveloperPochumanPochumanKeysignVoteData
@@ -30047,7 +30047,7 @@ paths:
           type: string
       tags:
         - Query
-  /VigorousDeveloper/poc-human/pochuman/observe_vote:
+  /VigorousDeveloper/humans/humans/observe_vote:
     get:
       summary: Queries a list of ObserveVote items.
       operationId: VigorousdeveloperPochumanPochumanObserveVoteAll
@@ -30184,7 +30184,7 @@ paths:
           type: boolean
       tags:
         - Query
-  '/VigorousDeveloper/poc-human/pochuman/observe_vote/{index}':
+  '/VigorousDeveloper/humans/humans/observe_vote/{index}':
     get:
       summary: Queries a ObserveVote by index.
       operationId: VigorousdeveloperPochumanPochumanObserveVote
@@ -30240,7 +30240,7 @@ paths:
           type: string
       tags:
         - Query
-  /VigorousDeveloper/poc-human/pochuman/params:
+  /VigorousDeveloper/humans/humans/params:
     get:
       summary: Parameters queries the parameters of the module.
       operationId: VigorousdeveloperPochumanPochumanParams
@@ -30276,7 +30276,7 @@ paths:
                   additionalProperties: {}
       tags:
         - Query
-  /VigorousDeveloper/poc-human/pochuman/pool_balance:
+  /VigorousDeveloper/humans/humans/pool_balance:
     get:
       summary: Queries a list of PoolBalance items.
       operationId: VigorousdeveloperPochumanPochumanPoolBalanceAll
@@ -30403,7 +30403,7 @@ paths:
           type: boolean
       tags:
         - Query
-  '/VigorousDeveloper/poc-human/pochuman/pool_balance/{index}':
+  '/VigorousDeveloper/humans/humans/pool_balance/{index}':
     get:
       summary: Queries a PoolBalance by index.
       operationId: VigorousdeveloperPochumanPochumanPoolBalance
@@ -30449,7 +30449,7 @@ paths:
           type: string
       tags:
         - Query
-  /VigorousDeveloper/poc-human/pochuman/transaction_data:
+  /VigorousDeveloper/humans/humans/transaction_data:
     get:
       summary: Queries a list of TransactionData items.
       operationId: VigorousdeveloperPochumanPochumanTransactionDataAll
@@ -30592,7 +30592,7 @@ paths:
           type: boolean
       tags:
         - Query
-  '/VigorousDeveloper/poc-human/pochuman/transaction_data/{index}':
+  '/VigorousDeveloper/humans/humans/transaction_data/{index}':
     get:
       summary: Queries a TransactionData by index.
       operationId: VigorousdeveloperPochumanPochumanTransactionData
@@ -51827,7 +51827,7 @@ definitions:
     title: >-
       SignatureCounts contains information about signature reporting for a
       number of blocks
-  vigorousdeveloper.pochuman.pochuman.FeeBalance:
+  vigorousdeveloper.humans.humans.FeeBalance:
     type: object
     properties:
       index:
@@ -51838,7 +51838,7 @@ definitions:
         type: string
       decimal:
         type: string
-  vigorousdeveloper.pochuman.pochuman.KeysignVoteData:
+  vigorousdeveloper.humans.humans.KeysignVoteData:
     type: object
     properties:
       index:
@@ -51851,44 +51851,44 @@ definitions:
         type: string
       txTime:
         type: string
-  vigorousdeveloper.pochuman.pochuman.MsgApproveTransactionResponse:
+  vigorousdeveloper.humans.humans.MsgApproveTransactionResponse:
     type: object
     properties:
       code:
         type: string
       msg:
         type: string
-  vigorousdeveloper.pochuman.pochuman.MsgKeysignVoteResponse:
+  vigorousdeveloper.humans.humans.MsgKeysignVoteResponse:
     type: object
     properties:
       code:
         type: string
       msg:
         type: string
-  vigorousdeveloper.pochuman.pochuman.MsgObservationVoteResponse:
+  vigorousdeveloper.humans.humans.MsgObservationVoteResponse:
     type: object
     properties:
       code:
         type: string
       msg:
         type: string
-  vigorousdeveloper.pochuman.pochuman.MsgRequestTransactionResponse:
+  vigorousdeveloper.humans.humans.MsgRequestTransactionResponse:
     type: object
     properties:
       code:
         type: string
       msg:
         type: string
-  vigorousdeveloper.pochuman.pochuman.MsgTranfserPoolcoinResponse:
+  vigorousdeveloper.humans.humans.MsgTranfserPoolcoinResponse:
     type: object
-  vigorousdeveloper.pochuman.pochuman.MsgUpdateBalanceResponse:
+  vigorousdeveloper.humans.humans.MsgUpdateBalanceResponse:
     type: object
     properties:
       code:
         type: string
       msg:
         type: string
-  vigorousdeveloper.pochuman.pochuman.ObserveVote:
+  vigorousdeveloper.humans.humans.ObserveVote:
     type: object
     properties:
       index:
@@ -51909,10 +51909,10 @@ definitions:
         type: string
       used:
         type: string
-  vigorousdeveloper.pochuman.pochuman.Params:
+  vigorousdeveloper.humans.humans.Params:
     type: object
     description: Params defines the parameters for the module.
-  vigorousdeveloper.pochuman.pochuman.PoolBalance:
+  vigorousdeveloper.humans.humans.PoolBalance:
     type: object
     properties:
       index:
@@ -51923,7 +51923,7 @@ definitions:
         type: string
       decimal:
         type: string
-  vigorousdeveloper.pochuman.pochuman.QueryAllFeeBalanceResponse:
+  vigorousdeveloper.humans.humans.QueryAllFeeBalanceResponse:
     type: object
     properties:
       feeBalance:
@@ -51964,7 +51964,7 @@ definitions:
                    repeated Bar results = 1;
                    PageResponse page = 2;
            }
-  vigorousdeveloper.pochuman.pochuman.QueryAllKeysignVoteDataResponse:
+  vigorousdeveloper.humans.humans.QueryAllKeysignVoteDataResponse:
     type: object
     properties:
       keysignVoteData:
@@ -52007,7 +52007,7 @@ definitions:
                    repeated Bar results = 1;
                    PageResponse page = 2;
            }
-  vigorousdeveloper.pochuman.pochuman.QueryAllObserveVoteResponse:
+  vigorousdeveloper.humans.humans.QueryAllObserveVoteResponse:
     type: object
     properties:
       observeVote:
@@ -52058,7 +52058,7 @@ definitions:
                    repeated Bar results = 1;
                    PageResponse page = 2;
            }
-  vigorousdeveloper.pochuman.pochuman.QueryAllPoolBalanceResponse:
+  vigorousdeveloper.humans.humans.QueryAllPoolBalanceResponse:
     type: object
     properties:
       poolBalance:
@@ -52099,7 +52099,7 @@ definitions:
                    repeated Bar results = 1;
                    PageResponse page = 2;
            }
-  vigorousdeveloper.pochuman.pochuman.QueryAllTransactionDataResponse:
+  vigorousdeveloper.humans.humans.QueryAllTransactionDataResponse:
     type: object
     properties:
       transactionData:
@@ -52156,7 +52156,7 @@ definitions:
                    repeated Bar results = 1;
                    PageResponse page = 2;
            }
-  vigorousdeveloper.pochuman.pochuman.QueryGetFeeBalanceResponse:
+  vigorousdeveloper.humans.humans.QueryGetFeeBalanceResponse:
     type: object
     properties:
       feeBalance:
@@ -52170,7 +52170,7 @@ definitions:
             type: string
           decimal:
             type: string
-  vigorousdeveloper.pochuman.pochuman.QueryGetKeysignVoteDataResponse:
+  vigorousdeveloper.humans.humans.QueryGetKeysignVoteDataResponse:
     type: object
     properties:
       keysignVoteData:
@@ -52186,7 +52186,7 @@ definitions:
             type: string
           txTime:
             type: string
-  vigorousdeveloper.pochuman.pochuman.QueryGetObserveVoteResponse:
+  vigorousdeveloper.humans.humans.QueryGetObserveVoteResponse:
     type: object
     properties:
       observeVote:
@@ -52210,7 +52210,7 @@ definitions:
             type: string
           used:
             type: string
-  vigorousdeveloper.pochuman.pochuman.QueryGetPoolBalanceResponse:
+  vigorousdeveloper.humans.humans.QueryGetPoolBalanceResponse:
     type: object
     properties:
       poolBalance:
@@ -52224,7 +52224,7 @@ definitions:
             type: string
           decimal:
             type: string
-  vigorousdeveloper.pochuman.pochuman.QueryGetTransactionDataResponse:
+  vigorousdeveloper.humans.humans.QueryGetTransactionDataResponse:
     type: object
     properties:
       transactionData:
@@ -52254,14 +52254,14 @@ definitions:
             type: string
           fee:
             type: string
-  vigorousdeveloper.pochuman.pochuman.QueryParamsResponse:
+  vigorousdeveloper.humans.humans.QueryParamsResponse:
     type: object
     properties:
       params:
         description: params holds all the parameters of this module.
         type: object
     description: QueryParamsResponse is response type for the Query/Params RPC method.
-  vigorousdeveloper.pochuman.pochuman.TransactionData:
+  vigorousdeveloper.humans.humans.TransactionData:
     type: object
     properties:
       index:

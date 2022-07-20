@@ -7,8 +7,8 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	keep "github.com/VigorousDeveloper/poc-human/x/mint/keeper"
-	"github.com/VigorousDeveloper/poc-human/x/mint/types"
+	keep "github.com/VigorousDeveloper/humans/x/mint/keeper"
+	"github.com/VigorousDeveloper/humans/x/mint/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
 	abci "github.com/tendermint/tendermint/abci/types"

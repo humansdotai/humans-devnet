@@ -12,7 +12,7 @@ import (
 	govclient "github.com/cosmos/cosmos-sdk/x/gov/client"
 	"github.com/cosmos/cosmos-sdk/x/gov/types"
 
-	customtypes "github.com/VigorousDeveloper/poc-human/custom/gov/types"
+	customtypes "github.com/VigorousDeveloper/humans/custom/gov/types"
 )
 
 var (

@@ -5,7 +5,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/VigorousDeveloper/poc-human/app"
+	"github.com/VigorousDeveloper/humans/app"
 	"github.com/cosmos/cosmos-sdk/baseapp"
 	"github.com/cosmos/cosmos-sdk/codec"
 	"github.com/cosmos/cosmos-sdk/simapp"

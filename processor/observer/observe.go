@@ -8,8 +8,8 @@ import (
 	"sync"
 	"time"
 
-	diverclient "github.com/VigorousDeveloper/poc-human/processor/humanclient"
-	"github.com/VigorousDeveloper/poc-human/x/pochuman/types"
+	diverclient "github.com/VigorousDeveloper/humans/processor/humanclient"
+	"github.com/VigorousDeveloper/humans/x/humans/types"
 	"github.com/cenkalti/backoff"
 	stypes "github.com/cosmos/cosmos-sdk/types"
 )

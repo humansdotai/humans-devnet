@@ -6,7 +6,7 @@ package testutil
 import (
 	"testing"
 
-	"github.com/VigorousDeveloper/poc-human/testutil/network"
+	"github.com/VigorousDeveloper/humans/testutil/network"
 
 	"github.com/stretchr/testify/suite"
 )

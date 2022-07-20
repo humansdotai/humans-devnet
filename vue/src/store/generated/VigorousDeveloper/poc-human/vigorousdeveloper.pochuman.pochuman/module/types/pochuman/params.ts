@@ -1,7 +1,7 @@
 /* eslint-disable */
 import { Writer, Reader } from "protobufjs/minimal";
 
-export const protobufPackage = "vigorousdeveloper.pochuman.pochuman";
+export const protobufPackage = "vigorousdeveloper.humans.humans";
 
 /** Params defines the parameters for the module. */
 export interface Params {}

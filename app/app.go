@@ -95,20 +95,20 @@ import (
 	monitoringpkeeper "github.com/tendermint/spn/x/monitoringp/keeper"
 	monitoringptypes "github.com/tendermint/spn/x/monitoringp/types"
 
-	"github.com/VigorousDeveloper/poc-human/docs"
-	pochumanmodule "github.com/VigorousDeveloper/poc-human/x/pochuman"
-	pochumanmodulekeeper "github.com/VigorousDeveloper/poc-human/x/pochuman/keeper"
-	pochumanmoduletypes "github.com/VigorousDeveloper/poc-human/x/pochuman/types"
+	"github.com/VigorousDeveloper/humans/docs"
+	pochumanmodule "github.com/VigorousDeveloper/humans/x/humans"
+	pochumanmodulekeeper "github.com/VigorousDeveloper/humans/x/humans/keeper"
+	pochumanmoduletypes "github.com/VigorousDeveloper/humans/x/humans/types"
 
-	"github.com/VigorousDeveloper/poc-human/x/mint"
-	mintkeeper "github.com/VigorousDeveloper/poc-human/x/mint/keeper"
-	minttypes "github.com/VigorousDeveloper/poc-human/x/mint/types"
+	"github.com/VigorousDeveloper/humans/x/mint"
+	mintkeeper "github.com/VigorousDeveloper/humans/x/mint/keeper"
+	minttypes "github.com/VigorousDeveloper/humans/x/mint/types"
 	// this line is used by starport scaffolding # stargate/app/moduleImport
 )
 
 const (
 	AccountAddressPrefix = "human"
-	Name                 = "poc-human"
+	Name                 = "humans"
 )
 
 // this line is used by starport scaffolding # stargate/wasm/app/enabledProposals
@@ -747,6 +747,6 @@ func (app *App) SimulationManager() *module.SimulationManager {
 }
 
 func RegisterCoinDenominations() {
-	_ = sdk.RegisterDenom("HMN", sdk.OneDec())
-	_ = sdk.RegisterDenom("uHMN", sdk.NewDecWithPrec(1, 9))
+	_ = sdk.RegisterDenom("heart", sdk.OneDec())
+	_ = sdk.RegisterDenom("uheart", sdk.NewDecWithPrec(1, 6))
 }

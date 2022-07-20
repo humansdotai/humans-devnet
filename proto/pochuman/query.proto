@@ -1,73 +1,73 @@
 syntax = "proto3";
-package vigorousdeveloper.pochuman.pochuman;
+package vigorousdeveloper.humans.humans;
 
 import "gogoproto/gogo.proto";
 import "google/api/annotations.proto";
 import "cosmos/base/query/v1beta1/pagination.proto";
-import "pochuman/params.proto";
-import "pochuman/fee_balance.proto";
-import "pochuman/keysign_vote_data.proto";
-import "pochuman/observe_vote.proto";
-import "pochuman/pool_balance.proto";
-import "pochuman/transaction_data.proto";
+import "humans/params.proto";
+import "humans/fee_balance.proto";
+import "humans/keysign_vote_data.proto";
+import "humans/observe_vote.proto";
+import "humans/pool_balance.proto";
+import "humans/transaction_data.proto";
 // this line is used by starport scaffolding # 1
 
-option go_package = "github.com/VigorousDeveloper/poc-human/x/pochuman/types";
+option go_package = "github.com/VigorousDeveloper/humans/x/humans/types";
 
 // Query defines the gRPC querier service.
 service Query {
   // Parameters queries the parameters of the module.
   rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
-    option (google.api.http).get = "/VigorousDeveloper/poc-human/pochuman/params";
+    option (google.api.http).get = "/VigorousDeveloper/humans/humans/params";
   }
   // Queries a FeeBalance by index.
 	rpc FeeBalance(QueryGetFeeBalanceRequest) returns (QueryGetFeeBalanceResponse) {
-		option (google.api.http).get = "/VigorousDeveloper/poc-human/pochuman/fee_balance/{index}";
+		option (google.api.http).get = "/VigorousDeveloper/humans/humans/fee_balance/{index}";
 	}
 
 	// Queries a list of FeeBalance items.
 	rpc FeeBalanceAll(QueryAllFeeBalanceRequest) returns (QueryAllFeeBalanceResponse) {
-		option (google.api.http).get = "/VigorousDeveloper/poc-human/pochuman/fee_balance";
+		option (google.api.http).get = "/VigorousDeveloper/humans/humans/fee_balance";
 	}
 
 // Queries a KeysignVoteData by index.
 	rpc KeysignVoteData(QueryGetKeysignVoteDataRequest) returns (QueryGetKeysignVoteDataResponse) {
-		option (google.api.http).get = "/VigorousDeveloper/poc-human/pochuman/keysign_vote_data/{index}";
+		option (google.api.http).get = "/VigorousDeveloper/humans/humans/keysign_vote_data/{index}";
 	}
 
 	// Queries a list of KeysignVoteData items.
 	rpc KeysignVoteDataAll(QueryAllKeysignVoteDataRequest) returns (QueryAllKeysignVoteDataResponse) {
-		option (google.api.http).get = "/VigorousDeveloper/poc-human/pochuman/keysign_vote_data";
+		option (google.api.http).get = "/VigorousDeveloper/humans/humans/keysign_vote_data";
 	}
 
 // Queries a ObserveVote by index.
 	rpc ObserveVote(QueryGetObserveVoteRequest) returns (QueryGetObserveVoteResponse) {
-		option (google.api.http).get = "/VigorousDeveloper/poc-human/pochuman/observe_vote/{index}";
+		option (google.api.http).get = "/VigorousDeveloper/humans/humans/observe_vote/{index}";
 	}
 
 	// Queries a list of ObserveVote items.
 	rpc ObserveVoteAll(QueryAllObserveVoteRequest) returns (QueryAllObserveVoteResponse) {
-		option (google.api.http).get = "/VigorousDeveloper/poc-human/pochuman/observe_vote";
+		option (google.api.http).get = "/VigorousDeveloper/humans/humans/observe_vote";
 	}
 
 // Queries a PoolBalance by index.
 	rpc PoolBalance(QueryGetPoolBalanceRequest) returns (QueryGetPoolBalanceResponse) {
-		option (google.api.http).get = "/VigorousDeveloper/poc-human/pochuman/pool_balance/{index}";
+		option (google.api.http).get = "/VigorousDeveloper/humans/humans/pool_balance/{index}";
 	}
 
 	// Queries a list of PoolBalance items.
 	rpc PoolBalanceAll(QueryAllPoolBalanceRequest) returns (QueryAllPoolBalanceResponse) {
-		option (google.api.http).get = "/VigorousDeveloper/poc-human/pochuman/pool_balance";
+		option (google.api.http).get = "/VigorousDeveloper/humans/humans/pool_balance";
 	}
 
 // Queries a TransactionData by index.
 	rpc TransactionData(QueryGetTransactionDataRequest) returns (QueryGetTransactionDataResponse) {
-		option (google.api.http).get = "/VigorousDeveloper/poc-human/pochuman/transaction_data/{index}";
+		option (google.api.http).get = "/VigorousDeveloper/humans/humans/transaction_data/{index}";
 	}
 
 	// Queries a list of TransactionData items.
 	rpc TransactionDataAll(QueryAllTransactionDataRequest) returns (QueryAllTransactionDataResponse) {
-		option (google.api.http).get = "/VigorousDeveloper/poc-human/pochuman/transaction_data";
+		option (google.api.http).get = "/VigorousDeveloper/humans/humans/transaction_data";
 	}
 
 // this line is used by starport scaffolding # 2

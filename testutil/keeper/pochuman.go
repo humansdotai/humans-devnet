@@ -3,8 +3,8 @@ package keeper
 import (
 	"testing"
 
-	"github.com/VigorousDeveloper/poc-human/x/pochuman/keeper"
-	"github.com/VigorousDeveloper/poc-human/x/pochuman/types"
+	"github.com/VigorousDeveloper/humans/x/humans/keeper"
+	"github.com/VigorousDeveloper/humans/x/humans/types"
 	"github.com/cosmos/cosmos-sdk/codec"
 	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
 	"github.com/cosmos/cosmos-sdk/store"

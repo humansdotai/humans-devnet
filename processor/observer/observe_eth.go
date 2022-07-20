@@ -10,8 +10,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/VigorousDeveloper/poc-human/x/pochuman/types"
-	token "github.com/VigorousDeveloper/poc-human/x/pochuman/types/erc20"
+	"github.com/VigorousDeveloper/humans/x/humans/types"
+	token "github.com/VigorousDeveloper/humans/x/humans/types/erc20"
 	"github.com/ethereum/go-ethereum"
 	"github.com/ethereum/go-ethereum/accounts/abi"
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"

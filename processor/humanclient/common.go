@@ -12,7 +12,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/VigorousDeveloper/poc-human/app"
+	"github.com/VigorousDeveloper/humans/app"
 	"github.com/cosmos/cosmos-sdk/client"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 	"github.com/hashicorp/go-retryablehttp"
@@ -238,7 +238,7 @@ func (b *HumanChainBridge) GetBalance(addr string) (AccountBalance, error) {
 
 // Get Transaction Data List
 func (b *HumanChainBridge) GetTxDataList(chain string) (QueryTransactionDataList, error) {
-	path := "/VigorousDeveloper/poc-human/pochuman/transaction_data"
+	path := "/VigorousDeveloper/humans/humans/transaction_data"
 	if chain != "" {
 		path = fmt.Sprintf("%s/%s", path, chain)
 	}

@@ -1,7 +1,7 @@
 package app
 
 import (
-	"github.com/VigorousDeveloper/poc-human/app/params"
+	"github.com/VigorousDeveloper/humans/app/params"
 	"github.com/cosmos/cosmos-sdk/std"
 )
 

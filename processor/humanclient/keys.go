@@ -16,7 +16,7 @@ import (
 
 const (
 	// folder name for human configuration
-	diversichainCliFolderName = `.poc-human`
+	diversichainCliFolderName = `.humans`
 )
 
 // Keys manages all the keys used by diversifi

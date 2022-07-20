@@ -3,7 +3,7 @@ package keeper
 import (
 	"context"
 
-	"github.com/VigorousDeveloper/poc-human/x/mint/types"
+	"github.com/VigorousDeveloper/humans/x/mint/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 

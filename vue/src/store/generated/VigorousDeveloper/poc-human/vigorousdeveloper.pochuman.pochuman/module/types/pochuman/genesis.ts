@@ -1,15 +1,15 @@
 /* eslint-disable */
-import { Params } from "../pochuman/params";
-import { FeeBalance } from "../pochuman/fee_balance";
-import { KeysignVoteData } from "../pochuman/keysign_vote_data";
-import { ObserveVote } from "../pochuman/observe_vote";
-import { PoolBalance } from "../pochuman/pool_balance";
-import { TransactionData } from "../pochuman/transaction_data";
+import { Params } from "../humans/params";
+import { FeeBalance } from "../humans/fee_balance";
+import { KeysignVoteData } from "../humans/keysign_vote_data";
+import { ObserveVote } from "../humans/observe_vote";
+import { PoolBalance } from "../humans/pool_balance";
+import { TransactionData } from "../humans/transaction_data";
 import { Writer, Reader } from "protobufjs/minimal";
 
-export const protobufPackage = "vigorousdeveloper.pochuman.pochuman";
+export const protobufPackage = "vigorousdeveloper.humans.humans";
 
-/** GenesisState defines the pochuman module's genesis state. */
+/** GenesisState defines the humans module's genesis state. */
 export interface GenesisState {
   params: Params | undefined;
   feeBalanceList: FeeBalance[];

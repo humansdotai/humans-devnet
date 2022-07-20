@@ -459,7 +459,7 @@ export class HttpClient<SecurityDataType = unknown> {
 }
 
 /**
- * @title pochuman/fee_balance.proto
+ * @title humans/fee_balance.proto
  * @version version not set
  */
 export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDataType> {
@@ -469,7 +469,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
    * @tags Query
    * @name QueryFeeBalanceAll
    * @summary Queries a list of FeeBalance items.
-   * @request GET:/VigorousDeveloper/poc-human/pochuman/fee_balance
+   * @request GET:/VigorousDeveloper/humans/humans/fee_balance
    */
   queryFeeBalanceAll = (
     query?: {
@@ -482,7 +482,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     params: RequestParams = {},
   ) =>
     this.request<PochumanQueryAllFeeBalanceResponse, RpcStatus>({
-      path: `/VigorousDeveloper/poc-human/pochuman/fee_balance`,
+      path: `/VigorousDeveloper/humans/humans/fee_balance`,
       method: "GET",
       query: query,
       format: "json",
@@ -495,11 +495,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
    * @tags Query
    * @name QueryFeeBalance
    * @summary Queries a FeeBalance by index.
-   * @request GET:/VigorousDeveloper/poc-human/pochuman/fee_balance/{index}
+   * @request GET:/VigorousDeveloper/humans/humans/fee_balance/{index}
    */
   queryFeeBalance = (index: string, params: RequestParams = {}) =>
     this.request<PochumanQueryGetFeeBalanceResponse, RpcStatus>({
-      path: `/VigorousDeveloper/poc-human/pochuman/fee_balance/${index}`,
+      path: `/VigorousDeveloper/humans/humans/fee_balance/${index}`,
       method: "GET",
       format: "json",
       ...params,
@@ -511,7 +511,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
    * @tags Query
    * @name QueryKeysignVoteDataAll
    * @summary Queries a list of KeysignVoteData items.
-   * @request GET:/VigorousDeveloper/poc-human/pochuman/keysign_vote_data
+   * @request GET:/VigorousDeveloper/humans/humans/keysign_vote_data
    */
   queryKeysignVoteDataAll = (
     query?: {
@@ -524,7 +524,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     params: RequestParams = {},
   ) =>
     this.request<PochumanQueryAllKeysignVoteDataResponse, RpcStatus>({
-      path: `/VigorousDeveloper/poc-human/pochuman/keysign_vote_data`,
+      path: `/VigorousDeveloper/humans/humans/keysign_vote_data`,
       method: "GET",
       query: query,
       format: "json",
@@ -537,11 +537,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
    * @tags Query
    * @name QueryKeysignVoteData
    * @summary Queries a KeysignVoteData by index.
-   * @request GET:/VigorousDeveloper/poc-human/pochuman/keysign_vote_data/{index}
+   * @request GET:/VigorousDeveloper/humans/humans/keysign_vote_data/{index}
    */
   queryKeysignVoteData = (index: string, params: RequestParams = {}) =>
     this.request<PochumanQueryGetKeysignVoteDataResponse, RpcStatus>({
-      path: `/VigorousDeveloper/poc-human/pochuman/keysign_vote_data/${index}`,
+      path: `/VigorousDeveloper/humans/humans/keysign_vote_data/${index}`,
       method: "GET",
       format: "json",
       ...params,
@@ -553,7 +553,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
    * @tags Query
    * @name QueryObserveVoteAll
    * @summary Queries a list of ObserveVote items.
-   * @request GET:/VigorousDeveloper/poc-human/pochuman/observe_vote
+   * @request GET:/VigorousDeveloper/humans/humans/observe_vote
    */
   queryObserveVoteAll = (
     query?: {
@@ -566,7 +566,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     params: RequestParams = {},
   ) =>
     this.request<PochumanQueryAllObserveVoteResponse, RpcStatus>({
-      path: `/VigorousDeveloper/poc-human/pochuman/observe_vote`,
+      path: `/VigorousDeveloper/humans/humans/observe_vote`,
       method: "GET",
       query: query,
       format: "json",
@@ -579,11 +579,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
    * @tags Query
    * @name QueryObserveVote
    * @summary Queries a ObserveVote by index.
-   * @request GET:/VigorousDeveloper/poc-human/pochuman/observe_vote/{index}
+   * @request GET:/VigorousDeveloper/humans/humans/observe_vote/{index}
    */
   queryObserveVote = (index: string, params: RequestParams = {}) =>
     this.request<PochumanQueryGetObserveVoteResponse, RpcStatus>({
-      path: `/VigorousDeveloper/poc-human/pochuman/observe_vote/${index}`,
+      path: `/VigorousDeveloper/humans/humans/observe_vote/${index}`,
       method: "GET",
       format: "json",
       ...params,
@@ -595,11 +595,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
    * @tags Query
    * @name QueryParams
    * @summary Parameters queries the parameters of the module.
-   * @request GET:/VigorousDeveloper/poc-human/pochuman/params
+   * @request GET:/VigorousDeveloper/humans/humans/params
    */
   queryParams = (params: RequestParams = {}) =>
     this.request<PochumanQueryParamsResponse, RpcStatus>({
-      path: `/VigorousDeveloper/poc-human/pochuman/params`,
+      path: `/VigorousDeveloper/humans/humans/params`,
       method: "GET",
       format: "json",
       ...params,
@@ -611,7 +611,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
    * @tags Query
    * @name QueryPoolBalanceAll
    * @summary Queries a list of PoolBalance items.
-   * @request GET:/VigorousDeveloper/poc-human/pochuman/pool_balance
+   * @request GET:/VigorousDeveloper/humans/humans/pool_balance
    */
   queryPoolBalanceAll = (
     query?: {
@@ -624,7 +624,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     params: RequestParams = {},
   ) =>
     this.request<PochumanQueryAllPoolBalanceResponse, RpcStatus>({
-      path: `/VigorousDeveloper/poc-human/pochuman/pool_balance`,
+      path: `/VigorousDeveloper/humans/humans/pool_balance`,
       method: "GET",
       query: query,
       format: "json",
@@ -637,11 +637,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
    * @tags Query
    * @name QueryPoolBalance
    * @summary Queries a PoolBalance by index.
-   * @request GET:/VigorousDeveloper/poc-human/pochuman/pool_balance/{index}
+   * @request GET:/VigorousDeveloper/humans/humans/pool_balance/{index}
    */
   queryPoolBalance = (index: string, params: RequestParams = {}) =>
     this.request<PochumanQueryGetPoolBalanceResponse, RpcStatus>({
-      path: `/VigorousDeveloper/poc-human/pochuman/pool_balance/${index}`,
+      path: `/VigorousDeveloper/humans/humans/pool_balance/${index}`,
       method: "GET",
       format: "json",
       ...params,
@@ -653,7 +653,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
    * @tags Query
    * @name QueryTransactionDataAll
    * @summary Queries a list of TransactionData items.
-   * @request GET:/VigorousDeveloper/poc-human/pochuman/transaction_data
+   * @request GET:/VigorousDeveloper/humans/humans/transaction_data
    */
   queryTransactionDataAll = (
     query?: {
@@ -666,7 +666,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     params: RequestParams = {},
   ) =>
     this.request<PochumanQueryAllTransactionDataResponse, RpcStatus>({
-      path: `/VigorousDeveloper/poc-human/pochuman/transaction_data`,
+      path: `/VigorousDeveloper/humans/humans/transaction_data`,
       method: "GET",
       query: query,
       format: "json",
@@ -679,11 +679,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
    * @tags Query
    * @name QueryTransactionData
    * @summary Queries a TransactionData by index.
-   * @request GET:/VigorousDeveloper/poc-human/pochuman/transaction_data/{index}
+   * @request GET:/VigorousDeveloper/humans/humans/transaction_data/{index}
    */
   queryTransactionData = (index: string, params: RequestParams = {}) =>
     this.request<PochumanQueryGetTransactionDataResponse, RpcStatus>({
-      path: `/VigorousDeveloper/poc-human/pochuman/transaction_data/${index}`,
+      path: `/VigorousDeveloper/humans/humans/transaction_data/${index}`,
       method: "GET",
       format: "json",
       ...params,

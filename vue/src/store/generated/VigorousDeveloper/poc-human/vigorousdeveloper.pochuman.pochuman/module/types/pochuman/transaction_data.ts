@@ -1,7 +1,7 @@
 /* eslint-disable */
 import { Writer, Reader } from "protobufjs/minimal";
 
-export const protobufPackage = "vigorousdeveloper.pochuman.pochuman";
+export const protobufPackage = "vigorousdeveloper.humans.humans";
 
 export interface TransactionData {
   index: string;

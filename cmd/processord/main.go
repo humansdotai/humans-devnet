@@ -6,10 +6,10 @@ import (
 	"os/signal"
 	"syscall"
 
-	"github.com/VigorousDeveloper/poc-human/cmd"
-	diverclient "github.com/VigorousDeveloper/poc-human/processor/humanclient"
-	"github.com/VigorousDeveloper/poc-human/processor/humanclient/cosmos"
-	"github.com/VigorousDeveloper/poc-human/processor/observer"
+	"github.com/VigorousDeveloper/humans/cmd"
+	diverclient "github.com/VigorousDeveloper/humans/processor/humanclient"
+	"github.com/VigorousDeveloper/humans/processor/humanclient/cosmos"
+	"github.com/VigorousDeveloper/humans/processor/observer"
 )
 
 func initPrefix() {
@@ -62,7 +62,7 @@ func main() {
 		ChainId:         "test",
 		ChainHost:       "127.0.0.1:1317",
 		ChainRPC:        "127.0.0.1:26657",
-		ChainHomeFolder: "~/.poc-human/",
+		ChainHomeFolder: "~/.humans/",
 	}
 
 	HumanChainBridge, err := diverclient.NewHumanChainBridge(k, cfg, signer, pubKey, addr)

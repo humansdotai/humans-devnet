@@ -7,9 +7,9 @@ import (
 	"github.com/ignite-hq/cli/ignite/pkg/cosmoscmd"
 	"github.com/stretchr/testify/require"
 
-	"github.com/VigorousDeveloper/poc-human/app"
-	"github.com/VigorousDeveloper/poc-human/x/mint/simulation"
-	"github.com/VigorousDeveloper/poc-human/x/mint/types"
+	"github.com/VigorousDeveloper/humans/app"
+	"github.com/VigorousDeveloper/humans/x/mint/simulation"
+	"github.com/VigorousDeveloper/humans/x/mint/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/kv"
 )

@@ -6,7 +6,7 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/VigorousDeveloper/poc-human/x/pochuman/types"
+	"github.com/VigorousDeveloper/humans/x/humans/types"
 	// "github.com/tendermint/tendermint/rpc/coretypes"
 )
 

@@ -2,7 +2,7 @@ VERSION := 0.0.1
 COMMIT := $(shell git log -1 --format='%H')
 
 ldflags = -X github.com/cosmos/cosmos-sdk/version.Name=Human \
-	-X github.com/cosmos/cosmos-sdk/version.ServerName=poc-humand \
+	-X github.com/cosmos/cosmos-sdk/version.ServerName=humans \
 	-X github.com/cosmos/cosmos-sdk/version.Version=$(VERSION) \
 	-X github.com/cosmos/cosmos-sdk/version.Commit=$(COMMIT)
 
@@ -14,13 +14,13 @@ PROJECT_NAME = $(shell git remote get-url origin | xargs basename -s .git)
 all: install
 
 install: go.sum
-	go install -mod=readonly $(BUILD_FLAGS) ./cmd/pochumand-manager
-	go install -mod=readonly $(BUILD_FLAGS) ./cmd/poc-humand
+	go install -mod=readonly $(BUILD_FLAGS) ./cmd/humansd-manager
+	go install -mod=readonly $(BUILD_FLAGS) ./cmd/humansd
 	go install -mod=readonly $(BUILD_FLAGS) ./cmd/processord
 
 build: go.sum clean
-	go build -mod=mod $(BUILD_FLAGS) -o build/pochumand-manager ./cmd/pochumand-manager
-	go build -mod=mod $(BUILD_FLAGS) -o build/poc-humand ./cmd/poc-humand
+	go build -mod=mod $(BUILD_FLAGS) -o build/humansd-manager ./cmd/humansd-manager
+	go build -mod=mod $(BUILD_FLAGS) -o build/humansd ./cmd/humansd
 	go build -mod=mod $(BUILD_FLAGS) -o build/processord ./cmd/processord
 
 build-linux:
@@ -44,8 +44,8 @@ devnet-prepare:
 	./scripts/prepare-devnet.sh
 
 devnet-start:
-	DAEMON_NAME=poc-humand DAEMON_HOME=~/.human DAEMON_ALLOW_DOWNLOAD_BINARIES=true DAEMON_RESTART_AFTER_UPGRADE=true \
-    poc-humand start --pruning="nothing" --inv-check-period 5
+	DAEMON_NAME=humansd DAEMON_HOME=~/.humans DAEMON_ALLOW_DOWNLOAD_BINARIES=true DAEMON_RESTART_AFTER_UPGRADE=true \
+    humansd start --pruning="nothing" --inv-check-period 5
 
 # Clean up the build directory
 clean:
@@ -60,7 +60,7 @@ build-docker:
 
 # Run a 4-node testnet locally
 localnet-start: build-linux localnet-stop
-	@if ! [ -f build/node0/poc-humand/config/genesis.json ]; then docker run --rm -v $(CURDIR)/build:/diversifid:Z lottery/core testnet --v 4 -o . --starting-ip-address 192.168.10.2 --keyring-backend=test --chain-id test ; fi
+	@if ! [ -f build/node0/humansd/config/genesis.json ]; then docker run --rm -v $(CURDIR)/build:/diversifid:Z lottery/core testnet --v 4 -o . --starting-ip-address 192.168.10.2 --keyring-backend=test --chain-id test ; fi
 	./scripts/import-localnet-seeds.sh
 	docker-compose up
 
@@ -111,4 +111,4 @@ proto-check-breaking:
 
 # Create log files
 log-files:
-	sudo mkdir -p /var/log/poc-humand && sudo touch /var/log/poc-humand/poc-humand.log && sudo touch /var/log/poc-humand/poc-humand_error.log
+	sudo mkdir -p /var/log/humansd && sudo touch /var/log/humansd/humansd.log && sudo touch /var/log/humansd/humansd_error.log

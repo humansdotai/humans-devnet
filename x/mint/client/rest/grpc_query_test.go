@@ -14,8 +14,8 @@ import (
 	"github.com/gogo/protobuf/proto"
 	"github.com/stretchr/testify/suite"
 
-	"github.com/VigorousDeveloper/poc-human/testutil/network"
-	minttypes "github.com/VigorousDeveloper/poc-human/x/mint/types"
+	"github.com/VigorousDeveloper/humans/testutil/network"
+	minttypes "github.com/VigorousDeveloper/humans/x/mint/types"
 )
 
 type IntegrationTestSuite struct {

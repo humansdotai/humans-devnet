@@ -1,8 +1,8 @@
 package mint
 
 import (
-	"github.com/VigorousDeveloper/poc-human/x/mint/keeper"
-	"github.com/VigorousDeveloper/poc-human/x/mint/types"
+	"github.com/VigorousDeveloper/humans/x/mint/keeper"
+	"github.com/VigorousDeveloper/humans/x/mint/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 

@@ -9,10 +9,10 @@ import (
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
 	dbm "github.com/tendermint/tm-db"
 
-	junoapp "github.com/VigorousDeveloper/poc-human/app"
+	junoapp "github.com/VigorousDeveloper/humans/app"
 	"github.com/cosmos/cosmos-sdk/simapp"
 
-	"github.com/VigorousDeveloper/poc-human/x/mint/types"
+	"github.com/VigorousDeveloper/humans/x/mint/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
