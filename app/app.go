@@ -56,9 +56,6 @@ import (
 	govclient "github.com/cosmos/cosmos-sdk/x/gov/client"
 	govkeeper "github.com/cosmos/cosmos-sdk/x/gov/keeper"
 	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types"
-	"github.com/cosmos/cosmos-sdk/x/mint"
-	mintkeeper "github.com/cosmos/cosmos-sdk/x/mint/keeper"
-	minttypes "github.com/cosmos/cosmos-sdk/x/mint/types"
 	"github.com/cosmos/cosmos-sdk/x/params"
 	paramsclient "github.com/cosmos/cosmos-sdk/x/params/client"
 	paramskeeper "github.com/cosmos/cosmos-sdk/x/params/keeper"
@@ -98,17 +95,20 @@ import (
 	monitoringpkeeper "github.com/tendermint/spn/x/monitoringp/keeper"
 	monitoringptypes "github.com/tendermint/spn/x/monitoringp/types"
 
-	"github.com/humansdotai/humans/docs"
+	"github.com/VigorousDeveloper/poc-human/docs"
+	pochumanmodule "github.com/VigorousDeveloper/poc-human/x/pochuman"
+	pochumanmodulekeeper "github.com/VigorousDeveloper/poc-human/x/pochuman/keeper"
+	pochumanmoduletypes "github.com/VigorousDeveloper/poc-human/x/pochuman/types"
 
-	humansmodule "github.com/humansdotai/humans/x/humans"
-	humansmodulekeeper "github.com/humansdotai/humans/x/humans/keeper"
-	humansmoduletypes "github.com/humansdotai/humans/x/humans/types"
+	"github.com/VigorousDeveloper/poc-human/x/mint"
+	mintkeeper "github.com/VigorousDeveloper/poc-human/x/mint/keeper"
+	minttypes "github.com/VigorousDeveloper/poc-human/x/mint/types"
 	// this line is used by starport scaffolding # stargate/app/moduleImport
 )
 
 const (
-	AccountAddressPrefix = "humans"
-	Name                 = "humans"
+	AccountAddressPrefix = "human"
+	Name                 = "poc-human"
 )
 
 // this line is used by starport scaffolding # stargate/wasm/app/enabledProposals
@@ -157,7 +157,7 @@ var (
 		transfer.AppModuleBasic{},
 		vesting.AppModuleBasic{},
 		monitoringp.AppModuleBasic{},
-		humansmodule.AppModuleBasic{},
+		pochumanmodule.AppModuleBasic{},
 		// this line is used by starport scaffolding # stargate/app/moduleBasic
 	)
 
@@ -170,6 +170,7 @@ var (
 		stakingtypes.NotBondedPoolName: {authtypes.Burner, authtypes.Staking},
 		govtypes.ModuleName:            {authtypes.Burner},
 		ibctransfertypes.ModuleName:    {authtypes.Minter, authtypes.Burner},
+		pochumanmoduletypes.ModuleName: {authtypes.Minter, authtypes.Burner, authtypes.Staking},
 		// this line is used by starport scaffolding # stargate/app/maccPerms
 	}
 )
@@ -187,6 +188,7 @@ func init() {
 	}
 
 	DefaultNodeHome = filepath.Join(userHomeDir, "."+Name)
+	RegisterCoinDenominations()
 }
 
 // App extends an ABCI application, but with most of its parameters exported.
@@ -230,7 +232,7 @@ type App struct {
 	ScopedTransferKeeper   capabilitykeeper.ScopedKeeper
 	ScopedMonitoringKeeper capabilitykeeper.ScopedKeeper
 
-	HumansKeeper humansmodulekeeper.Keeper
+	PochumanKeeper pochumanmodulekeeper.Keeper
 	// this line is used by starport scaffolding # stargate/app/keeperDeclaration
 
 	// mm is the module manager
@@ -267,7 +269,7 @@ func New(
 		minttypes.StoreKey, distrtypes.StoreKey, slashingtypes.StoreKey,
 		govtypes.StoreKey, paramstypes.StoreKey, ibchost.StoreKey, upgradetypes.StoreKey, feegrant.StoreKey,
 		evidencetypes.StoreKey, ibctransfertypes.StoreKey, capabilitytypes.StoreKey, monitoringptypes.StoreKey,
-		humansmoduletypes.StoreKey,
+		pochumanmoduletypes.StoreKey,
 		// this line is used by starport scaffolding # stargate/app/storeKey
 	)
 	tkeys := sdk.NewTransientStoreKeys(paramstypes.TStoreKey)
@@ -386,13 +388,15 @@ func New(
 	)
 	monitoringModule := monitoringp.NewAppModule(appCodec, app.MonitoringKeeper)
 
-	app.HumansKeeper = *humansmodulekeeper.NewKeeper(
+	app.PochumanKeeper = *pochumanmodulekeeper.NewKeeper(
 		appCodec,
-		keys[humansmoduletypes.StoreKey],
-		keys[humansmoduletypes.MemStoreKey],
-		app.GetSubspace(humansmoduletypes.ModuleName),
+		keys[pochumanmoduletypes.StoreKey],
+		keys[pochumanmoduletypes.MemStoreKey],
+		app.GetSubspace(pochumanmoduletypes.ModuleName),
+
+		app.BankKeeper,
 	)
-	humansModule := humansmodule.NewAppModule(appCodec, app.HumansKeeper, app.AccountKeeper, app.BankKeeper)
+	pochumanModule := pochumanmodule.NewAppModule(appCodec, app.PochumanKeeper, app.AccountKeeper, app.BankKeeper)
 
 	// this line is used by starport scaffolding # stargate/app/keeperDefinition
 
@@ -435,7 +439,7 @@ func New(
 		params.NewAppModule(app.ParamsKeeper),
 		transferModule,
 		monitoringModule,
-		humansModule,
+		pochumanModule,
 		// this line is used by starport scaffolding # stargate/app/appModule
 	)
 
@@ -463,7 +467,7 @@ func New(
 		feegrant.ModuleName,
 		paramstypes.ModuleName,
 		monitoringptypes.ModuleName,
-		humansmoduletypes.ModuleName,
+		pochumanmoduletypes.ModuleName,
 		// this line is used by starport scaffolding # stargate/app/beginBlockers
 	)
 
@@ -487,7 +491,7 @@ func New(
 		ibchost.ModuleName,
 		ibctransfertypes.ModuleName,
 		monitoringptypes.ModuleName,
-		humansmoduletypes.ModuleName,
+		pochumanmoduletypes.ModuleName,
 		// this line is used by starport scaffolding # stargate/app/endBlockers
 	)
 
@@ -516,7 +520,7 @@ func New(
 		ibctransfertypes.ModuleName,
 		feegrant.ModuleName,
 		monitoringptypes.ModuleName,
-		humansmoduletypes.ModuleName,
+		pochumanmoduletypes.ModuleName,
 		// this line is used by starport scaffolding # stargate/app/initGenesis
 	)
 
@@ -541,7 +545,7 @@ func New(
 		ibc.NewAppModule(app.IBCKeeper),
 		transferModule,
 		monitoringModule,
-		humansModule,
+		pochumanModule,
 		// this line is used by starport scaffolding # stargate/app/appModule
 	)
 	app.sm.RegisterStoreDecoders()
@@ -731,7 +735,7 @@ func initParamsKeeper(appCodec codec.BinaryCodec, legacyAmino *codec.LegacyAmino
 	paramsKeeper.Subspace(ibctransfertypes.ModuleName)
 	paramsKeeper.Subspace(ibchost.ModuleName)
 	paramsKeeper.Subspace(monitoringptypes.ModuleName)
-	paramsKeeper.Subspace(humansmoduletypes.ModuleName)
+	paramsKeeper.Subspace(pochumanmoduletypes.ModuleName)
 	// this line is used by starport scaffolding # stargate/app/paramSubspace
 
 	return paramsKeeper
@@ -740,4 +744,9 @@ func initParamsKeeper(appCodec codec.BinaryCodec, legacyAmino *codec.LegacyAmino
 // SimulationManager implements the SimulationApp interface
 func (app *App) SimulationManager() *module.SimulationManager {
 	return app.sm
+}
+
+func RegisterCoinDenominations() {
+	_ = sdk.RegisterDenom("HMN", sdk.OneDec())
+	_ = sdk.RegisterDenom("uHMN", sdk.NewDecWithPrec(1, 9))
 }

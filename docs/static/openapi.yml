@@ -19749,42 +19749,6 @@ paths:
           format: int64
       tags:
         - Query
-  /humansdotai/humans/humans/params:
-    get:
-      summary: Parameters queries the parameters of the module.
-      operationId: HumansdotaiHumansHumansParams
-      responses:
-        '200':
-          description: A successful response.
-          schema:
-            type: object
-            properties:
-              params:
-                description: params holds all the parameters of this module.
-                type: object
-            description: >-
-              QueryParamsResponse is response type for the Query/Params RPC
-              method.
-        default:
-          description: An unexpected error response.
-          schema:
-            type: object
-            properties:
-              code:
-                type: integer
-                format: int32
-              message:
-                type: string
-              details:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    '@type':
-                      type: string
-                  additionalProperties: {}
-      tags:
-        - Query
   /ibc/apps/transfer/v1/denom_traces:
     get:
       summary: DenomTraces queries all denomination traces.
@@ -29731,6 +29695,963 @@ paths:
                     '@type':
                       type: string
                   additionalProperties: {}
+      tags:
+        - Query
+  /VigorousDeveloper/poc-human/pochuman/fee_balance:
+    get:
+      summary: Queries a list of FeeBalance items.
+      operationId: VigorousdeveloperPochumanPochumanFeeBalanceAll
+      responses:
+        '200':
+          description: A successful response.
+          schema:
+            type: object
+            properties:
+              feeBalance:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    index:
+                      type: string
+                    chainName:
+                      type: string
+                    balance:
+                      type: string
+                    decimal:
+                      type: string
+              pagination:
+                type: object
+                properties:
+                  next_key:
+                    type: string
+                    format: byte
+                    title: |-
+                      next_key is the key to be passed to PageRequest.key to
+                      query the next page most efficiently
+                  total:
+                    type: string
+                    format: uint64
+                    title: >-
+                      total is total number of results available if
+                      PageRequest.count_total
+
+                      was set, its value is undefined otherwise
+                description: >-
+                  PageResponse is to be embedded in gRPC response messages where
+                  the
+
+                  corresponding request message has used PageRequest.
+
+                   message SomeResponse {
+                           repeated Bar results = 1;
+                           PageResponse page = 2;
+                   }
+        default:
+          description: An unexpected error response.
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+              message:
+                type: string
+              details:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    '@type':
+                      type: string
+                  additionalProperties: {}
+      parameters:
+        - name: pagination.key
+          description: |-
+            key is a value returned in PageResponse.next_key to begin
+            querying the next page most efficiently. Only one of offset or key
+            should be set.
+          in: query
+          required: false
+          type: string
+          format: byte
+        - name: pagination.offset
+          description: >-
+            offset is a numeric offset that can be used when key is unavailable.
+
+            It is less efficient than using key. Only one of offset or key
+            should
+
+            be set.
+          in: query
+          required: false
+          type: string
+          format: uint64
+        - name: pagination.limit
+          description: >-
+            limit is the total number of results to be returned in the result
+            page.
+
+            If left empty it will default to a value to be set by each app.
+          in: query
+          required: false
+          type: string
+          format: uint64
+        - name: pagination.count_total
+          description: >-
+            count_total is set to true  to indicate that the result set should
+            include
+
+            a count of the total number of items available for pagination in
+            UIs.
+
+            count_total is only respected when offset is used. It is ignored
+            when key
+
+            is set.
+          in: query
+          required: false
+          type: boolean
+        - name: pagination.reverse
+          description: >-
+            reverse is set to true if results are to be returned in the
+            descending order.
+
+
+            Since: cosmos-sdk 0.43
+          in: query
+          required: false
+          type: boolean
+      tags:
+        - Query
+  '/VigorousDeveloper/poc-human/pochuman/fee_balance/{index}':
+    get:
+      summary: Queries a FeeBalance by index.
+      operationId: VigorousdeveloperPochumanPochumanFeeBalance
+      responses:
+        '200':
+          description: A successful response.
+          schema:
+            type: object
+            properties:
+              feeBalance:
+                type: object
+                properties:
+                  index:
+                    type: string
+                  chainName:
+                    type: string
+                  balance:
+                    type: string
+                  decimal:
+                    type: string
+        default:
+          description: An unexpected error response.
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+              message:
+                type: string
+              details:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    '@type':
+                      type: string
+                  additionalProperties: {}
+      parameters:
+        - name: index
+          in: path
+          required: true
+          type: string
+      tags:
+        - Query
+  /VigorousDeveloper/poc-human/pochuman/keysign_vote_data:
+    get:
+      summary: Queries a list of KeysignVoteData items.
+      operationId: VigorousdeveloperPochumanPochumanKeysignVoteDataAll
+      responses:
+        '200':
+          description: A successful response.
+          schema:
+            type: object
+            properties:
+              keysignVoteData:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    index:
+                      type: string
+                    txHash:
+                      type: string
+                    pubKey:
+                      type: string
+                    voter:
+                      type: string
+                    txTime:
+                      type: string
+              pagination:
+                type: object
+                properties:
+                  next_key:
+                    type: string
+                    format: byte
+                    title: |-
+                      next_key is the key to be passed to PageRequest.key to
+                      query the next page most efficiently
+                  total:
+                    type: string
+                    format: uint64
+                    title: >-
+                      total is total number of results available if
+                      PageRequest.count_total
+
+                      was set, its value is undefined otherwise
+                description: >-
+                  PageResponse is to be embedded in gRPC response messages where
+                  the
+
+                  corresponding request message has used PageRequest.
+
+                   message SomeResponse {
+                           repeated Bar results = 1;
+                           PageResponse page = 2;
+                   }
+        default:
+          description: An unexpected error response.
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+              message:
+                type: string
+              details:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    '@type':
+                      type: string
+                  additionalProperties: {}
+      parameters:
+        - name: pagination.key
+          description: |-
+            key is a value returned in PageResponse.next_key to begin
+            querying the next page most efficiently. Only one of offset or key
+            should be set.
+          in: query
+          required: false
+          type: string
+          format: byte
+        - name: pagination.offset
+          description: >-
+            offset is a numeric offset that can be used when key is unavailable.
+
+            It is less efficient than using key. Only one of offset or key
+            should
+
+            be set.
+          in: query
+          required: false
+          type: string
+          format: uint64
+        - name: pagination.limit
+          description: >-
+            limit is the total number of results to be returned in the result
+            page.
+
+            If left empty it will default to a value to be set by each app.
+          in: query
+          required: false
+          type: string
+          format: uint64
+        - name: pagination.count_total
+          description: >-
+            count_total is set to true  to indicate that the result set should
+            include
+
+            a count of the total number of items available for pagination in
+            UIs.
+
+            count_total is only respected when offset is used. It is ignored
+            when key
+
+            is set.
+          in: query
+          required: false
+          type: boolean
+        - name: pagination.reverse
+          description: >-
+            reverse is set to true if results are to be returned in the
+            descending order.
+
+
+            Since: cosmos-sdk 0.43
+          in: query
+          required: false
+          type: boolean
+      tags:
+        - Query
+  '/VigorousDeveloper/poc-human/pochuman/keysign_vote_data/{index}':
+    get:
+      summary: Queries a KeysignVoteData by index.
+      operationId: VigorousdeveloperPochumanPochumanKeysignVoteData
+      responses:
+        '200':
+          description: A successful response.
+          schema:
+            type: object
+            properties:
+              keysignVoteData:
+                type: object
+                properties:
+                  index:
+                    type: string
+                  txHash:
+                    type: string
+                  pubKey:
+                    type: string
+                  voter:
+                    type: string
+                  txTime:
+                    type: string
+        default:
+          description: An unexpected error response.
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+              message:
+                type: string
+              details:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    '@type':
+                      type: string
+                  additionalProperties: {}
+      parameters:
+        - name: index
+          in: path
+          required: true
+          type: string
+      tags:
+        - Query
+  /VigorousDeveloper/poc-human/pochuman/observe_vote:
+    get:
+      summary: Queries a list of ObserveVote items.
+      operationId: VigorousdeveloperPochumanPochumanObserveVoteAll
+      responses:
+        '200':
+          description: A successful response.
+          schema:
+            type: object
+            properties:
+              observeVote:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    index:
+                      type: string
+                    creator:
+                      type: string
+                    txhash:
+                      type: string
+                    from:
+                      type: string
+                    to:
+                      type: string
+                    amount:
+                      type: string
+                    txtime:
+                      type: string
+                    chainId:
+                      type: string
+                    used:
+                      type: string
+              pagination:
+                type: object
+                properties:
+                  next_key:
+                    type: string
+                    format: byte
+                    title: |-
+                      next_key is the key to be passed to PageRequest.key to
+                      query the next page most efficiently
+                  total:
+                    type: string
+                    format: uint64
+                    title: >-
+                      total is total number of results available if
+                      PageRequest.count_total
+
+                      was set, its value is undefined otherwise
+                description: >-
+                  PageResponse is to be embedded in gRPC response messages where
+                  the
+
+                  corresponding request message has used PageRequest.
+
+                   message SomeResponse {
+                           repeated Bar results = 1;
+                           PageResponse page = 2;
+                   }
+        default:
+          description: An unexpected error response.
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+              message:
+                type: string
+              details:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    '@type':
+                      type: string
+                  additionalProperties: {}
+      parameters:
+        - name: pagination.key
+          description: |-
+            key is a value returned in PageResponse.next_key to begin
+            querying the next page most efficiently. Only one of offset or key
+            should be set.
+          in: query
+          required: false
+          type: string
+          format: byte
+        - name: pagination.offset
+          description: >-
+            offset is a numeric offset that can be used when key is unavailable.
+
+            It is less efficient than using key. Only one of offset or key
+            should
+
+            be set.
+          in: query
+          required: false
+          type: string
+          format: uint64
+        - name: pagination.limit
+          description: >-
+            limit is the total number of results to be returned in the result
+            page.
+
+            If left empty it will default to a value to be set by each app.
+          in: query
+          required: false
+          type: string
+          format: uint64
+        - name: pagination.count_total
+          description: >-
+            count_total is set to true  to indicate that the result set should
+            include
+
+            a count of the total number of items available for pagination in
+            UIs.
+
+            count_total is only respected when offset is used. It is ignored
+            when key
+
+            is set.
+          in: query
+          required: false
+          type: boolean
+        - name: pagination.reverse
+          description: >-
+            reverse is set to true if results are to be returned in the
+            descending order.
+
+
+            Since: cosmos-sdk 0.43
+          in: query
+          required: false
+          type: boolean
+      tags:
+        - Query
+  '/VigorousDeveloper/poc-human/pochuman/observe_vote/{index}':
+    get:
+      summary: Queries a ObserveVote by index.
+      operationId: VigorousdeveloperPochumanPochumanObserveVote
+      responses:
+        '200':
+          description: A successful response.
+          schema:
+            type: object
+            properties:
+              observeVote:
+                type: object
+                properties:
+                  index:
+                    type: string
+                  creator:
+                    type: string
+                  txhash:
+                    type: string
+                  from:
+                    type: string
+                  to:
+                    type: string
+                  amount:
+                    type: string
+                  txtime:
+                    type: string
+                  chainId:
+                    type: string
+                  used:
+                    type: string
+        default:
+          description: An unexpected error response.
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+              message:
+                type: string
+              details:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    '@type':
+                      type: string
+                  additionalProperties: {}
+      parameters:
+        - name: index
+          in: path
+          required: true
+          type: string
+      tags:
+        - Query
+  /VigorousDeveloper/poc-human/pochuman/params:
+    get:
+      summary: Parameters queries the parameters of the module.
+      operationId: VigorousdeveloperPochumanPochumanParams
+      responses:
+        '200':
+          description: A successful response.
+          schema:
+            type: object
+            properties:
+              params:
+                description: params holds all the parameters of this module.
+                type: object
+            description: >-
+              QueryParamsResponse is response type for the Query/Params RPC
+              method.
+        default:
+          description: An unexpected error response.
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+              message:
+                type: string
+              details:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    '@type':
+                      type: string
+                  additionalProperties: {}
+      tags:
+        - Query
+  /VigorousDeveloper/poc-human/pochuman/pool_balance:
+    get:
+      summary: Queries a list of PoolBalance items.
+      operationId: VigorousdeveloperPochumanPochumanPoolBalanceAll
+      responses:
+        '200':
+          description: A successful response.
+          schema:
+            type: object
+            properties:
+              poolBalance:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    index:
+                      type: string
+                    chainName:
+                      type: string
+                    balance:
+                      type: string
+                    decimal:
+                      type: string
+              pagination:
+                type: object
+                properties:
+                  next_key:
+                    type: string
+                    format: byte
+                    title: |-
+                      next_key is the key to be passed to PageRequest.key to
+                      query the next page most efficiently
+                  total:
+                    type: string
+                    format: uint64
+                    title: >-
+                      total is total number of results available if
+                      PageRequest.count_total
+
+                      was set, its value is undefined otherwise
+                description: >-
+                  PageResponse is to be embedded in gRPC response messages where
+                  the
+
+                  corresponding request message has used PageRequest.
+
+                   message SomeResponse {
+                           repeated Bar results = 1;
+                           PageResponse page = 2;
+                   }
+        default:
+          description: An unexpected error response.
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+              message:
+                type: string
+              details:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    '@type':
+                      type: string
+                  additionalProperties: {}
+      parameters:
+        - name: pagination.key
+          description: |-
+            key is a value returned in PageResponse.next_key to begin
+            querying the next page most efficiently. Only one of offset or key
+            should be set.
+          in: query
+          required: false
+          type: string
+          format: byte
+        - name: pagination.offset
+          description: >-
+            offset is a numeric offset that can be used when key is unavailable.
+
+            It is less efficient than using key. Only one of offset or key
+            should
+
+            be set.
+          in: query
+          required: false
+          type: string
+          format: uint64
+        - name: pagination.limit
+          description: >-
+            limit is the total number of results to be returned in the result
+            page.
+
+            If left empty it will default to a value to be set by each app.
+          in: query
+          required: false
+          type: string
+          format: uint64
+        - name: pagination.count_total
+          description: >-
+            count_total is set to true  to indicate that the result set should
+            include
+
+            a count of the total number of items available for pagination in
+            UIs.
+
+            count_total is only respected when offset is used. It is ignored
+            when key
+
+            is set.
+          in: query
+          required: false
+          type: boolean
+        - name: pagination.reverse
+          description: >-
+            reverse is set to true if results are to be returned in the
+            descending order.
+
+
+            Since: cosmos-sdk 0.43
+          in: query
+          required: false
+          type: boolean
+      tags:
+        - Query
+  '/VigorousDeveloper/poc-human/pochuman/pool_balance/{index}':
+    get:
+      summary: Queries a PoolBalance by index.
+      operationId: VigorousdeveloperPochumanPochumanPoolBalance
+      responses:
+        '200':
+          description: A successful response.
+          schema:
+            type: object
+            properties:
+              poolBalance:
+                type: object
+                properties:
+                  index:
+                    type: string
+                  chainName:
+                    type: string
+                  balance:
+                    type: string
+                  decimal:
+                    type: string
+        default:
+          description: An unexpected error response.
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+              message:
+                type: string
+              details:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    '@type':
+                      type: string
+                  additionalProperties: {}
+      parameters:
+        - name: index
+          in: path
+          required: true
+          type: string
+      tags:
+        - Query
+  /VigorousDeveloper/poc-human/pochuman/transaction_data:
+    get:
+      summary: Queries a list of TransactionData items.
+      operationId: VigorousdeveloperPochumanPochumanTransactionDataAll
+      responses:
+        '200':
+          description: A successful response.
+          schema:
+            type: object
+            properties:
+              transactionData:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    index:
+                      type: string
+                    originChain:
+                      type: string
+                    originAddress:
+                      type: string
+                    targetChain:
+                      type: string
+                    targetAddress:
+                      type: string
+                    amount:
+                      type: string
+                    time:
+                      type: string
+                    creator:
+                      type: string
+                    status:
+                      type: string
+                    confirmedBlockHash:
+                      type: string
+                    signedKey:
+                      type: string
+                    fee:
+                      type: string
+              pagination:
+                type: object
+                properties:
+                  next_key:
+                    type: string
+                    format: byte
+                    title: |-
+                      next_key is the key to be passed to PageRequest.key to
+                      query the next page most efficiently
+                  total:
+                    type: string
+                    format: uint64
+                    title: >-
+                      total is total number of results available if
+                      PageRequest.count_total
+
+                      was set, its value is undefined otherwise
+                description: >-
+                  PageResponse is to be embedded in gRPC response messages where
+                  the
+
+                  corresponding request message has used PageRequest.
+
+                   message SomeResponse {
+                           repeated Bar results = 1;
+                           PageResponse page = 2;
+                   }
+        default:
+          description: An unexpected error response.
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+              message:
+                type: string
+              details:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    '@type':
+                      type: string
+                  additionalProperties: {}
+      parameters:
+        - name: pagination.key
+          description: |-
+            key is a value returned in PageResponse.next_key to begin
+            querying the next page most efficiently. Only one of offset or key
+            should be set.
+          in: query
+          required: false
+          type: string
+          format: byte
+        - name: pagination.offset
+          description: >-
+            offset is a numeric offset that can be used when key is unavailable.
+
+            It is less efficient than using key. Only one of offset or key
+            should
+
+            be set.
+          in: query
+          required: false
+          type: string
+          format: uint64
+        - name: pagination.limit
+          description: >-
+            limit is the total number of results to be returned in the result
+            page.
+
+            If left empty it will default to a value to be set by each app.
+          in: query
+          required: false
+          type: string
+          format: uint64
+        - name: pagination.count_total
+          description: >-
+            count_total is set to true  to indicate that the result set should
+            include
+
+            a count of the total number of items available for pagination in
+            UIs.
+
+            count_total is only respected when offset is used. It is ignored
+            when key
+
+            is set.
+          in: query
+          required: false
+          type: boolean
+        - name: pagination.reverse
+          description: >-
+            reverse is set to true if results are to be returned in the
+            descending order.
+
+
+            Since: cosmos-sdk 0.43
+          in: query
+          required: false
+          type: boolean
+      tags:
+        - Query
+  '/VigorousDeveloper/poc-human/pochuman/transaction_data/{index}':
+    get:
+      summary: Queries a TransactionData by index.
+      operationId: VigorousdeveloperPochumanPochumanTransactionData
+      responses:
+        '200':
+          description: A successful response.
+          schema:
+            type: object
+            properties:
+              transactionData:
+                type: object
+                properties:
+                  index:
+                    type: string
+                  originChain:
+                    type: string
+                  originAddress:
+                    type: string
+                  targetChain:
+                    type: string
+                  targetAddress:
+                    type: string
+                  amount:
+                    type: string
+                  time:
+                    type: string
+                  creator:
+                    type: string
+                  status:
+                    type: string
+                  confirmedBlockHash:
+                    type: string
+                  signedKey:
+                    type: string
+                  fee:
+                    type: string
+        default:
+          description: An unexpected error response.
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+              message:
+                type: string
+              details:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    '@type':
+                      type: string
+                  additionalProperties: {}
+      parameters:
+        - name: index
+          in: path
+          required: true
+          type: string
       tags:
         - Query
 definitions:
@@ -46400,16 +47321,6 @@ definitions:
     description: >-
       MsgCreateVestingAccountResponse defines the Msg/CreateVestingAccount
       response type.
-  humansdotai.humans.humans.Params:
-    type: object
-    description: Params defines the parameters for the module.
-  humansdotai.humans.humans.QueryParamsResponse:
-    type: object
-    properties:
-      params:
-        description: params holds all the parameters of this module.
-        type: object
-    description: QueryParamsResponse is response type for the Query/Params RPC method.
   ibc.applications.transfer.v1.DenomTrace:
     type: object
     properties:
@@ -50916,3 +51827,464 @@ definitions:
     title: >-
       SignatureCounts contains information about signature reporting for a
       number of blocks
+  vigorousdeveloper.pochuman.pochuman.FeeBalance:
+    type: object
+    properties:
+      index:
+        type: string
+      chainName:
+        type: string
+      balance:
+        type: string
+      decimal:
+        type: string
+  vigorousdeveloper.pochuman.pochuman.KeysignVoteData:
+    type: object
+    properties:
+      index:
+        type: string
+      txHash:
+        type: string
+      pubKey:
+        type: string
+      voter:
+        type: string
+      txTime:
+        type: string
+  vigorousdeveloper.pochuman.pochuman.MsgApproveTransactionResponse:
+    type: object
+    properties:
+      code:
+        type: string
+      msg:
+        type: string
+  vigorousdeveloper.pochuman.pochuman.MsgKeysignVoteResponse:
+    type: object
+    properties:
+      code:
+        type: string
+      msg:
+        type: string
+  vigorousdeveloper.pochuman.pochuman.MsgObservationVoteResponse:
+    type: object
+    properties:
+      code:
+        type: string
+      msg:
+        type: string
+  vigorousdeveloper.pochuman.pochuman.MsgRequestTransactionResponse:
+    type: object
+    properties:
+      code:
+        type: string
+      msg:
+        type: string
+  vigorousdeveloper.pochuman.pochuman.MsgTranfserPoolcoinResponse:
+    type: object
+  vigorousdeveloper.pochuman.pochuman.MsgUpdateBalanceResponse:
+    type: object
+    properties:
+      code:
+        type: string
+      msg:
+        type: string
+  vigorousdeveloper.pochuman.pochuman.ObserveVote:
+    type: object
+    properties:
+      index:
+        type: string
+      creator:
+        type: string
+      txhash:
+        type: string
+      from:
+        type: string
+      to:
+        type: string
+      amount:
+        type: string
+      txtime:
+        type: string
+      chainId:
+        type: string
+      used:
+        type: string
+  vigorousdeveloper.pochuman.pochuman.Params:
+    type: object
+    description: Params defines the parameters for the module.
+  vigorousdeveloper.pochuman.pochuman.PoolBalance:
+    type: object
+    properties:
+      index:
+        type: string
+      chainName:
+        type: string
+      balance:
+        type: string
+      decimal:
+        type: string
+  vigorousdeveloper.pochuman.pochuman.QueryAllFeeBalanceResponse:
+    type: object
+    properties:
+      feeBalance:
+        type: array
+        items:
+          type: object
+          properties:
+            index:
+              type: string
+            chainName:
+              type: string
+            balance:
+              type: string
+            decimal:
+              type: string
+      pagination:
+        type: object
+        properties:
+          next_key:
+            type: string
+            format: byte
+            title: |-
+              next_key is the key to be passed to PageRequest.key to
+              query the next page most efficiently
+          total:
+            type: string
+            format: uint64
+            title: >-
+              total is total number of results available if
+              PageRequest.count_total
+
+              was set, its value is undefined otherwise
+        description: |-
+          PageResponse is to be embedded in gRPC response messages where the
+          corresponding request message has used PageRequest.
+
+           message SomeResponse {
+                   repeated Bar results = 1;
+                   PageResponse page = 2;
+           }
+  vigorousdeveloper.pochuman.pochuman.QueryAllKeysignVoteDataResponse:
+    type: object
+    properties:
+      keysignVoteData:
+        type: array
+        items:
+          type: object
+          properties:
+            index:
+              type: string
+            txHash:
+              type: string
+            pubKey:
+              type: string
+            voter:
+              type: string
+            txTime:
+              type: string
+      pagination:
+        type: object
+        properties:
+          next_key:
+            type: string
+            format: byte
+            title: |-
+              next_key is the key to be passed to PageRequest.key to
+              query the next page most efficiently
+          total:
+            type: string
+            format: uint64
+            title: >-
+              total is total number of results available if
+              PageRequest.count_total
+
+              was set, its value is undefined otherwise
+        description: |-
+          PageResponse is to be embedded in gRPC response messages where the
+          corresponding request message has used PageRequest.
+
+           message SomeResponse {
+                   repeated Bar results = 1;
+                   PageResponse page = 2;
+           }
+  vigorousdeveloper.pochuman.pochuman.QueryAllObserveVoteResponse:
+    type: object
+    properties:
+      observeVote:
+        type: array
+        items:
+          type: object
+          properties:
+            index:
+              type: string
+            creator:
+              type: string
+            txhash:
+              type: string
+            from:
+              type: string
+            to:
+              type: string
+            amount:
+              type: string
+            txtime:
+              type: string
+            chainId:
+              type: string
+            used:
+              type: string
+      pagination:
+        type: object
+        properties:
+          next_key:
+            type: string
+            format: byte
+            title: |-
+              next_key is the key to be passed to PageRequest.key to
+              query the next page most efficiently
+          total:
+            type: string
+            format: uint64
+            title: >-
+              total is total number of results available if
+              PageRequest.count_total
+
+              was set, its value is undefined otherwise
+        description: |-
+          PageResponse is to be embedded in gRPC response messages where the
+          corresponding request message has used PageRequest.
+
+           message SomeResponse {
+                   repeated Bar results = 1;
+                   PageResponse page = 2;
+           }
+  vigorousdeveloper.pochuman.pochuman.QueryAllPoolBalanceResponse:
+    type: object
+    properties:
+      poolBalance:
+        type: array
+        items:
+          type: object
+          properties:
+            index:
+              type: string
+            chainName:
+              type: string
+            balance:
+              type: string
+            decimal:
+              type: string
+      pagination:
+        type: object
+        properties:
+          next_key:
+            type: string
+            format: byte
+            title: |-
+              next_key is the key to be passed to PageRequest.key to
+              query the next page most efficiently
+          total:
+            type: string
+            format: uint64
+            title: >-
+              total is total number of results available if
+              PageRequest.count_total
+
+              was set, its value is undefined otherwise
+        description: |-
+          PageResponse is to be embedded in gRPC response messages where the
+          corresponding request message has used PageRequest.
+
+           message SomeResponse {
+                   repeated Bar results = 1;
+                   PageResponse page = 2;
+           }
+  vigorousdeveloper.pochuman.pochuman.QueryAllTransactionDataResponse:
+    type: object
+    properties:
+      transactionData:
+        type: array
+        items:
+          type: object
+          properties:
+            index:
+              type: string
+            originChain:
+              type: string
+            originAddress:
+              type: string
+            targetChain:
+              type: string
+            targetAddress:
+              type: string
+            amount:
+              type: string
+            time:
+              type: string
+            creator:
+              type: string
+            status:
+              type: string
+            confirmedBlockHash:
+              type: string
+            signedKey:
+              type: string
+            fee:
+              type: string
+      pagination:
+        type: object
+        properties:
+          next_key:
+            type: string
+            format: byte
+            title: |-
+              next_key is the key to be passed to PageRequest.key to
+              query the next page most efficiently
+          total:
+            type: string
+            format: uint64
+            title: >-
+              total is total number of results available if
+              PageRequest.count_total
+
+              was set, its value is undefined otherwise
+        description: |-
+          PageResponse is to be embedded in gRPC response messages where the
+          corresponding request message has used PageRequest.
+
+           message SomeResponse {
+                   repeated Bar results = 1;
+                   PageResponse page = 2;
+           }
+  vigorousdeveloper.pochuman.pochuman.QueryGetFeeBalanceResponse:
+    type: object
+    properties:
+      feeBalance:
+        type: object
+        properties:
+          index:
+            type: string
+          chainName:
+            type: string
+          balance:
+            type: string
+          decimal:
+            type: string
+  vigorousdeveloper.pochuman.pochuman.QueryGetKeysignVoteDataResponse:
+    type: object
+    properties:
+      keysignVoteData:
+        type: object
+        properties:
+          index:
+            type: string
+          txHash:
+            type: string
+          pubKey:
+            type: string
+          voter:
+            type: string
+          txTime:
+            type: string
+  vigorousdeveloper.pochuman.pochuman.QueryGetObserveVoteResponse:
+    type: object
+    properties:
+      observeVote:
+        type: object
+        properties:
+          index:
+            type: string
+          creator:
+            type: string
+          txhash:
+            type: string
+          from:
+            type: string
+          to:
+            type: string
+          amount:
+            type: string
+          txtime:
+            type: string
+          chainId:
+            type: string
+          used:
+            type: string
+  vigorousdeveloper.pochuman.pochuman.QueryGetPoolBalanceResponse:
+    type: object
+    properties:
+      poolBalance:
+        type: object
+        properties:
+          index:
+            type: string
+          chainName:
+            type: string
+          balance:
+            type: string
+          decimal:
+            type: string
+  vigorousdeveloper.pochuman.pochuman.QueryGetTransactionDataResponse:
+    type: object
+    properties:
+      transactionData:
+        type: object
+        properties:
+          index:
+            type: string
+          originChain:
+            type: string
+          originAddress:
+            type: string
+          targetChain:
+            type: string
+          targetAddress:
+            type: string
+          amount:
+            type: string
+          time:
+            type: string
+          creator:
+            type: string
+          status:
+            type: string
+          confirmedBlockHash:
+            type: string
+          signedKey:
+            type: string
+          fee:
+            type: string
+  vigorousdeveloper.pochuman.pochuman.QueryParamsResponse:
+    type: object
+    properties:
+      params:
+        description: params holds all the parameters of this module.
+        type: object
+    description: QueryParamsResponse is response type for the Query/Params RPC method.
+  vigorousdeveloper.pochuman.pochuman.TransactionData:
+    type: object
+    properties:
+      index:
+        type: string
+      originChain:
+        type: string
+      originAddress:
+        type: string
+      targetChain:
+        type: string
+      targetAddress:
+        type: string
+      amount:
+        type: string
+      time:
+        type: string
+      creator:
+        type: string
+      status:
+        type: string
+      confirmedBlockHash:
+        type: string
+      signedKey:
+        type: string
+      fee:
+        type: string

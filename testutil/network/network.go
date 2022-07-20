@@ -18,7 +18,7 @@ import (
 	tmrand "github.com/tendermint/tendermint/libs/rand"
 	tmdb "github.com/tendermint/tm-db"
 
-	"github.com/humansdotai/humans/app"
+	"github.com/VigorousDeveloper/poc-human/app"
 )
 
 type (
