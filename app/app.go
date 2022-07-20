@@ -56,9 +56,6 @@ import (
 	govclient "github.com/cosmos/cosmos-sdk/x/gov/client"
 	govkeeper "github.com/cosmos/cosmos-sdk/x/gov/keeper"
 	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types"
-	"github.com/cosmos/cosmos-sdk/x/mint"
-	mintkeeper "github.com/cosmos/cosmos-sdk/x/mint/keeper"
-	minttypes "github.com/cosmos/cosmos-sdk/x/mint/types"
 	"github.com/cosmos/cosmos-sdk/x/params"
 	paramsclient "github.com/cosmos/cosmos-sdk/x/params/client"
 	paramskeeper "github.com/cosmos/cosmos-sdk/x/params/keeper"
@@ -102,6 +99,10 @@ import (
 	pochumanmodule "github.com/VigorousDeveloper/poc-human/x/pochuman"
 	pochumanmodulekeeper "github.com/VigorousDeveloper/poc-human/x/pochuman/keeper"
 	pochumanmoduletypes "github.com/VigorousDeveloper/poc-human/x/pochuman/types"
+
+	"github.com/VigorousDeveloper/poc-human/x/mint"
+	mintkeeper "github.com/VigorousDeveloper/poc-human/x/mint/keeper"
+	minttypes "github.com/VigorousDeveloper/poc-human/x/mint/types"
 	// this line is used by starport scaffolding # stargate/app/moduleImport
 )
 
