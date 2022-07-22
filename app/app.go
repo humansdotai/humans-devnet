@@ -104,13 +104,7 @@ import (
 	"github.com/VigorousDeveloper/humans/x/mint"
 	mintkeeper "github.com/VigorousDeveloper/humans/x/mint/keeper"
 	minttypes "github.com/VigorousDeveloper/humans/x/mint/types"
-
 	// this line is used by starport scaffolding # stargate/app/moduleImport
-
-	ica "github.com/cosmos/ibc-go/v3/modules/apps/27-interchain-accounts"
-	icahost "github.com/cosmos/ibc-go/v3/modules/apps/27-interchain-accounts/host"
-	icahostkeeper "github.com/cosmos/ibc-go/v3/modules/apps/27-interchain-accounts/host/keeper"
-	icahosttypes "github.com/cosmos/ibc-go/v3/modules/apps/27-interchain-accounts/host/types"
 )
 
 const (
@@ -274,11 +268,8 @@ type App struct {
 	TransferKeeper   ibctransferkeeper.Keeper
 	FeeGrantKeeper   feegrantkeeper.Keeper
 
-	ICAHostKeeper icahostkeeper.Keeper
-
 	// make scoped keepers public for test purposes
 	ScopedIBCKeeper      capabilitykeeper.ScopedKeeper
-	ScopedICAHostKeeper  capabilitykeeper.ScopedKeeper
 	ScopedTransferKeeper capabilitykeeper.ScopedKeeper
 
 	HumansKeeper humansmodulekeeper.Keeper
@@ -349,7 +340,6 @@ func New(
 
 	// grant capabilities for the ibc and ibc-transfer modules
 	scopedIBCKeeper := app.CapabilityKeeper.ScopeToModule(ibchost.ModuleName)
-	scopedICAHostKeeper := app.CapabilityKeeper.ScopeToModule(icahosttypes.SubModuleName)
 	scopedTransferKeeper := app.CapabilityKeeper.ScopeToModule(ibctransfertypes.ModuleName)
 	// this line is used by starport scaffolding # stargate/app/scopedKeeper
 
@@ -424,26 +414,22 @@ func New(
 	transferModule := transfer.NewAppModule(app.TransferKeeper)
 	transferIBCModule := transfer.NewIBCModule(app.TransferKeeper)
 
-	app.ICAHostKeeper = icahostkeeper.NewKeeper(
-		appCodec,
-		keys[icahosttypes.StoreKey],
-		app.GetSubspace(icahosttypes.SubModuleName),
-		app.IBCKeeper.ChannelKeeper,
-		&app.IBCKeeper.PortKeeper,
-		app.AccountKeeper,
-		scopedICAHostKeeper,
-		app.MsgServiceRouter(),
-	)
-
-	icaModule := ica.NewAppModule(nil, &app.ICAHostKeeper)
-	icaHostIBCModule := icahost.NewIBCModule(app.ICAHostKeeper)
-
 	// Create evidence Keeper for to register the IBC light client misbehaviour evidence route
 	evidenceKeeper := evidencekeeper.NewKeeper(
 		appCodec, keys[evidencetypes.StoreKey], &app.StakingKeeper, app.SlashingKeeper,
 	)
 	// If evidence needs to be handled for the app, set routes in router here and seal
 	app.EvidenceKeeper = *evidenceKeeper
+
+	app.HumansKeeper = *humansmodulekeeper.NewKeeper(
+		appCodec,
+		keys[humansmoduletypes.StoreKey],
+		keys[humansmoduletypes.MemStoreKey],
+		app.GetSubspace(humansmoduletypes.ModuleName),
+
+		app.BankKeeper,
+	)
+	humansmodule := humansmodule.NewAppModule(appCodec, app.HumansKeeper, app.AccountKeeper, app.BankKeeper)
 
 	wasmDir := filepath.Join(homePath, "data")
 
@@ -482,30 +468,19 @@ func New(
 		govRouter.AddRoute(wasm.RouterKey, wasm.NewWasmProposalHandler(app.wasmKeeper, enabledProposals))
 	}
 
-	app.GovKeeper = govkeeper.NewKeeper(
-		appCodec, keys[govtypes.StoreKey], app.GetSubspace(govtypes.ModuleName), app.AccountKeeper, app.BankKeeper,
-		&stakingKeeper, govRouter,
-	)
-
-	app.HumansKeeper = *humansmodulekeeper.NewKeeper(
-		appCodec,
-		keys[humansmoduletypes.StoreKey],
-		keys[humansmoduletypes.MemStoreKey],
-		app.GetSubspace(humansmoduletypes.ModuleName),
-
-		app.BankKeeper,
-	)
-	humansmodule := humansmodule.NewAppModule(appCodec, app.HumansKeeper, app.AccountKeeper, app.BankKeeper)
-
 	// this line is used by starport scaffolding # stargate/app/keeperDefinition
 
 	// Create static IBC router, add transfer route, then set and seal it
 	ibcRouter := ibcporttypes.NewRouter()
 	ibcRouter.AddRoute(ibctransfertypes.ModuleName, transferIBCModule)
 	ibcRouter.AddRoute(wasm.ModuleName, wasm.NewIBCHandler(app.wasmKeeper, app.IBCKeeper.ChannelKeeper))
-	ibcRouter.AddRoute(icahosttypes.SubModuleName, icaHostIBCModule)
 	// this line is used by starport scaffolding # ibc/app/router
 	app.IBCKeeper.SetRouter(ibcRouter)
+
+	app.GovKeeper = govkeeper.NewKeeper(
+		appCodec, keys[govtypes.StoreKey], app.GetSubspace(govtypes.ModuleName), app.AccountKeeper, app.BankKeeper,
+		&stakingKeeper, govRouter,
+	)
 
 	/****  Module Options ****/
 
@@ -541,7 +516,6 @@ func New(
 		humansmodule,
 		// this line is used by starport scaffolding # stargate/app/appModule
 		wasm.NewAppModule(appCodec, &app.wasmKeeper, app.StakingKeeper, app.AccountKeeper, app.BankKeeper),
-		icaModule,
 	)
 
 	// During begin block slashing happens after distr.BeginBlocker so that
@@ -691,7 +665,6 @@ func New(
 	app.ScopedTransferKeeper = scopedTransferKeeper
 	// this line is used by starport scaffolding # stargate/app/beforeInitReturn
 	app.scopedWasmKeeper = scopedWasmKeeper
-	app.ScopedICAHostKeeper = scopedICAHostKeeper
 
 	return app
 }
