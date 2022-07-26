@@ -1,8 +1,8 @@
 package humans
 
 import (
-	"github.com/VigorousDeveloper/humans/x/humans/keeper"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/humansdotai/humans/x/humans/keeper"
 )
 
 // EndBlocker is called at the end of every block

@@ -5,7 +5,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/types/module"
 	"github.com/cosmos/cosmos-sdk/x/params"
 
-	customtypes "github.com/VigorousDeveloper/humans/custom/params/types"
+	customtypes "github.com/humansdotai/humans/custom/params/types"
 )
 
 var (

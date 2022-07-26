@@ -3,10 +3,10 @@ package humans_test
 import (
 	"testing"
 
-	keepertest "github.com/VigorousDeveloper/humans/testutil/keeper"
-	"github.com/VigorousDeveloper/humans/testutil/nullify"
-	"github.com/VigorousDeveloper/humans/x/humans"
-	"github.com/VigorousDeveloper/humans/x/humans/types"
+	keepertest "github.com/humansdotai/humans/testutil/keeper"
+	"github.com/humansdotai/humans/testutil/nullify"
+	"github.com/humansdotai/humans/x/humans"
+	"github.com/humansdotai/humans/x/humans/types"
 	"github.com/stretchr/testify/require"
 )
 

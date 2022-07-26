@@ -12,10 +12,10 @@ import (
 	"sync"
 	"time"
 
-	"github.com/VigorousDeveloper/humans/app"
 	"github.com/cosmos/cosmos-sdk/client"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 	"github.com/hashicorp/go-retryablehttp"
+	"github.com/humansdotai/humans/app"
 	rpchttp "github.com/tendermint/tendermint/rpc/client/http"
 )
 

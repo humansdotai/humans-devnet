@@ -3,8 +3,8 @@ package keeper
 import (
 	"context"
 
-	"github.com/VigorousDeveloper/humans/x/mint/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/humansdotai/humans/x/mint/types"
 )
 
 var _ types.QueryServer = Keeper{}

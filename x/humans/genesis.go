@@ -1,9 +1,9 @@
 package humans
 
 import (
-	"github.com/VigorousDeveloper/humans/x/humans/keeper"
-	"github.com/VigorousDeveloper/humans/x/humans/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/humansdotai/humans/x/humans/keeper"
+	"github.com/humansdotai/humans/x/humans/types"
 )
 
 // InitGenesis initializes the capability module's state from a provided genesis

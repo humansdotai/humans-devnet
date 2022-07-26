@@ -3,7 +3,7 @@ package types_test
 import (
 	"testing"
 
-	"github.com/VigorousDeveloper/humans/x/humans/types"
+	"github.com/humansdotai/humans/x/humans/types"
 	"github.com/stretchr/testify/require"
 )
 

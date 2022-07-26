@@ -11,14 +11,14 @@ import (
 
 	abci "github.com/tendermint/tendermint/abci/types"
 
-	"github.com/VigorousDeveloper/humans/x/humans/client/cli"
-	"github.com/VigorousDeveloper/humans/x/humans/keeper"
-	"github.com/VigorousDeveloper/humans/x/humans/types"
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/codec"
 	cdctypes "github.com/cosmos/cosmos-sdk/codec/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
+	"github.com/humansdotai/humans/x/humans/client/cli"
+	"github.com/humansdotai/humans/x/humans/keeper"
+	"github.com/humansdotai/humans/x/humans/types"
 )
 
 var (

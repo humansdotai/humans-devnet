@@ -3,15 +3,15 @@ package humans
 import (
 	"math/rand"
 
-	"github.com/VigorousDeveloper/humans/testutil/sample"
-	humanssimulation "github.com/VigorousDeveloper/humans/x/humans/simulation"
-	"github.com/VigorousDeveloper/humans/x/humans/types"
 	"github.com/cosmos/cosmos-sdk/baseapp"
 	simappparams "github.com/cosmos/cosmos-sdk/simapp/params"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
 	"github.com/cosmos/cosmos-sdk/x/simulation"
+	"github.com/humansdotai/humans/testutil/sample"
+	humanssimulation "github.com/humansdotai/humans/x/humans/simulation"
+	"github.com/humansdotai/humans/x/humans/types"
 )
 
 // avoid unused import issue

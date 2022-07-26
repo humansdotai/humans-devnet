@@ -3,8 +3,8 @@ package types
 import (
 	"testing"
 
-	"github.com/VigorousDeveloper/humans/testutil/sample"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	"github.com/humansdotai/humans/testutil/sample"
 	"github.com/stretchr/testify/require"
 )
 

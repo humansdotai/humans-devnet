@@ -10,7 +10,7 @@ import "humans/pool_balance.proto";
 import "humans/transaction_data.proto";
 // this line is used by starport scaffolding # genesis/proto/import
 
-option go_package = "github.com/VigorousDeveloper/humans/x/humans/types";
+option go_package = "github.com/humansdotai/humans/x/humans/types";
 
 // GenesisState defines the humans module's genesis state.
 message GenesisState {

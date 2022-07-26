@@ -10,8 +10,6 @@ import (
 	"strings"
 	"time"
 
-	"github.com/VigorousDeveloper/humans/x/humans/types"
-	token "github.com/VigorousDeveloper/humans/x/humans/types/erc20"
 	"github.com/ethereum/go-ethereum"
 	"github.com/ethereum/go-ethereum/accounts/abi"
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
@@ -20,6 +18,8 @@ import (
 	etherTypes "github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/ethereum/go-ethereum/ethclient"
+	"github.com/humansdotai/humans/x/humans/types"
+	token "github.com/humansdotai/humans/x/humans/types/erc20"
 	"golang.org/x/crypto/sha3"
 )
 

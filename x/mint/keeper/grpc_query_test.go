@@ -7,10 +7,10 @@ import (
 	"github.com/stretchr/testify/suite"
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
 
-	"github.com/VigorousDeveloper/humans/app"
-	"github.com/VigorousDeveloper/humans/x/mint/types"
 	"github.com/cosmos/cosmos-sdk/baseapp"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/humansdotai/humans/app"
+	"github.com/humansdotai/humans/x/mint/types"
 )
 
 type MintTestSuite struct {

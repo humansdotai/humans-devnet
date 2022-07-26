@@ -8,8 +8,8 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/x/simulation"
 
-	"github.com/VigorousDeveloper/humans/x/mint/types"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
+	"github.com/humansdotai/humans/x/mint/types"
 )
 
 const (

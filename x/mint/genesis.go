@@ -1,9 +1,9 @@
 package mint
 
 import (
-	"github.com/VigorousDeveloper/humans/x/mint/keeper"
-	"github.com/VigorousDeveloper/humans/x/mint/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/humansdotai/humans/x/mint/keeper"
+	"github.com/humansdotai/humans/x/mint/types"
 )
 
 // InitGenesis new mint genesis

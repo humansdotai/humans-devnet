@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/VigorousDeveloper/humans/x/humans/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/humansdotai/humans/x/humans/types"
 )
 
 func (k msgServer) KeysignVote(goCtx context.Context, msg *types.MsgKeysignVote) (*types.MsgKeysignVoteResponse, error) {

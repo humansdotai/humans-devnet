@@ -3,9 +3,9 @@ package cli
 import (
 	"context"
 
-	"github.com/VigorousDeveloper/humans/x/humans/types"
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
+	"github.com/humansdotai/humans/x/humans/types"
 	"github.com/spf13/cobra"
 )
 
