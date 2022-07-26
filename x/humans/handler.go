@@ -3,10 +3,10 @@ package humans
 import (
 	"fmt"
 
-	"github.com/VigorousDeveloper/humans/x/humans/keeper"
-	"github.com/VigorousDeveloper/humans/x/humans/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	"github.com/humansdotai/humans/x/humans/keeper"
+	"github.com/humansdotai/humans/x/humans/types"
 )
 
 // NewHandler ...

@@ -96,14 +96,14 @@ import (
 	"github.com/ignite-hq/cli/ignite/pkg/cosmoscmd"
 	"github.com/ignite-hq/cli/ignite/pkg/openapiconsole"
 
-	"github.com/VigorousDeveloper/humans/docs"
-	humansmodule "github.com/VigorousDeveloper/humans/x/humans"
-	humansmodulekeeper "github.com/VigorousDeveloper/humans/x/humans/keeper"
-	humansmoduletypes "github.com/VigorousDeveloper/humans/x/humans/types"
+	"github.com/humansdotai/humans/docs"
+	humansmodule "github.com/humansdotai/humans/x/humans"
+	humansmodulekeeper "github.com/humansdotai/humans/x/humans/keeper"
+	humansmoduletypes "github.com/humansdotai/humans/x/humans/types"
 
-	"github.com/VigorousDeveloper/humans/x/mint"
-	mintkeeper "github.com/VigorousDeveloper/humans/x/mint/keeper"
-	minttypes "github.com/VigorousDeveloper/humans/x/mint/types"
+	"github.com/humansdotai/humans/x/mint"
+	mintkeeper "github.com/humansdotai/humans/x/mint/keeper"
+	minttypes "github.com/humansdotai/humans/x/mint/types"
 	// this line is used by starport scaffolding # stargate/app/moduleImport
 )
 

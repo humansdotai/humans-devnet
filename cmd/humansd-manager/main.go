@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/VigorousDeveloper/humans/cmd/humansd-manager/lib"
+	"github.com/humansdotai/humans/cmd/humansd-manager/lib"
 )
 
 func main() {

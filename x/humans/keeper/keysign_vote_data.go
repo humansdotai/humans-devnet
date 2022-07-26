@@ -1,9 +1,9 @@
 package keeper
 
 import (
-	"github.com/VigorousDeveloper/humans/x/humans/types"
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/humansdotai/humans/x/humans/types"
 )
 
 // SetKeysignVoteData set a specific keysignVoteData in the store from its index

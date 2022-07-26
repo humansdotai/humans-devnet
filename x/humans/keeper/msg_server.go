@@ -1,7 +1,7 @@
 package keeper
 
 import (
-	"github.com/VigorousDeveloper/humans/x/humans/types"
+	"github.com/humansdotai/humans/x/humans/types"
 )
 
 type msgServer struct {

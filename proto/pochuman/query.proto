@@ -12,7 +12,7 @@ import "humans/pool_balance.proto";
 import "humans/transaction_data.proto";
 // this line is used by starport scaffolding # 1
 
-option go_package = "github.com/VigorousDeveloper/humans/x/humans/types";
+option go_package = "github.com/humansdotai/humans/x/humans/types";
 
 // Query defines the gRPC querier service.
 service Query {

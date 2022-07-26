@@ -6,10 +6,10 @@ import (
 	"os/signal"
 	"syscall"
 
-	"github.com/VigorousDeveloper/humans/cmd"
-	diverclient "github.com/VigorousDeveloper/humans/processor/humanclient"
-	"github.com/VigorousDeveloper/humans/processor/humanclient/cosmos"
-	"github.com/VigorousDeveloper/humans/processor/observer"
+	"github.com/humansdotai/humans/cmd"
+	diverclient "github.com/humansdotai/humans/processor/humanclient"
+	"github.com/humansdotai/humans/processor/humanclient/cosmos"
+	"github.com/humansdotai/humans/processor/observer"
 )
 
 func initPrefix() {

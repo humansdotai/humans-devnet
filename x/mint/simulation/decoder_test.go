@@ -7,11 +7,11 @@ import (
 	"github.com/ignite-hq/cli/ignite/pkg/cosmoscmd"
 	"github.com/stretchr/testify/require"
 
-	"github.com/VigorousDeveloper/humans/app"
-	"github.com/VigorousDeveloper/humans/x/mint/simulation"
-	"github.com/VigorousDeveloper/humans/x/mint/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/kv"
+	"github.com/humansdotai/humans/app"
+	"github.com/humansdotai/humans/x/mint/simulation"
+	"github.com/humansdotai/humans/x/mint/types"
 )
 
 func TestDecodeStore(t *testing.T) {

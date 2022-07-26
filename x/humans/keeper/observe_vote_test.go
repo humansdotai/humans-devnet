@@ -4,11 +4,11 @@ import (
 	"strconv"
 	"testing"
 
-	keepertest "github.com/VigorousDeveloper/humans/testutil/keeper"
-	"github.com/VigorousDeveloper/humans/testutil/nullify"
-	"github.com/VigorousDeveloper/humans/x/humans/keeper"
-	"github.com/VigorousDeveloper/humans/x/humans/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	keepertest "github.com/humansdotai/humans/testutil/keeper"
+	"github.com/humansdotai/humans/testutil/nullify"
+	"github.com/humansdotai/humans/x/humans/keeper"
+	"github.com/humansdotai/humans/x/humans/types"
 	"github.com/stretchr/testify/require"
 )
 

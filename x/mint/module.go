@@ -11,17 +11,17 @@ import (
 	"github.com/spf13/cobra"
 	abci "github.com/tendermint/tendermint/abci/types"
 
-	"github.com/VigorousDeveloper/humans/x/mint/client/cli"
-	"github.com/VigorousDeveloper/humans/x/mint/client/rest"
-	"github.com/VigorousDeveloper/humans/x/mint/keeper"
-	"github.com/VigorousDeveloper/humans/x/mint/simulation"
-	"github.com/VigorousDeveloper/humans/x/mint/types"
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/codec"
 	cdctypes "github.com/cosmos/cosmos-sdk/codec/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
+	"github.com/humansdotai/humans/x/mint/client/cli"
+	"github.com/humansdotai/humans/x/mint/client/rest"
+	"github.com/humansdotai/humans/x/mint/keeper"
+	"github.com/humansdotai/humans/x/mint/simulation"
+	"github.com/humansdotai/humans/x/mint/types"
 )
 
 var (

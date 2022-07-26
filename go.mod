@@ -1,4 +1,4 @@
-module github.com/VigorousDeveloper/humans
+module github.com/humansdotai/humans
 
 go 1.18
 

@@ -12,10 +12,10 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
-	"github.com/VigorousDeveloper/humans/testutil/network"
-	"github.com/VigorousDeveloper/humans/testutil/nullify"
-	"github.com/VigorousDeveloper/humans/x/humans/client/cli"
-	"github.com/VigorousDeveloper/humans/x/humans/types"
+	"github.com/humansdotai/humans/testutil/network"
+	"github.com/humansdotai/humans/testutil/nullify"
+	"github.com/humansdotai/humans/x/humans/client/cli"
+	"github.com/humansdotai/humans/x/humans/types"
 )
 
 // Prevent strconv unused error

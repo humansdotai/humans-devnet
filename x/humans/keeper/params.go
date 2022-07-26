@@ -1,8 +1,8 @@
 package keeper
 
 import (
-	"github.com/VigorousDeveloper/humans/x/humans/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/humansdotai/humans/x/humans/types"
 )
 
 // GetParams get all parameters as types.Params

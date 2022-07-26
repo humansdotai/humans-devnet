@@ -3,8 +3,8 @@ package keeper_test
 import (
 	"testing"
 
-	testkeeper "github.com/VigorousDeveloper/humans/testutil/keeper"
-	"github.com/VigorousDeveloper/humans/x/humans/types"
+	testkeeper "github.com/humansdotai/humans/testutil/keeper"
+	"github.com/humansdotai/humans/x/humans/types"
 	"github.com/stretchr/testify/require"
 )
 

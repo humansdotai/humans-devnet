@@ -1,8 +1,8 @@
 package main
 
 import (
-	"github.com/VigorousDeveloper/humans/app"
 	"github.com/cosmos/cosmos-sdk/client"
+	"github.com/humansdotai/humans/app"
 	"github.com/ignite-hq/cli/ignite/pkg/cosmoscmd"
 	"github.com/spf13/cobra"
 

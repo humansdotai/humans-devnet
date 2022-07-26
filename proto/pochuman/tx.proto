@@ -3,7 +3,7 @@ package vigorousdeveloper.humans.humans;
 
 // this line is used by starport scaffolding # proto/tx/import
 
-option go_package = "github.com/VigorousDeveloper/humans/x/humans/types";
+option go_package = "github.com/humansdotai/humans/x/humans/types";
 
 // Msg defines the Msg service.
 service Msg {

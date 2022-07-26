@@ -3,10 +3,10 @@ package cli
 import (
 	"strconv"
 
-	"github.com/VigorousDeveloper/humans/x/humans/types"
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/tx"
+	"github.com/humansdotai/humans/x/humans/types"
 	"github.com/spf13/cobra"
 )
 

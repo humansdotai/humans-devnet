@@ -8,10 +8,10 @@ import (
 	"sync"
 	"time"
 
-	diverclient "github.com/VigorousDeveloper/humans/processor/humanclient"
-	"github.com/VigorousDeveloper/humans/x/humans/types"
 	"github.com/cenkalti/backoff"
 	stypes "github.com/cosmos/cosmos-sdk/types"
+	diverclient "github.com/humansdotai/humans/processor/humanclient"
+	"github.com/humansdotai/humans/x/humans/types"
 )
 
 // Observer observer service

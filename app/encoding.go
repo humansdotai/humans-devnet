@@ -1,8 +1,8 @@
 package app
 
 import (
-	"github.com/VigorousDeveloper/humans/app/params"
 	"github.com/cosmos/cosmos-sdk/std"
+	"github.com/humansdotai/humans/app/params"
 )
 
 // MakeEncodingConfig creates an EncodingConfig for testing

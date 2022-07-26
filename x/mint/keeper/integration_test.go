@@ -9,11 +9,11 @@ import (
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
 	dbm "github.com/tendermint/tm-db"
 
-	junoapp "github.com/VigorousDeveloper/humans/app"
 	"github.com/cosmos/cosmos-sdk/simapp"
+	junoapp "github.com/humansdotai/humans/app"
 
-	"github.com/VigorousDeveloper/humans/x/mint/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/humansdotai/humans/x/mint/types"
 )
 
 // returns context and an app with updated mint keeper
