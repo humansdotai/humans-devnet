@@ -40,7 +40,7 @@ func (b *HumanChainBridge) Broadcast(msgs ...stypes.Msg) (TxID, error) {
 		}
 	}
 
-	flags := flag.NewFlagSet("diversifi", 0)
+	flags := flag.NewFlagSet("humans", 0)
 
 	ctx := b.GetContext()
 	factory := clienttx.NewFactoryCLI(ctx, flags)
@@ -89,10 +89,9 @@ func (b *HumanChainBridge) Broadcast(msgs ...stypes.Msg) (TxID, error) {
 		// commit code 6 means `unknown request` , which means the tx can't be accepted by diversifi
 		// if that's the case, let's just ignore it and move on
 		if commit.Code != 6 {
-			return txHash, fmt.Errorf("fail to broadcast to DIVERSIChain,code:%d, log:%s", commit.Code, commit.RawLog)
+			return txHash, fmt.Errorf("fail to broadcast to HumanChain,code:%d, log:%s", commit.Code, commit.RawLog)
 		}
 	}
-	// b.m.GetCounter(metrics.TxToDiversichain).Inc()
 
 	// increment seqNum
 	atomic.AddUint64(&b.seqNumber, 1)

@@ -112,3 +112,4 @@ proto-check-breaking:
 # Create log files
 log-files:
 	sudo mkdir -p /var/log/humansd && sudo touch /var/log/humansd/humansd.log && sudo touch /var/log/humansd/humansd_error.log
+	sudo mkdir -p /var/log/processord && sudo touch /var/log/processord/processord.log && sudo touch /var/log/processord/processord_error.log

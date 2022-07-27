@@ -16,7 +16,7 @@ func (o *Observer) FetchBalanceOfHumanPool() bool {
 	if err != nil {
 		return false
 	}
-
+	
 	_, voter := o.HumanChainBridge.GetVoterInfo()
 
 	famt, _ := strconv.ParseFloat(accBalance.Balances[0].Amount, 64)

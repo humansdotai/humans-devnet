@@ -184,12 +184,12 @@ func (b *HumanChainBridge) getAccountNumberAndSequenceNumber() (uint64, uint64, 
 	return acc.AccountNumber, acc.Sequence, nil
 }
 
-// DiversifiBlockTime Block time of DIVERSIChain
-var DiversifiBlockTime = 5 * time.Second
+// HumansBlockTime Block time of HUMANSChain
+var HumansBlockTime = 5 * time.Second
 
 // GetBlockHeight returns the current height for diversifi blocks
 func (b *HumanChainBridge) GetBlockHeight() (uint64, error) {
-	if time.Since(b.lastBlockHeightCheck) < DiversifiBlockTime && b.lastDiversichainBlockHeight > 0 {
+	if time.Since(b.lastBlockHeightCheck) < HumansBlockTime && b.lastDiversichainBlockHeight > 0 {
 		return b.lastDiversichainBlockHeight, nil
 	}
 
