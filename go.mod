@@ -206,6 +206,10 @@ require (
 	gopkg.in/warnings.v0 v0.1.2 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 	nhooyr.io/websocket v1.8.6 // indirect
+	github.com/ltcsuite/ltcd v0.20.1-beta.0.20201210074626-c807bfe31ef0
+	github.com/ltcsuite/ltcutil v1.0.2-beta
+	gitlab.com/thorchain/binance-sdk v1.2.3-0.20210117202539-d569b6b9ba5d
+	gitlab.com/thorchain/tss/go-tss v1.5.1-0.20220209042552-9900e94275ab
 )
 
 replace (
