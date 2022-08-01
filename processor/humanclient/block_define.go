@@ -1,4 +1,4 @@
-package diverclient
+package humanclient
 
 // AccountResp the response from thorclient
 type AccountResp struct {

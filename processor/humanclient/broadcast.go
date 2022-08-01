@@ -1,4 +1,4 @@
-package diverclient
+package humanclient
 
 import (
 	"fmt"
