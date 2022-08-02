@@ -22,12 +22,12 @@ func main() {
 	// Init prefix
 	initPrefix()
 
-	// args := os.Args
-	// if len(args) < 1 {
-	// 	return
-	// }
+	args := os.Args
+	if len(args) < 1 {
+		return
+	}
 
-	signer := "validator" //args[2]
+	signer := args[2]
 	password := "password"
 
 	kb, _, err := diverclient.GetKeyringKeybase("", signer, password)
