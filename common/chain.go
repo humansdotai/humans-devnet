@@ -4,24 +4,14 @@ import (
 	"errors"
 	"strings"
 
-	"github.com/btcsuite/btcd/chaincfg"
 	"github.com/cosmos/cosmos-sdk/types"
-	dogchaincfg "github.com/eager7/dogd/chaincfg"
-	ltcchaincfg "github.com/ltcsuite/ltcd/chaincfg"
-	btypes "gitlab.com/thorchain/binance-sdk/common/types"
 	"github.com/humansdotai/humans/common/cosmos"
 )
 
 var (
-	EmptyChain = Chain("")
-	BNBChain   = Chain("BNB")
-	ETHChain   = Chain("ETH")
-	BTCChain   = Chain("BTC")
-	LTCChain   = Chain("LTC")
-	BCHChain   = Chain("BCH")
-	DOGEChain  = Chain("DOGE")
-	HumansChain  = Chain("HEART")
-	TERRAChain = Chain("TERRA")
+	EmptyChain  = Chain("")
+	ETHChain    = Chain("ETH")
+	HumansChain = Chain("HEART")
 
 	SigningAlgoSecp256k1 = SigningAlgo("secp256k1")
 	SigningAlgoEd25519   = SigningAlgo("ed25519")
@@ -80,11 +70,6 @@ func (c Chain) String() string {
 	return strings.ToUpper(string(c))
 }
 
-// IsBNB determinate whether it is BNBChain
-func (c Chain) IsBNB() bool {
-	return c.Equals(BNBChain)
-}
-
 // GetSigningAlgo get the signing algorithm for the given chain
 func (c Chain) GetSigningAlgo() SigningAlgo {
 	// Only SigningAlgoSecp256k1 is supported for now
@@ -96,20 +81,8 @@ func (c Chain) GetGasAsset() Asset {
 	switch c {
 	case HumansChain:
 		return HeartNative
-	case BNBChain:
-		return BNBAsset
-	case BTCChain:
-		return BTCAsset
-	case LTCChain:
-		return LTCAsset
-	case BCHChain:
-		return BCHAsset
-	case DOGEChain:
-		return DOGEAsset
 	case ETHChain:
 		return ETHAsset
-	case TERRAChain:
-		return LUNAAsset
 	default:
 		return EmptyAsset
 	}
@@ -119,12 +92,7 @@ func (c Chain) GetGasAsset() Asset {
 // TERRA is using 1E6, all other gas asset so far using 1E8
 // HumansChain is using 1E8, if an external chain's gas asset is larger than 1E8, just return cosmos.DefaultCoinDecimals
 func (c Chain) GetGasAssetDecimal() int64 {
-	switch c {
-	case TERRAChain:
-		return 6
-	default:
-		return cosmos.DefaultCoinDecimals
-	}
+	return cosmos.DefaultCoinDecimals
 }
 
 // IsValidAddress make sure the address is correct for the chain
@@ -140,56 +108,26 @@ func (c Chain) AddressPrefix(cn ChainNetwork) string {
 	switch cn {
 	case MockNet:
 		switch c {
-		case BNBChain:
-			return btypes.TestNetwork.Bech32Prefixes()
-		case TERRAChain:
-			return "terra"
 		case ETHChain:
 			return "0x"
 		case HumansChain:
 			// TODO update this to use testnet address prefix
 			return types.GetConfig().GetBech32AccountAddrPrefix()
-		case BTCChain:
-			return chaincfg.RegressionNetParams.Bech32HRPSegwit
-		case LTCChain:
-			return ltcchaincfg.RegressionNetParams.Bech32HRPSegwit
-		case DOGEChain:
-			return dogchaincfg.RegressionNetParams.Bech32HRPSegwit
 		}
 	case TestNet:
 		switch c {
-		case BNBChain:
-			return btypes.TestNetwork.Bech32Prefixes()
-		case TERRAChain:
-			return "terra"
 		case ETHChain:
 			return "0x"
 		case HumansChain:
 			// TODO update this to use testnet address prefix
 			return types.GetConfig().GetBech32AccountAddrPrefix()
-		case BTCChain:
-			return chaincfg.TestNet3Params.Bech32HRPSegwit
-		case LTCChain:
-			return ltcchaincfg.TestNet4Params.Bech32HRPSegwit
-		case DOGEChain:
-			return dogchaincfg.TestNet3Params.Bech32HRPSegwit
 		}
 	case MainNet, StageNet:
 		switch c {
-		case BNBChain:
-			return btypes.ProdNetwork.Bech32Prefixes()
-		case TERRAChain:
-			return "terra"
 		case ETHChain:
 			return "0x"
 		case HumansChain:
 			return types.GetConfig().GetBech32AccountAddrPrefix()
-		case BTCChain:
-			return chaincfg.MainNetParams.Bech32HRPSegwit
-		case LTCChain:
-			return ltcchaincfg.MainNetParams.Bech32HRPSegwit
-		case DOGEChain:
-			return dogchaincfg.MainNetParams.Bech32HRPSegwit
 		}
 	}
 	return ""

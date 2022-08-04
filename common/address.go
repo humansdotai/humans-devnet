@@ -12,9 +12,9 @@ import (
 	eth "github.com/ethereum/go-ethereum/common"
 	bchchaincfg "github.com/gcash/bchd/chaincfg"
 	"github.com/gcash/bchutil"
+	"github.com/humansdotai/humans/common/cosmos"
 	ltcchaincfg "github.com/ltcsuite/ltcd/chaincfg"
 	"github.com/ltcsuite/ltcutil"
-	"github.com/humansdotai/humans/common/cosmos"
 )
 
 type Address string
@@ -133,30 +133,6 @@ func (addr Address) IsValidBCHAddress() bool {
 	return false
 }
 
-// ConvertToNewBCHAddressFormat convert the given BCH to new address format
-func ConvertToNewBCHAddressFormat(addr Address) (Address, error) {
-	if !addr.IsChain(BCHChain) {
-		return NoAddress, fmt.Errorf("address(%s) is not BCH chain", addr)
-	}
-	network := GetCurrentChainNetwork()
-	var param *bchchaincfg.Params
-	switch network {
-	case MockNet:
-		param = &bchchaincfg.RegressionNetParams
-	case TestNet:
-		param = &bchchaincfg.TestNet3Params
-	case MainNet:
-		param = &bchchaincfg.MainNetParams
-	case StageNet:
-		param = &bchchaincfg.MainNetParams
-	}
-	bchAddr, err := bchutil.DecodeAddress(addr.String(), param)
-	if err != nil {
-		return NoAddress, fmt.Errorf("fail to decode address(%s), %w", addr, err)
-	}
-	return getBCHAddress(bchAddr, param)
-}
-
 func getBCHAddress(address bchutil.Address, cfg *bchchaincfg.Params) (Address, error) {
 	switch address.(type) {
 	case *bchutil.LegacyAddressPubKeyHash, *bchutil.AddressPubKeyHash:
@@ -175,135 +151,20 @@ func getBCHAddress(address bchutil.Address, cfg *bchchaincfg.Params) (Address, e
 	return NoAddress, fmt.Errorf("invalid address type")
 }
 
-// ConvertToNewBCHAddressFormatV83 convert the given BCH to new address format
-func ConvertToNewBCHAddressFormatV83(addr Address) (Address, error) {
-	if !addr.IsChain(BCHChain) {
-		return NoAddress, fmt.Errorf("address(%s) is not BCH chain", addr)
-	}
-	network := GetCurrentChainNetwork()
-	var param *bchchaincfg.Params
-	switch network {
-	case MockNet:
-		param = &bchchaincfg.RegressionNetParams
-	case TestNet:
-		param = &bchchaincfg.TestNet3Params
-	case MainNet:
-		param = &bchchaincfg.MainNetParams
-	case StageNet:
-		param = &bchchaincfg.MainNetParams
-	}
-	bchAddr, err := bchutil.DecodeAddress(addr.String(), param)
-	if err != nil {
-		return NoAddress, fmt.Errorf("fail to decode address(%s), %w", addr, err)
-	}
-	return getBCHAddressV83(bchAddr, param)
-}
-
-func getBCHAddressV83(address bchutil.Address, cfg *bchchaincfg.Params) (Address, error) {
-	switch address.(type) {
-	case *bchutil.LegacyAddressPubKeyHash, *bchutil.AddressPubKeyHash:
-		h, err := bchutil.NewAddressPubKeyHash(address.ScriptAddress(), cfg)
-		if err != nil {
-			return NoAddress, fmt.Errorf("fail to convert to new pubkey hash address: %w", err)
-		}
-		return NewAddress(h.String())
-	case *bchutil.LegacyAddressScriptHash, *bchutil.AddressScriptHash:
-		h, err := bchutil.NewAddressScriptHashFromHash(address.ScriptAddress(), cfg)
-		if err != nil {
-			return NoAddress, fmt.Errorf("fail to convert to new address script hash address: %w", err)
-		}
-		return NewAddress(h.String())
-	}
-	return NoAddress, fmt.Errorf("invalid address type")
-}
-
 func (addr Address) IsChain(chain Chain) bool {
 	switch chain {
 	case ETHChain:
 		return strings.HasPrefix(addr.String(), "0x")
-	case BNBChain:
-		prefix, _, _ := bech32.Decode(addr.String())
-		return prefix == "bnb" || prefix == "tbnb"
-	case TERRAChain:
-		// Note: Terra does not use a special prefix for testnet
-		prefix, _, _ := bech32.Decode(addr.String())
-		return prefix == "terra"
 	case HumansChain:
 		prefix, _, _ := bech32.Decode(addr.String())
 		return prefix == "human" || prefix == "thuman" || prefix == "shuman"
-	case BTCChain:
-		prefix, _, err := bech32.Decode(addr.String())
-		if err == nil && (prefix == "bc" || prefix == "tb") {
-			return true
-		}
-		// Check mainnet other formats
-		_, err = btcutil.DecodeAddress(addr.String(), &chaincfg.MainNetParams)
-		if err == nil {
-			return true
-		}
-		// Check testnet other formats
-		_, err = btcutil.DecodeAddress(addr.String(), &chaincfg.TestNet3Params)
-		if err == nil {
-			return true
-		}
-		return false
-	case LTCChain:
-		prefix, _, err := bech32.Decode(addr.String())
-		if err == nil && (prefix == "ltc" || prefix == "tltc" || prefix == "rltc") {
-			return true
-		}
-		// Check mainnet other formats
-		_, err = ltcutil.DecodeAddress(addr.String(), &ltcchaincfg.MainNetParams)
-		if err == nil {
-			return true
-		}
-		// Check testnet other formats
-		_, err = ltcutil.DecodeAddress(addr.String(), &ltcchaincfg.TestNet4Params)
-		if err == nil {
-			return true
-		}
-		return false
-	case BCHChain:
-		// Check mainnet other formats
-		_, err := bchutil.DecodeAddress(addr.String(), &bchchaincfg.MainNetParams)
-		if err == nil {
-			return true
-		}
-		// Check testnet other formats
-		_, err = bchutil.DecodeAddress(addr.String(), &bchchaincfg.TestNet3Params)
-		if err == nil {
-			return true
-		}
-		// Check mocknet / regression other formats
-		_, err = bchutil.DecodeAddress(addr.String(), &bchchaincfg.RegressionNetParams)
-		if err == nil {
-			return true
-		}
-		return false
-	case DOGEChain:
-		// Check mainnet other formats
-		_, err := dogutil.DecodeAddress(addr.String(), &dogchaincfg.MainNetParams)
-		if err == nil {
-			return true
-		}
-		// Check testnet other formats
-		_, err = dogutil.DecodeAddress(addr.String(), &dogchaincfg.TestNet3Params)
-		if err == nil {
-			return true
-		}
-		// Check mocknet / regression other formats
-		_, err = dogutil.DecodeAddress(addr.String(), &dogchaincfg.RegressionNetParams)
-		if err == nil {
-			return true
-		}
-		return false
 	default:
 		return true // if HumansNode don't specifically check a chain yet, assume its ok.
 	}
 }
 
 func (addr Address) GetChain() Chain {
-	for _, chain := range []Chain{ETHChain, BNBChain, HumansChain, BTCChain, LTCChain, BCHChain, DOGEChain, TERRAChain} {
+	for _, chain := range []Chain{ETHChain, HumansChain} {
 		if addr.IsChain(chain) {
 			return chain
 		}
@@ -322,16 +183,6 @@ func (addr Address) GetNetwork(chain Chain) ChainNetwork {
 	switch chain {
 	case ETHChain:
 		return currentNetwork
-	case BNBChain:
-		prefix, _, _ := bech32.Decode(addr.String())
-		if strings.EqualFold(prefix, "bnb") {
-			return mainNetPredicate()
-		}
-		if strings.EqualFold(prefix, "tbnb") {
-			return TestNet
-		}
-	case TERRAChain:
-		return currentNetwork
 	case HumansChain:
 		prefix, _, _ := bech32.Decode(addr.String())
 		if strings.EqualFold(prefix, "human") {
@@ -342,84 +193,6 @@ func (addr Address) GetNetwork(chain Chain) ChainNetwork {
 		}
 		if strings.EqualFold(prefix, "shuman") {
 			return StageNet
-		}
-	case BTCChain:
-		prefix, _, _ := bech32.Decode(addr.String())
-		switch prefix {
-		case "bc":
-			return mainNetPredicate()
-		case "tb":
-			return TestNet
-		case "bcrt":
-			return MockNet
-		default:
-			_, err := btcutil.DecodeAddress(addr.String(), &chaincfg.MainNetParams)
-			if err == nil {
-				return mainNetPredicate()
-			}
-			_, err = btcutil.DecodeAddress(addr.String(), &chaincfg.TestNet3Params)
-			if err == nil {
-				return TestNet
-			}
-			_, err = btcutil.DecodeAddress(addr.String(), &chaincfg.RegressionNetParams)
-			if err == nil {
-				return MockNet
-			}
-		}
-	case LTCChain:
-		prefix, _, _ := bech32.Decode(addr.String())
-		switch prefix {
-		case "ltc":
-			return mainNetPredicate()
-		case "tltc":
-			return TestNet
-		case "rltc":
-			return MockNet
-		default:
-			_, err := ltcutil.DecodeAddress(addr.String(), &ltcchaincfg.MainNetParams)
-			if err == nil {
-				return mainNetPredicate()
-			}
-			_, err = ltcutil.DecodeAddress(addr.String(), &ltcchaincfg.TestNet4Params)
-			if err == nil {
-				return TestNet
-			}
-			_, err = ltcutil.DecodeAddress(addr.String(), &ltcchaincfg.RegressionNetParams)
-			if err == nil {
-				return MockNet
-			}
-		}
-	case BCHChain:
-		// Check mainnet other formats
-		_, err := bchutil.DecodeAddress(addr.String(), &bchchaincfg.MainNetParams)
-		if err == nil {
-			return mainNetPredicate()
-		}
-		// Check testnet other formats
-		_, err = bchutil.DecodeAddress(addr.String(), &bchchaincfg.TestNet3Params)
-		if err == nil {
-			return TestNet
-		}
-		// Check mocknet / regression other formats
-		_, err = bchutil.DecodeAddress(addr.String(), &bchchaincfg.RegressionNetParams)
-		if err == nil {
-			return MockNet
-		}
-	case DOGEChain:
-		// Check mainnet other formats
-		_, err := dogutil.DecodeAddress(addr.String(), &dogchaincfg.MainNetParams)
-		if err == nil {
-			return mainNetPredicate()
-		}
-		// Check testnet other formats
-		_, err = dogutil.DecodeAddress(addr.String(), &dogchaincfg.TestNet3Params)
-		if err == nil {
-			return TestNet
-		}
-		// Check mocknet / regression other formats
-		_, err = dogutil.DecodeAddress(addr.String(), &dogchaincfg.RegressionNetParams)
-		if err == nil {
-			return MockNet
 		}
 	}
 	return MockNet

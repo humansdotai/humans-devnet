@@ -1,8 +1,9 @@
 package common
 
 import (
-	"gitlab.com/thorchain/binance-sdk/common/types"
+	"strconv"
 
+	"github.com/CosmWasm/wasmvm/types"
 	"github.com/humansdotai/humans/common/cosmos"
 )
 
@@ -22,7 +23,9 @@ func GetCoins(chain Chain, accCoins []types.Coin) (Coins, error) {
 		if err != nil {
 			return nil, err
 		}
-		coins = append(coins, NewCoin(asset, cosmos.NewUint(uint64(coin.Amount))))
+		amt, _ := strconv.ParseUint(coin.Amount, 10, 64)
+		amtInt64 := uint64(amt)
+		coins = append(coins, NewCoin(asset, cosmos.NewUint(amtInt64)))
 	}
 	return coins, nil
 }

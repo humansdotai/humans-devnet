@@ -248,11 +248,10 @@ func (cs Coins) Adds(coins Coins) Coins {
 	return cs
 }
 
-// HasNoneNativeRune check whether the coins contains NoneNativeRUNE
-//  At the moment, there are BEP2 RUNE, ERC20 RUNE and Native RUNE
-func (cs Coins) HasNoneNativeRune() bool {
+// HasNoneNativeHeart check whether the coins contains NoneNativeHEART
+func (cs Coins) HasNoneNativeHeart() bool {
 	for _, c := range cs {
-		if c.Asset.IsRune() && !c.IsNative() {
+		if c.Asset.IsHeart() && !c.IsNative() {
 			return true
 		}
 	}

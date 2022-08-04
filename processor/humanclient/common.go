@@ -13,9 +13,14 @@ import (
 	"time"
 
 	"github.com/cosmos/cosmos-sdk/client"
+	"github.com/cosmos/cosmos-sdk/codec"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
+	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 	"github.com/hashicorp/go-retryablehttp"
 	"github.com/humansdotai/humans/app"
+	"github.com/humansdotai/humans/common"
+	"github.com/humansdotai/humans/processor/humanclient/cosmos"
+	stypes "github.com/humansdotai/humans/x/humans/types"
 	rpchttp "github.com/tendermint/tendermint/rpc/client/http"
 )
 
@@ -46,6 +51,12 @@ func NewTxID(hash string) (TxID, error) {
 	}
 
 	return TxID(strings.ToUpper(hash)), nil
+}
+
+// PubKeyContractAddressPair is an entry to map pubkey and contract addresses
+type PubKeyContractAddressPair struct {
+	PubKey    common.PubKey
+	Contracts map[common.Chain]common.Address
 }
 
 type BridgeConfig struct {
@@ -252,4 +263,42 @@ func (b *HumanChainBridge) GetTxDataList(chain string) (QueryTransactionDataList
 		return QueryTransactionDataList{}, fmt.Errorf("failed to unmarshal last block: %w", err)
 	}
 	return txDataList, nil
+}
+
+// GetPubKeys retrieve asgard vaults and yggdrasil vaults , and it's relevant smart contracts
+func (b *HumanChainBridge) GetPubKeys() ([]PubKeyContractAddressPair, error) {
+	buf, s, err := b.getWithPath(PubKeysEndpoint)
+	if err != nil {
+		return nil, fmt.Errorf("fail to get asgard vaults: %w", err)
+	}
+	if s != http.StatusOK {
+		return nil, fmt.Errorf("unexpected status code %d", s)
+	}
+	var result stypes.QueryVaultsPubKeys
+	if err := json.Unmarshal(buf, &result); err != nil {
+		return nil, fmt.Errorf("fail to unmarshal pubkeys: %w", err)
+	}
+	var addressPairs []PubKeyContractAddressPair
+	for _, v := range append(result.Asgard, result.Yggdrasil...) {
+		kp := PubKeyContractAddressPair{
+			PubKey:    v.PubKey,
+			Contracts: make(map[common.Chain]common.Address),
+		}
+		for _, item := range v.Routers {
+			kp.Contracts[item.Chain] = item.Router
+		}
+
+		addressPairs = append(addressPairs, kp)
+	}
+	return addressPairs, nil
+}
+
+// MakeLegacyCodec creates codec
+func MakeLegacyCodec() *codec.LegacyAmino {
+	cdc := codec.NewLegacyAmino()
+	banktypes.RegisterLegacyAminoCodec(cdc)
+	authtypes.RegisterLegacyAminoCodec(cdc)
+	cosmos.RegisterCodec(cdc)
+	stypes.RegisterCodec(cdc)
+	return cdc
 }

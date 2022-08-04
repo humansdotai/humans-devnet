@@ -3,7 +3,6 @@ package common
 import (
 	"encoding/json"
 	"fmt"
-	"os"
 	"strings"
 
 	"github.com/gogo/protobuf/jsonpb"
@@ -12,28 +11,10 @@ import (
 var (
 	// EmptyAsset empty asset, not valid
 	EmptyAsset = Asset{Chain: EmptyChain, Symbol: "", Ticker: "", Synth: false}
-	// LUNAAsset LUNA
-	LUNAAsset = Asset{Chain: TERRAChain, Symbol: "LUNA", Ticker: "LUNA", Synth: false}
-	// BNBAsset BNB
-	BNBAsset = Asset{Chain: BNBChain, Symbol: "BNB", Ticker: "BNB", Synth: false}
-	// BTCAsset BTC
-	BTCAsset = Asset{Chain: BTCChain, Symbol: "BTC", Ticker: "BTC", Synth: false}
-	// LTCAsset BTC
-	LTCAsset = Asset{Chain: LTCChain, Symbol: "LTC", Ticker: "LTC", Synth: false}
-	// BCHAsset BCH
-	BCHAsset = Asset{Chain: BCHChain, Symbol: "BCH", Ticker: "BCH", Synth: false}
-	// DOGEAsset DOGE
-	DOGEAsset = Asset{Chain: DOGEChain, Symbol: "DOGE", Ticker: "DOGE", Synth: false}
 	// ETHAsset ETH
 	ETHAsset = Asset{Chain: ETHChain, Symbol: "ETH", Ticker: "ETH", Synth: false}
-	// Rune67CAsset RUNE on Binance test net
-	Rune67CAsset = Asset{Chain: BNBChain, Symbol: "RUNE-67C", Ticker: "RUNE", Synth: false} // testnet asset on binance ganges
-	// RuneB1AAsset RUNE on Binance main net
-	RuneB1AAsset = Asset{Chain: BNBChain, Symbol: "RUNE-B1A", Ticker: "RUNE", Synth: false} // mainnet
-	// RuneNative HEART on humans
-	HeartNative            = Asset{Chain: HumansChain, Symbol: "HEART", Ticker: "HEART", Synth: false}
-	RuneERC20Asset        = Asset{Chain: ETHChain, Symbol: "RUNE-0x3155ba85d5f96b2d030a4966af206230e46849cb", Ticker: "RUNE", Synth: false}
-	RuneERC20TestnetAsset = Asset{Chain: ETHChain, Symbol: "RUNE-0xd601c6A3a36721320573885A8d8420746dA3d7A0", Ticker: "RUNE", Synth: false}
+	// HEART on humans
+	HeartNative = Asset{Chain: HumansChain, Symbol: "HEART", Ticker: "HEART", Synth: false}
 )
 
 // NewAsset parse the given input into Asset object
@@ -119,8 +100,8 @@ func (a Asset) IsSyntheticAsset() bool {
 
 // Native return native asset, only relevant on HumansChain
 func (a Asset) Native() string {
-	if a.IsRune() {
-		return "rune"
+	if a.IsHeart() {
+		return "heart"
 	}
 	return strings.ToLower(a.String())
 }
@@ -149,18 +130,13 @@ func (a Asset) IsGasAsset() bool {
 }
 
 // IsRune is a helper function ,return true only when the asset represent RUNE
-func (a Asset) IsRune() bool {
-	return a.Equals(BEP2RuneAsset()) || a.Equals(RuneNative) || a.Equals(ERC20RuneAsset())
+func (a Asset) IsHeart() bool {
+	return a.Equals(HeartNative)
 }
 
 // IsNativeRune is a helper function, return true only when the asset represent NATIVE RUNE
 func (a Asset) IsNativeHeart() bool {
-	return a.IsRune() && a.Chain.IsHumanChain()
-}
-
-// IsBNB is a helper function, return true only when the asset represent BNB
-func (a Asset) IsBNB() bool {
-	return a.Equals(BNBAsset)
+	return a.IsHeart() && a.Chain.IsHumanChain()
 }
 
 // MarshalJSON implement Marshaler interface
@@ -191,31 +167,5 @@ func (a *Asset) UnmarshalJSONPB(unmarshal *jsonpb.Unmarshaler, content []byte) e
 
 // RuneAsset return RUNE Asset depends on different environment
 func RuneAsset() Asset {
-	return RuneNative
-}
-
-// BEP2RuneAsset is RUNE on BEP2
-func BEP2RuneAsset() Asset {
-	if strings.EqualFold(os.Getenv("NET"), "testnet") || strings.EqualFold(os.Getenv("NET"), "mocknet") {
-		return Rune67CAsset
-	}
-	return RuneB1AAsset
-}
-
-// ERC20RuneAsset is RUNE on ETH
-func ERC20RuneAsset() Asset {
-	if strings.EqualFold(os.Getenv("NET"), "testnet") || strings.EqualFold(os.Getenv("NET"), "mocknet") {
-		// On testnet/mocknet, return  ERC20_RUNE_CONTRACT if it is explicitly set
-		if os.Getenv("ERC20_RUNE_CONTRACT") != "" {
-			return Asset{
-				Chain:  ETHChain,
-				Symbol: Symbol(fmt.Sprintf("RUNE-%s", os.Getenv("ERC20_RUNE_CONTRACT"))),
-				Ticker: "RUNE",
-				Synth:  false,
-			}
-		}
-		// Default to hardcoded address
-		return RuneERC20TestnetAsset
-	}
-	return RuneERC20Asset
+	return HeartNative
 }
