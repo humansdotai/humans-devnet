@@ -64,7 +64,7 @@ func NewPubKeyManager(bridge *humanclient.HumanChainBridge) (*PubKeyManager, err
 	}, nil
 }
 
-// Start to poll pubkeys from thorchain
+// Start to poll pubkeys from humanchain
 func (pkm *PubKeyManager) Start() error {
 	pubkeys, err := pkm.getPubkeys()
 	if err != nil {

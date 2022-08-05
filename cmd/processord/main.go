@@ -80,6 +80,7 @@ func main() {
 	if err != nil {
 		log.Fatal().Err(err).Msg("fail to get bootstrap peers")
 	}
+
 	tmPrivateKey := tcommon.CosmosPrivateKeyToTMPrivateKey(priKey)
 	tssIns, err := tss.NewTss(
 		bootstrapPeers,
@@ -105,14 +106,6 @@ func main() {
 		log.Err(err).Msg("fail to start tss instance")
 	}
 
-	sign, err := signer.NewSigner(cfg.Signer, thorchainBridge, k, pubkeyMgr, tssIns, chains, m, tssKeysignMetricMgr)
-	if err != nil {
-		log.Fatal().Err(err).Msg("fail to create instance of signer")
-	}
-	if err := sign.Start(); err != nil {
-		log.Fatal().Err(err).Msg("fail to start signer")
-	}
-
 	obs_storage := ""
 	obs, err := observer.NewObserver(HumanChainBridge, obs_storage)
 	if err != nil {
@@ -124,17 +117,6 @@ func main() {
 		fmt.Println("fail to start observer")
 		return
 	}
-
-	// tss, err := tss.NewTssSigner(HumanChainBridge)
-	// if err != nil {
-	// 	fmt.Println("fail to create tss")
-	// 	return
-	// }
-
-	// if err = tss.Start(); err != nil {
-	// 	fmt.Println("fail to start tss")
-	// 	return
-	// }
 
 	// wait....
 	ch := make(chan os.Signal, 1)
