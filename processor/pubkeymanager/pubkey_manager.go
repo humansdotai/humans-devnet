@@ -7,14 +7,12 @@ import (
 	"time"
 
 	"github.com/cosmos/cosmos-sdk/codec"
-	"github.com/prometheus/client_golang/prometheus"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 
 	"github.com/humansdotai/humans/common"
 	"github.com/humansdotai/humans/constants"
 	"github.com/humansdotai/humans/processor/humanclient"
-	"github.com/humansdotai/humans/processor/metrics"
 )
 
 // OnNewPubKey is a function that used as a callback , if somehow we need to do additional process when a new pubkey get added
@@ -45,28 +43,24 @@ type pubKeyInfo struct {
 
 // PubKeyManager manager an always up to date pubkeys , which implement PubKeyValidator interface
 type PubKeyManager struct {
-	cdc        *codec.LegacyAmino
-	bridge     *humanclient.HumanChainBridge
-	pubkeys    []pubKeyInfo
-	rwMutex    *sync.RWMutex
-	logger     zerolog.Logger
-	errCounter *prometheus.CounterVec
-	m          *metrics.Metrics
-	stopChan   chan struct{}
-	callback   []OnNewPubKey
+	cdc      *codec.LegacyAmino
+	bridge   *humanclient.HumanChainBridge
+	pubkeys  []pubKeyInfo
+	rwMutex  *sync.RWMutex
+	logger   zerolog.Logger
+	stopChan chan struct{}
+	callback []OnNewPubKey
 }
 
 // NewPubKeyManager create a new instance of PubKeyManager
-func NewPubKeyManager(bridge *humanclient.HumanChainBridge, m *metrics.Metrics) (*PubKeyManager, error) {
+func NewPubKeyManager(bridge *humanclient.HumanChainBridge) (*PubKeyManager, error) {
 	return &PubKeyManager{
-		cdc:        humanclient.MakeLegacyCodec(),
-		logger:     log.With().Str("module", "public_key_mgr").Logger(),
-		bridge:     bridge,
-		errCounter: m.GetCounterVec(metrics.PubKeyManagerError),
-		m:          m,
-		stopChan:   make(chan struct{}),
-		rwMutex:    &sync.RWMutex{},
-		callback:   []OnNewPubKey{},
+		cdc:      humanclient.MakeLegacyCodec(),
+		logger:   log.With().Str("module", "public_key_mgr").Logger(),
+		bridge:   bridge,
+		stopChan: make(chan struct{}),
+		rwMutex:  &sync.RWMutex{},
+		callback: []OnNewPubKey{},
 	}, nil
 }
 
@@ -247,10 +241,10 @@ func (pkm *PubKeyManager) fetchPubKeys() {
 	}
 
 	for _, vault := range vaults {
-		if vault.GetMembership().Contains(pkm.GetNodePubKey()) {
-			pkm.AddPubKey(vault.PubKey, true)
-			pubkeys = append(pubkeys, vault.PubKey)
-		}
+		// if vault.GetMembership().Contains(pkm.GetNodePubKey()) {
+		pkm.AddPubKey(vault.PubKey, true)
+		pubkeys = append(pubkeys, vault.PubKey)
+		// }
 	}
 	pkm.rwMutex.Lock()
 	defer pkm.rwMutex.Unlock()

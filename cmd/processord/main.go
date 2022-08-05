@@ -5,11 +5,18 @@ import (
 	"os"
 	"os/signal"
 	"syscall"
+	"time"
 
+	"github.com/humansdotai/humans/app"
 	"github.com/humansdotai/humans/cmd"
-	diverclient "github.com/humansdotai/humans/processor/humanclient"
+	tcommon "github.com/humansdotai/humans/common"
+	humanclient "github.com/humansdotai/humans/processor/humanclient"
 	"github.com/humansdotai/humans/processor/humanclient/cosmos"
 	"github.com/humansdotai/humans/processor/observer"
+	"github.com/humansdotai/humans/processor/pubkeymanager"
+	"github.com/rs/zerolog/log"
+	"gitlab.com/thorchain/tss/go-tss/common"
+	"gitlab.com/thorchain/tss/go-tss/tss"
 )
 
 func initPrefix() {
@@ -30,7 +37,7 @@ func main() {
 	signer := "validator" //args[2]
 	password := "password"
 
-	kb, _, err := diverclient.GetKeyringKeybase("", signer, password)
+	kb, _, err := humanclient.GetKeyringKeybase("", signer, password)
 	if err != nil {
 		fmt.Println("fail to get keyring keybase")
 		return
@@ -40,7 +47,25 @@ func main() {
 	pubKey := info.GetPubKey().Address().String()
 	addr := info.GetAddress().String()
 
-	k := diverclient.NewKeysWithKeybase(kb, signer, password)
+	k := humanclient.NewKeysWithKeybase(kb, signer, password)
+
+	cfg := &humanclient.BridgeConfig{
+		ChainId:         "test",
+		ChainHost:       "127.0.0.1:1317",
+		ChainRPC:        "127.0.0.1:26657",
+		ChainHomeFolder: "~/.humans/",
+	}
+
+	HumanChainBridge, err := humanclient.NewHumanChainBridge(k, cfg, signer, pubKey, addr)
+
+	// PubKey Manager
+	pubkeyMgr, err := pubkeymanager.NewPubKeyManager(HumanChainBridge)
+	if err != nil {
+		log.Fatal().Err(err).Msg("fail to create pubkey manager")
+	}
+	if err := pubkeyMgr.Start(); err != nil {
+		log.Fatal().Err(err).Msg("fail to start pubkey manager")
+	}
 
 	// setup TSS signing
 	priKey, err := k.GetPrivateKey()
@@ -51,21 +76,42 @@ func main() {
 
 	fmt.Println(priKey)
 
-	// cfg := &diverclient.BridgeConfig{
-	// 	ChainId:         "test",
-	// 	ChainHost:       "127.0.0.1:1317",
-	// 	ChainRPC:        "127.0.0.1:26657",
-	// 	ChainHomeFolder: "~/.diversifi/",
-	// }
-
-	cfg := &diverclient.BridgeConfig{
-		ChainId:         "test",
-		ChainHost:       "127.0.0.1:1317",
-		ChainRPC:        "127.0.0.1:26657",
-		ChainHomeFolder: "~/.humans/",
+	bootstrapPeers, err := cfg.TSS.GetBootstrapPeers()
+	if err != nil {
+		log.Fatal().Err(err).Msg("fail to get bootstrap peers")
+	}
+	tmPrivateKey := tcommon.CosmosPrivateKeyToTMPrivateKey(priKey)
+	tssIns, err := tss.NewTss(
+		bootstrapPeers,
+		cfg.TSS.P2PPort,
+		tmPrivateKey,
+		cfg.TSS.Rendezvous,
+		app.DefaultNodeHome,
+		common.TssConfig{
+			EnableMonitor:   true,
+			KeyGenTimeout:   300 * time.Second, // must be shorter than constants.JailTimeKeygen
+			KeySignTimeout:  60 * time.Second,  // must be shorter than constants.JailTimeKeysign
+			PartyTimeout:    45 * time.Second,
+			PreParamTimeout: 5 * time.Minute,
+		},
+		nil,
+		cfg.TSS.ExternalIP,
+	)
+	if err != nil {
+		log.Fatal().Err(err).Msg("fail to create tss instance")
 	}
 
-	HumanChainBridge, err := diverclient.NewHumanChainBridge(k, cfg, signer, pubKey, addr)
+	if err := tssIns.Start(); err != nil {
+		log.Err(err).Msg("fail to start tss instance")
+	}
+
+	sign, err := signer.NewSigner(cfg.Signer, thorchainBridge, k, pubkeyMgr, tssIns, chains, m, tssKeysignMetricMgr)
+	if err != nil {
+		log.Fatal().Err(err).Msg("fail to create instance of signer")
+	}
+	if err := sign.Start(); err != nil {
+		log.Fatal().Err(err).Msg("fail to start signer")
+	}
 
 	obs_storage := ""
 	obs, err := observer.NewObserver(HumanChainBridge, obs_storage)

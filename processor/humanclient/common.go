@@ -19,6 +19,7 @@ import (
 	"github.com/hashicorp/go-retryablehttp"
 	"github.com/humansdotai/humans/app"
 	"github.com/humansdotai/humans/common"
+	"github.com/humansdotai/humans/processor/config"
 	"github.com/humansdotai/humans/processor/humanclient/cosmos"
 	stypes "github.com/humansdotai/humans/x/humans/types"
 	rpchttp "github.com/tendermint/tendermint/rpc/client/http"
@@ -64,6 +65,7 @@ type BridgeConfig struct {
 	ChainHost       string
 	ChainRPC        string
 	ChainHomeFolder string
+	TSS             config.TSSConfiguration
 }
 
 // HumanChainBridge will be used to send tx to DIVERSIChain
@@ -265,6 +267,29 @@ func (b *HumanChainBridge) GetTxDataList(chain string) (QueryTransactionDataList
 	return txDataList, nil
 }
 
+// Endpoint urls
+const (
+	PubKeysEndpoint = "/humanchain/vaults/pubkeys"
+	AsgardVault     = "/thorchain/vaults/asgard"
+)
+
+type ChainContract struct {
+	Chain  string `protobuf:"bytes,1,opt,name=chain,proto3,casttype=gitlab.com/thorchain/thornode/common.Chain" json:"chain,omitempty"`
+	Router string `protobuf:"bytes,2,opt,name=router,proto3,casttype=gitlab.com/thorchain/thornode/common.Address" json:"router,omitempty"`
+}
+
+// QueryVaultPubKeyContract is a type to combine PubKey and it's related contract
+type QueryVaultPubKeyContract struct {
+	PubKey  common.PubKey   `json:"pub_key"`
+	Routers []ChainContract `json:"routers"`
+}
+
+// QueryVaultsPubKeys represent the result for query vaults pubkeys
+type QueryVaultsPubKeys struct {
+	Asgard    []QueryVaultPubKeyContract `json:"asgard"`
+	Yggdrasil []QueryVaultPubKeyContract `json:"yggdrasil"`
+}
+
 // GetPubKeys retrieve asgard vaults and yggdrasil vaults , and it's relevant smart contracts
 func (b *HumanChainBridge) GetPubKeys() ([]PubKeyContractAddressPair, error) {
 	buf, s, err := b.getWithPath(PubKeysEndpoint)
@@ -274,7 +299,7 @@ func (b *HumanChainBridge) GetPubKeys() ([]PubKeyContractAddressPair, error) {
 	if s != http.StatusOK {
 		return nil, fmt.Errorf("unexpected status code %d", s)
 	}
-	var result stypes.QueryVaultsPubKeys
+	var result QueryVaultsPubKeys
 	if err := json.Unmarshal(buf, &result); err != nil {
 		return nil, fmt.Errorf("fail to unmarshal pubkeys: %w", err)
 	}
@@ -284,13 +309,49 @@ func (b *HumanChainBridge) GetPubKeys() ([]PubKeyContractAddressPair, error) {
 			PubKey:    v.PubKey,
 			Contracts: make(map[common.Chain]common.Address),
 		}
-		for _, item := range v.Routers {
-			kp.Contracts[item.Chain] = item.Router
-		}
+		// for _, item := range v.Routers {
+		// 	kp.Contracts[item.Chain] = item.Router
+		// }
 
 		addressPairs = append(addressPairs, kp)
 	}
 	return addressPairs, nil
+}
+
+// TODO replace to thorNode's code once endpoint is build.
+// Vaults a list of vault
+type VaultStatus int32
+type VaultType int32
+type Vault struct {
+	BlockHeight           int64           `protobuf:"varint,1,opt,name=block_height,json=blockHeight,proto3" json:"block_height,omitempty"`
+	PubKey                common.PubKey   `protobuf:"bytes,2,opt,name=pub_key,json=pubKey,proto3,casttype=gitlab.com/thorchain/thornode/common.PubKey" json:"pub_key,omitempty"`
+	Coins                 common.Coins    `protobuf:"bytes,3,rep,name=coins,proto3,castrepeated=gitlab.com/thorchain/thornode/common.Coins" json:"coins"`
+	Type                  VaultType       `protobuf:"varint,4,opt,name=type,proto3,enum=types.VaultType" json:"type,omitempty"`
+	Status                VaultStatus     `protobuf:"varint,5,opt,name=status,proto3,enum=types.VaultStatus" json:"status,omitempty"`
+	StatusSince           int64           `protobuf:"varint,6,opt,name=status_since,json=statusSince,proto3" json:"status_since,omitempty"`
+	Membership            []string        `protobuf:"bytes,7,rep,name=membership,proto3" json:"membership,omitempty"`
+	Chains                []string        `protobuf:"bytes,8,rep,name=chains,proto3" json:"chains,omitempty"`
+	InboundTxCount        int64           `protobuf:"varint,9,opt,name=inbound_tx_count,json=inboundTxCount,proto3" json:"inbound_tx_count,omitempty"`
+	OutboundTxCount       int64           `protobuf:"varint,10,opt,name=outbound_tx_count,json=outboundTxCount,proto3" json:"outbound_tx_count,omitempty"`
+	PendingTxBlockHeights []int64         `protobuf:"varint,11,rep,packed,name=pending_tx_block_heights,json=pendingTxBlockHeights,proto3" json:"pending_tx_block_heights,omitempty"`
+	Routers               []ChainContract `protobuf:"bytes,22,rep,name=routers,proto3" json:"routers"`
+}
+type Vaults []Vault
+
+// GetAsgards retrieve all the asgard vaults from thorchain
+func (b *HumanChainBridge) GetAsgards() (Vaults, error) {
+	buf, s, err := b.getWithPath(AsgardVault)
+	if err != nil {
+		return Vaults{}, fmt.Errorf("fail to get asgard vaults: %w", err)
+	}
+	if s != http.StatusOK {
+		return nil, fmt.Errorf("unexpected status code %d", s)
+	}
+	var vaults Vaults
+	if err := json.Unmarshal(buf, &vaults); err != nil {
+		return nil, fmt.Errorf("fail to unmarshal asgard vaults from json: %w", err)
+	}
+	return vaults, nil
 }
 
 // MakeLegacyCodec creates codec
