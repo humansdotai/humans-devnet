@@ -19,7 +19,7 @@ const (
 	diversichainCliFolderName = `.humans`
 )
 
-// Keys manages all the keys used by diversifi
+// Keys manages all the keys used by humans
 type Keys struct {
 	signerName string
 	password   string // TODO this is a bad way , need to fix it
@@ -66,9 +66,9 @@ func GetKeyringKeybase(chainHomeFolder, signerName, password string) (ckeys.Keyr
 }
 
 // getKeybase will create an instance of Keybase
-func getKeybase(diversifichainHome string, reader io.Reader) (ckeys.Keyring, error) {
-	cliDir := diversifichainHome
-	if len(diversifichainHome) == 0 {
+func getKeybase(humanschainHome string, reader io.Reader) (ckeys.Keyring, error) {
+	cliDir := humanschainHome
+	if len(humanschainHome) == 0 {
 		usr, err := user.Current()
 		if err != nil {
 			return nil, fmt.Errorf("fail to get current user,err:%w", err)

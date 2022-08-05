@@ -178,7 +178,7 @@ func (o *Observer) ProcessSendTxToHumanChain() {
 		case <-o.stopChan:
 			return
 		case <-time.After(time.Second):
-			o.SendTxToDiversifiChain()
+			o.SendTxTohumansChain()
 			break
 		}
 	}
@@ -200,8 +200,8 @@ func (o *Observer) ProcessRecoverSocketConnection() {
 	}
 }
 
-// Send msgs to diversifi chain
-func (o *Observer) SendTxToDiversifiChain() error {
+// Send msgs to humans chain
+func (o *Observer) SendTxTohumansChain() error {
 	msgs := make([]stypes.Msg, 0)
 	for _, m := range o.ArrMsgKeysignVote {
 		msgs = append(msgs, m)
@@ -265,12 +265,12 @@ func (o *Observer) continsHash(s []string, str string) bool {
 	return false
 }
 
-// Fetch DiversifiChain & Broadcast Keysign Transaction
+// Fetch humansChain & Broadcast Keysign Transaction
 func (o *Observer) FetchTransactionAndBroadcastKeysignTx() bool {
 	// Get PubKey & Voter Address
 	pubKey, voter := o.HumanChainBridge.GetVoterInfo()
 
-	// Get All Transaction Data from DiversifiChain
+	// Get All Transaction Data from humansChain
 	txDataList, err := o.HumanChainBridge.GetTxDataList("")
 
 	//

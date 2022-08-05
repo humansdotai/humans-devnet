@@ -7,17 +7,8 @@ import (
 	"strings"
 
 	secp256k1 "github.com/btcsuite/btcd/btcec"
-	"github.com/btcsuite/btcd/chaincfg"
-	"github.com/btcsuite/btcutil"
 	"github.com/btcsuite/btcutil/bech32"
 	"github.com/cosmos/cosmos-sdk/crypto/codec"
-	dogchaincfg "github.com/eager7/dogd/chaincfg"
-	"github.com/eager7/dogutil"
-	ltcchaincfg "github.com/ltcsuite/ltcd/chaincfg"
-	"github.com/ltcsuite/ltcutil"
-
-	bchchaincfg "github.com/gcash/bchd/chaincfg"
-	"github.com/gcash/bchutil"
 
 	eth "github.com/ethereum/go-ethereum/crypto"
 	"github.com/tendermint/tendermint/crypto"
@@ -25,10 +16,7 @@ import (
 	"github.com/humansdotai/humans/common/cosmos"
 )
 
-// PubKey used in thorchain, it should be bech32 encoded string
-// thus it will be something like
-// tthorpub1addwnpepqt7qug8vk9r3saw8n4r803ydj2g3dqwx0mvq5akhnze86fc536xcycgtrnv
-// tthorpub1addwnpepqdqvd4r84lq9m54m5kk9sf4k6kdgavvch723pcgadulxd6ey9u70k6zq8qe
+// PubKey used in humanchain, it should be bech32 encoded string
 type (
 	PubKey  string
 	PubKeys []PubKey
@@ -86,16 +74,6 @@ func (pubKey PubKey) GetAddress(chain Chain) (Address, error) {
 	}
 	chainNetwork := GetCurrentChainNetwork()
 	switch chain {
-	case BNBChain, TERRAChain:
-		pk, err := cosmos.GetPubKeyFromBech32(cosmos.Bech32PubKeyTypeAccPub, string(pubKey))
-		if err != nil {
-			return NoAddress, err
-		}
-		str, err := ConvertAndEncode(chain.AddressPrefix(chainNetwork), pk.Address().Bytes())
-		if err != nil {
-			return NoAddress, fmt.Errorf("fail to bech32 encode the address, err: %w", err)
-		}
-		return NewAddress(str)
 	case HumansChain:
 		pk, err := cosmos.GetPubKeyFromBech32(cosmos.Bech32PubKeyTypeAccPub, string(pubKey))
 		if err != nil {
@@ -119,82 +97,6 @@ func (pubKey PubKey) GetAddress(chain Chain) (Address, error) {
 		}
 		str := strings.ToLower(eth.PubkeyToAddress(*pub.ToECDSA()).String())
 		return NewAddress(str)
-	case BTCChain:
-		pk, err := cosmos.GetPubKeyFromBech32(cosmos.Bech32PubKeyTypeAccPub, string(pubKey))
-		if err != nil {
-			return NoAddress, err
-		}
-		var net *chaincfg.Params
-		switch chainNetwork {
-		case MockNet:
-			net = &chaincfg.RegressionNetParams
-		case TestNet:
-			net = &chaincfg.TestNet3Params
-		case MainNet, StageNet:
-			net = &chaincfg.MainNetParams
-		}
-		addr, err := btcutil.NewAddressWitnessPubKeyHash(pk.Address().Bytes(), net)
-		if err != nil {
-			return NoAddress, fmt.Errorf("fail to bech32 encode the address, err: %w", err)
-		}
-		return NewAddress(addr.String())
-	case LTCChain:
-		pk, err := cosmos.GetPubKeyFromBech32(cosmos.Bech32PubKeyTypeAccPub, string(pubKey))
-		if err != nil {
-			return NoAddress, err
-		}
-		var net *ltcchaincfg.Params
-		switch chainNetwork {
-		case MockNet:
-			net = &ltcchaincfg.RegressionNetParams
-		case TestNet:
-			net = &ltcchaincfg.TestNet4Params
-		case MainNet, StageNet:
-			net = &ltcchaincfg.MainNetParams
-		}
-		addr, err := ltcutil.NewAddressWitnessPubKeyHash(pk.Address().Bytes(), net)
-		if err != nil {
-			return NoAddress, fmt.Errorf("fail to bech32 encode the address, err: %w", err)
-		}
-		return NewAddress(addr.String())
-	case DOGEChain:
-		pk, err := cosmos.GetPubKeyFromBech32(cosmos.Bech32PubKeyTypeAccPub, string(pubKey))
-		if err != nil {
-			return NoAddress, err
-		}
-		var net *dogchaincfg.Params
-		switch chainNetwork {
-		case MockNet:
-			net = &dogchaincfg.RegressionNetParams
-		case TestNet:
-			net = &dogchaincfg.TestNet3Params
-		case MainNet, StageNet:
-			net = &dogchaincfg.MainNetParams
-		}
-		addr, err := dogutil.NewAddressPubKeyHash(pk.Address().Bytes(), net)
-		if err != nil {
-			return NoAddress, fmt.Errorf("fail to encode the address, err: %w", err)
-		}
-		return NewAddress(addr.String())
-	case BCHChain:
-		pk, err := cosmos.GetPubKeyFromBech32(cosmos.Bech32PubKeyTypeAccPub, string(pubKey))
-		if err != nil {
-			return NoAddress, err
-		}
-		var net *bchchaincfg.Params
-		switch chainNetwork {
-		case MockNet:
-			net = &bchchaincfg.RegressionNetParams
-		case TestNet:
-			net = &bchchaincfg.TestNet3Params
-		case MainNet, StageNet:
-			net = &bchchaincfg.MainNetParams
-		}
-		addr, err := bchutil.NewAddressPubKeyHash(pk.Address().Bytes(), net)
-		if err != nil {
-			return NoAddress, fmt.Errorf("fail to encode the address, err: %w", err)
-		}
-		return NewAddress(addr.String())
 	}
 
 	return NoAddress, nil

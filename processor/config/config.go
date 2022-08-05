@@ -14,12 +14,12 @@ import (
 )
 
 type Configuration struct {
-	Signer    SignerConfiguration  `json:"signer" mapstructure:"signer"`
+	Signer      SignerConfiguration  `json:"signer" mapstructure:"signer"`
 	Humanschain ClientConfiguration  `json:"Humanschain" mapstructure:"Humanschain"`
-	Metrics   MetricsConfiguration `json:"metrics" mapstructure:"metrics"`
-	Chains    []ChainConfiguration `json:"chains" mapstructure:"chains"`
-	TSS       TSSConfiguration     `json:"tss" mapstructure:"tss"`
-	BackOff   BackOff              `json:"back_off" mapstructure:"back_off"`
+	Metrics     MetricsConfiguration `json:"metrics" mapstructure:"metrics"`
+	Chains      []ChainConfiguration `json:"chains" mapstructure:"chains"`
+	TSS         TSSConfiguration     `json:"tss" mapstructure:"tss"`
+	BackOff     BackOff              `json:"back_off" mapstructure:"back_off"`
 }
 
 // SignerConfiguration all the configures need by signer
@@ -149,9 +149,9 @@ func applyDefaultConfig() {
 	viper.SetDefault("metrics.listen_port", "9000")
 	viper.SetDefault("metrics.read_timeout", "30s")
 	viper.SetDefault("metrics.write_timeout", "30s")
-	viper.SetDefault("metrics.chains", common.Chains{common.BNBChain, common.BTCChain, common.LTCChain, common.BCHChain, common.ETHChain, common.DOGEChain, common.TERRAChain})
-	viper.SetDefault("thorchain.chain_id", "thorchain")
-	viper.SetDefault("thorchain.chain_host", "localhost:1317")
+	viper.SetDefault("metrics.chains", common.Chains{common.ETHChain})
+	viper.SetDefault("humanchain.chain_id", "humanchain")
+	viper.SetDefault("humanchain.chain_host", "localhost:1317")
 	viper.SetDefault("back_off.initial_interval", 500*time.Millisecond)
 	viper.SetDefault("back_off.randomization_factor", 0.5)
 	viper.SetDefault("back_off.multiplier", 1.5)

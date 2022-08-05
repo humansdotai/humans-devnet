@@ -17,35 +17,9 @@ var (
 	ethGasPerByte  = cosmos.NewUint(68)
 )
 
-// BNBGasFeeSingleton fee charged by Binance for transfer with a single coin
-var BNBGasFeeSingleton = Gas{
-	{Asset: BNBAsset, Amount: bnbSingleTxFee},
-}
-
-// BNBGasFeeMulti gas fee for multi send
-var BNBGasFeeMulti = Gas{
-	{Asset: BNBAsset, Amount: bnbMultiTxFee},
-}
-
 // ETHGasFeeTransfer gas fee for ETH
 var ETHGasFeeTransfer = Gas{
 	{Asset: ETHAsset, Amount: ethTransferFee},
-}
-
-// CalcBinanceGasPrice calculate gas price for Binance chain
-func CalcBinanceGasPrice(tx Tx, asset Asset, units []cosmos.Uint) Gas {
-	lenCoins := uint64(len(tx.Coins))
-	if asset == BNBAsset {
-		switch {
-		case lenCoins == 0:
-			return nil
-		case lenCoins == 1:
-			return Gas{NewCoin(BNBAsset, units[0])}
-		case lenCoins > 1:
-			return Gas{NewCoin(BNBAsset, units[1].MulUint64(lenCoins))}
-		}
-	}
-	return nil
 }
 
 // GetETHGasFee return the gas for ETH

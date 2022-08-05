@@ -57,25 +57,6 @@ func (tx TxID) String() string {
 // Txs a list of Tx
 type Txs []Tx
 
-// GetRagnarokTx return a tx used for ragnarok
-func GetRagnarokTx(chain Chain, fromAddr, toAddr Address) Tx {
-	return Tx{
-		Chain:       chain,
-		ID:          BlankTxID,
-		FromAddress: fromAddr,
-		ToAddress:   toAddr,
-		Coins: Coins{
-			// used for ragnarok, so doesn't really matter
-			NewCoin(BNBAsset, cosmos.OneUint()),
-		},
-		Gas: Gas{
-			// used for ragnarok, so doesn't really matter
-			NewCoin(BNBAsset, cosmos.OneUint()),
-		},
-		Memo: "Ragnarok",
-	}
-}
-
 // NewTx create a new instance of Tx based on the input information
 func NewTx(txID TxID, from, to Address, coins Coins, gas Gas, memo string) Tx {
 	var chain Chain

@@ -7,14 +7,12 @@ import (
 	"time"
 
 	"github.com/cosmos/cosmos-sdk/codec"
-	"github.com/prometheus/client_golang/prometheus"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 
-	"github.com/humansdotai/humans/processor/metrics"
-	"github.com/humansdotai/humans/processor/humanclient"
 	"github.com/humansdotai/humans/common"
 	"github.com/humansdotai/humans/constants"
+	"github.com/humansdotai/humans/processor/humanclient"
 )
 
 // OnNewPubKey is a function that used as a callback , if somehow we need to do additional process when a new pubkey get added
@@ -45,28 +43,24 @@ type pubKeyInfo struct {
 
 // PubKeyManager manager an always up to date pubkeys , which implement PubKeyValidator interface
 type PubKeyManager struct {
-	cdc        *codec.LegacyAmino
-	bridge     *thorclient.ThorchainBridge
-	pubkeys    []pubKeyInfo
-	rwMutex    *sync.RWMutex
-	logger     zerolog.Logger
-	errCounter *prometheus.CounterVec
-	m          *metrics.Metrics
-	stopChan   chan struct{}
-	callback   []OnNewPubKey
+	cdc      *codec.LegacyAmino
+	bridge   *humanclient.HumanChainBridge
+	pubkeys  []pubKeyInfo
+	rwMutex  *sync.RWMutex
+	logger   zerolog.Logger
+	stopChan chan struct{}
+	callback []OnNewPubKey
 }
 
 // NewPubKeyManager create a new instance of PubKeyManager
-func NewPubKeyManager(bridge *thorclient.ThorchainBridge, m *metrics.Metrics) (*PubKeyManager, error) {
+func NewPubKeyManager(bridge *humanclient.HumanChainBridge) (*PubKeyManager, error) {
 	return &PubKeyManager{
-		cdc:        thorclient.MakeLegacyCodec(),
-		logger:     log.With().Str("module", "public_key_mgr").Logger(),
-		bridge:     bridge,
-		errCounter: m.GetCounterVec(metrics.PubKeyManagerError),
-		m:          m,
-		stopChan:   make(chan struct{}),
-		rwMutex:    &sync.RWMutex{},
-		callback:   []OnNewPubKey{},
+		cdc:      humanclient.MakeLegacyCodec(),
+		logger:   log.With().Str("module", "public_key_mgr").Logger(),
+		bridge:   bridge,
+		stopChan: make(chan struct{}),
+		rwMutex:  &sync.RWMutex{},
+		callback: []OnNewPubKey{},
 	}, nil
 }
 
@@ -93,7 +87,7 @@ func (pkm *PubKeyManager) Stop() error {
 	return nil
 }
 
-func (pkm *PubKeyManager) updateContractAddresses(pairs []thorclient.PubKeyContractAddressPair) {
+func (pkm *PubKeyManager) updateContractAddresses(pairs []humanclient.PubKeyContractAddressPair) {
 	pkm.rwMutex.Lock()
 	defer pkm.rwMutex.Unlock()
 	for _, pair := range pairs {
@@ -247,10 +241,10 @@ func (pkm *PubKeyManager) fetchPubKeys() {
 	}
 
 	for _, vault := range vaults {
-		if vault.GetMembership().Contains(pkm.GetNodePubKey()) {
-			pkm.AddPubKey(vault.PubKey, true)
-			pubkeys = append(pubkeys, vault.PubKey)
-		}
+		// if vault.GetMembership().Contains(pkm.GetNodePubKey()) {
+		pkm.AddPubKey(vault.PubKey, true)
+		pubkeys = append(pubkeys, vault.PubKey)
+		// }
 	}
 	pkm.rwMutex.Lock()
 	defer pkm.rwMutex.Unlock()
@@ -275,7 +269,7 @@ func (pkm *PubKeyManager) updatePubKeys() {
 		select {
 		case <-pkm.stopChan:
 			return
-		case <-time.After(constants.ThorchainBlockTime):
+		case <-time.After(constants.HumanchainBlockTime):
 			pkm.fetchPubKeys()
 		}
 	}
@@ -307,7 +301,7 @@ func (pkm *PubKeyManager) IsValidPoolAddress(addr string, chain common.Chain) (b
 }
 
 // getPubkeys from HumansChain
-func (pkm *PubKeyManager) getPubkeys() ([]thorclient.PubKeyContractAddressPair, error) {
+func (pkm *PubKeyManager) getPubkeys() ([]humanclient.PubKeyContractAddressPair, error) {
 	return pkm.bridge.GetPubKeys()
 }
 
