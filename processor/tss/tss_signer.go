@@ -285,7 +285,7 @@ func (s *KeySign) getVersion() semver.Version {
 	if !s.currentVersion.Equals(semver.Version{}) && requestTime.Sub(s.lastCheck).Seconds() < constants.ThorchainBlockTime.Seconds() {
 		return s.currentVersion
 	}
-	version, err := s.bridge.GetThorchainVersion()
+	version, err := s.bridge.Getver()
 	if err != nil {
 		s.logger.Err(err).Msg("fail to get current thorchain version")
 		return s.currentVersion

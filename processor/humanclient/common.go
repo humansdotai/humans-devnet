@@ -149,8 +149,8 @@ func (b *HumanChainBridge) getHumanChainURL(path string) string {
 func (b *HumanChainBridge) get(url string) ([]byte, int, error) {
 	resp, err := b.httpClient.Get(url)
 	if err != nil {
-		fmt.Println("ffailed to GET from diversifichain")
-		return nil, http.StatusNotFound, fmt.Errorf("failed to GET from diversifichain: %w", err)
+		fmt.Println("ffailed to GET from humanschain")
+		return nil, http.StatusNotFound, fmt.Errorf("failed to GET from humanschain: %w", err)
 	}
 	defer func() {
 		if err := resp.Body.Close(); err != nil {
@@ -163,7 +163,7 @@ func (b *HumanChainBridge) get(url string) ([]byte, int, error) {
 		return buf, resp.StatusCode, errors.New("Status code: " + resp.Status + " returned")
 	}
 	if err != nil {
-		fmt.Println("fail_read_diversifihain_resp", "")
+		fmt.Println("fail_read_humanshain_resp", "")
 		return nil, resp.StatusCode, fmt.Errorf("failed to read response body: %w", err)
 	}
 	return buf, resp.StatusCode, nil
@@ -200,7 +200,7 @@ func (b *HumanChainBridge) getAccountNumberAndSequenceNumber() (uint64, uint64, 
 // HumansBlockTime Block time of HUMANSChain
 var HumansBlockTime = 5 * time.Second
 
-// GetBlockHeight returns the current height for diversifi blocks
+// GetBlockHeight returns the current height for humans blocks
 func (b *HumanChainBridge) GetBlockHeight() (uint64, error) {
 	if time.Since(b.lastBlockHeightCheck) < HumansBlockTime && b.lastDiversichainBlockHeight > 0 {
 		return b.lastDiversichainBlockHeight, nil
