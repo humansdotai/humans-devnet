@@ -1,5 +1,5 @@
 syntax = "proto3";
-package vigorousdeveloper.humans.humans;
+package humansdotai.humans.humans;
 
 import "gogoproto/gogo.proto";
 

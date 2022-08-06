@@ -1,9 +1,9 @@
 syntax = "proto3";
-package vigorousdeveloper.humans.humans;
+package humansdotai.humans.humans;
 
 option go_package = "github.com/humansdotai/humans/x/humans/types";
 
-message PoolBalance {
+message FeeBalance {
   string index = 1; 
   string chainName = 2; 
   string balance = 3; 

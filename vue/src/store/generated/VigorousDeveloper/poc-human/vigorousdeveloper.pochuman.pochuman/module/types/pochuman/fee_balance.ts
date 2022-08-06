@@ -1,7 +1,7 @@
 /* eslint-disable */
 import { Writer, Reader } from "protobufjs/minimal";
 
-export const protobufPackage = "vigorousdeveloper.humans.humans";
+export const protobufPackage = "humansdotai.humans.humans";
 
 export interface FeeBalance {
   index: string;

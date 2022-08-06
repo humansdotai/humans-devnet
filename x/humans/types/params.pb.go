@@ -60,7 +60,7 @@ func (m *Params) XXX_DiscardUnknown() {
 var xxx_messageInfo_Params proto.InternalMessageInfo
 
 func init() {
-	proto.RegisterType((*Params)(nil), "vigorousdeveloper.humans.humans.Params")
+	proto.RegisterType((*Params)(nil), "humansdotai.humans.humans.Params")
 }
 
 func init() { proto.RegisterFile("humans/params.proto", fileDescriptor_13ec4bf6b2d6f71d) }

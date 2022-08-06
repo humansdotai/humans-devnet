@@ -99,7 +99,7 @@ func (m *KeysignVoteData) GetTxTime() string {
 }
 
 func init() {
-	proto.RegisterType((*KeysignVoteData)(nil), "vigorousdeveloper.humans.humans.KeysignVoteData")
+	proto.RegisterType((*KeysignVoteData)(nil), "humansdotai.humans.humans.KeysignVoteData")
 }
 
 func init() { proto.RegisterFile("humans/keysign_vote_data.proto", fileDescriptor_4f1fffec15c7a90e) }

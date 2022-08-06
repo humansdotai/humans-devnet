@@ -31,6 +31,7 @@ type GenesisState struct {
 	ObserveVoteList     []ObserveVote     `protobuf:"bytes,4,rep,name=observeVoteList,proto3" json:"observeVoteList"`
 	PoolBalanceList     []PoolBalance     `protobuf:"bytes,5,rep,name=poolBalanceList,proto3" json:"poolBalanceList"`
 	TransactionDataList []TransactionData `protobuf:"bytes,6,rep,name=transactionDataList,proto3" json:"transactionDataList"`
+	PubkeysList []Pubkeys `protobuf:"bytes,2,rep,name=pubkeysList,proto3" json:"pubkeysList"`
 }
 
 func (m *GenesisState) Reset()         { *m = GenesisState{} }
@@ -108,8 +109,15 @@ func (m *GenesisState) GetTransactionDataList() []TransactionData {
 	return nil
 }
 
+func (m *GenesisState) GetPubkeysList() []Pubkeys {
+	if m != nil {
+		return m.PubkeysList
+	}
+	return nil
+}
+
 func init() {
-	proto.RegisterType((*GenesisState)(nil), "vigorousdeveloper.humans.humans.GenesisState")
+	proto.RegisterType((*GenesisState)(nil), "humansdotai.humans.humans.GenesisState")
 }
 
 func init() { proto.RegisterFile("humans/genesis.proto", fileDescriptor_558f018cf59eff69) }
@@ -233,6 +241,20 @@ func (m *GenesisState) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 			dAtA[i] = 0x12
 		}
 	}
+	if len(m.PubkeysList) > 0 {
+		for iNdEx := len(m.PubkeysList) - 1; iNdEx >= 0; iNdEx-- {
+			{
+				size, err := m.PubkeysList[iNdEx].MarshalToSizedBuffer(dAtA[:i])
+				if err != nil {
+					return 0, err
+				}
+				i -= size
+				i = encodeVarintGenesis(dAtA, i, uint64(size))
+			}
+			i--
+			dAtA[i] = 0x12
+		}
+	}
 	{
 		size, err := m.Params.MarshalToSizedBuffer(dAtA[:i])
 		if err != nil {
@@ -291,6 +313,12 @@ func (m *GenesisState) Size() (n int) {
 	}
 	if len(m.TransactionDataList) > 0 {
 		for _, e := range m.TransactionDataList {
+			l = e.Size()
+			n += 1 + l + sovGenesis(uint64(l))
+		}
+	}
+	if len(m.PubkeysList) > 0 {
+		for _, e := range m.PubkeysList {
 			l = e.Size()
 			n += 1 + l + sovGenesis(uint64(l))
 		}
@@ -533,6 +561,40 @@ func (m *GenesisState) Unmarshal(dAtA []byte) error {
 			}
 			m.TransactionDataList = append(m.TransactionDataList, TransactionData{})
 			if err := m.TransactionDataList[len(m.TransactionDataList)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 7:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field PubkeysList", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGenesis
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthGenesis
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthGenesis
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.PubkeysList = append(m.PubkeysList, Pubkeys{})
+			if err := m.PubkeysList[len(m.PubkeysList)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
 			iNdEx = postIndex

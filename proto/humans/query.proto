@@ -1,5 +1,5 @@
 syntax = "proto3";
-package vigorousdeveloper.humans.humans;
+package humansdotai.humans.humans;
 
 import "gogoproto/gogo.proto";
 import "google/api/annotations.proto";
@@ -10,6 +10,7 @@ import "humans/keysign_vote_data.proto";
 import "humans/observe_vote.proto";
 import "humans/pool_balance.proto";
 import "humans/transaction_data.proto";
+import "humans/pubkeys.proto";
 // this line is used by starport scaffolding # 1
 
 option go_package = "github.com/humansdotai/humans/x/humans/types";
@@ -18,58 +19,67 @@ option go_package = "github.com/humansdotai/humans/x/humans/types";
 service Query {
   // Parameters queries the parameters of the module.
   rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
-    option (google.api.http).get = "/VigorousDeveloper/humans/humans/params";
+    option (google.api.http).get = "/humansdotai/humans/humans/params";
   }
   // Queries a FeeBalance by index.
 	rpc FeeBalance(QueryGetFeeBalanceRequest) returns (QueryGetFeeBalanceResponse) {
-		option (google.api.http).get = "/VigorousDeveloper/humans/humans/fee_balance/{index}";
+		option (google.api.http).get = "/humansdotai/humans/humans/fee_balance/{index}";
 	}
 
 	// Queries a list of FeeBalance items.
 	rpc FeeBalanceAll(QueryAllFeeBalanceRequest) returns (QueryAllFeeBalanceResponse) {
-		option (google.api.http).get = "/VigorousDeveloper/humans/humans/fee_balance";
+		option (google.api.http).get = "/humansdotai/humans/humans/fee_balance";
 	}
 
 // Queries a KeysignVoteData by index.
 	rpc KeysignVoteData(QueryGetKeysignVoteDataRequest) returns (QueryGetKeysignVoteDataResponse) {
-		option (google.api.http).get = "/VigorousDeveloper/humans/humans/keysign_vote_data/{index}";
+		option (google.api.http).get = "/humansdotai/humans/humans/keysign_vote_data/{index}";
 	}
 
 	// Queries a list of KeysignVoteData items.
 	rpc KeysignVoteDataAll(QueryAllKeysignVoteDataRequest) returns (QueryAllKeysignVoteDataResponse) {
-		option (google.api.http).get = "/VigorousDeveloper/humans/humans/keysign_vote_data";
+		option (google.api.http).get = "/humansdotai/humans/humans/keysign_vote_data";
 	}
 
 // Queries a ObserveVote by index.
 	rpc ObserveVote(QueryGetObserveVoteRequest) returns (QueryGetObserveVoteResponse) {
-		option (google.api.http).get = "/VigorousDeveloper/humans/humans/observe_vote/{index}";
+		option (google.api.http).get = "/humansdotai/humans/humans/observe_vote/{index}";
 	}
 
 	// Queries a list of ObserveVote items.
 	rpc ObserveVoteAll(QueryAllObserveVoteRequest) returns (QueryAllObserveVoteResponse) {
-		option (google.api.http).get = "/VigorousDeveloper/humans/humans/observe_vote";
+		option (google.api.http).get = "/humansdotai/humans/humans/observe_vote";
 	}
 
 // Queries a PoolBalance by index.
 	rpc PoolBalance(QueryGetPoolBalanceRequest) returns (QueryGetPoolBalanceResponse) {
-		option (google.api.http).get = "/VigorousDeveloper/humans/humans/pool_balance/{index}";
+		option (google.api.http).get = "/humansdotai/humans/humans/pool_balance/{index}";
 	}
 
 	// Queries a list of PoolBalance items.
 	rpc PoolBalanceAll(QueryAllPoolBalanceRequest) returns (QueryAllPoolBalanceResponse) {
-		option (google.api.http).get = "/VigorousDeveloper/humans/humans/pool_balance";
+		option (google.api.http).get = "/humansdotai/humans/humans/pool_balance";
 	}
 
 // Queries a TransactionData by index.
 	rpc TransactionData(QueryGetTransactionDataRequest) returns (QueryGetTransactionDataResponse) {
-		option (google.api.http).get = "/VigorousDeveloper/humans/humans/transaction_data/{index}";
+		option (google.api.http).get = "/humansdotai/humans/humans/transaction_data/{index}";
 	}
 
 	// Queries a list of TransactionData items.
 	rpc TransactionDataAll(QueryAllTransactionDataRequest) returns (QueryAllTransactionDataResponse) {
-		option (google.api.http).get = "/VigorousDeveloper/humans/humans/transaction_data";
+		option (google.api.http).get = "/humansdotai/humans/humans/transaction_data";
 	}
 
+  	// Queries a Pubkeys by index.
+ 	 rpc Pubkeys(QueryGetPubkeysRequest) returns (QueryGetPubkeysResponse) {
+		option (google.api.http).get = "/humansdotai/humans/humans/pubkeys/{index}";
+	}
+
+	// Queries a list of Pubkeys items.
+	rpc PubkeysAll(QueryAllPubkeysRequest) returns (QueryAllPubkeysResponse) {
+		option (google.api.http).get = "/humansdotai/humans/humans/pubkeys";
+	}
 // this line is used by starport scaffolding # 2
 }
 
@@ -170,6 +180,24 @@ message QueryAllTransactionDataRequest {
 message QueryAllTransactionDataResponse {
 	repeated TransactionData transactionData = 1 [(gogoproto.nullable) = false];
 	cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+message QueryGetPubkeysRequest {
+	string index = 1;
+
+}
+
+message QueryGetPubkeysResponse {
+  Pubkeys pubkeys = 1 [(gogoproto.nullable) = false];
+}
+
+message QueryAllPubkeysRequest {
+  cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+message QueryAllPubkeysResponse {
+  repeated Pubkeys pubkeys = 1 [(gogoproto.nullable) = false];
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
 
 // this line is used by starport scaffolding # 3

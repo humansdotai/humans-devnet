@@ -11,7 +11,7 @@ import { ObserveVote } from "../humans/observe_vote";
 import { PoolBalance } from "../humans/pool_balance";
 import { TransactionData } from "../humans/transaction_data";
 
-export const protobufPackage = "vigorousdeveloper.humans.humans";
+export const protobufPackage = "humansdotai.humans.humans";
 
 /** QueryParamsRequest is request type for the Query/Params RPC method. */
 export interface QueryParamsRequest {}
@@ -1882,7 +1882,7 @@ export class QueryClientImpl implements Query {
   Params(request: QueryParamsRequest): Promise<QueryParamsResponse> {
     const data = QueryParamsRequest.encode(request).finish();
     const promise = this.rpc.request(
-      "vigorousdeveloper.humans.humans.Query",
+      "humansdotai.humans.humans.Query",
       "Params",
       data
     );
@@ -1894,7 +1894,7 @@ export class QueryClientImpl implements Query {
   ): Promise<QueryGetFeeBalanceResponse> {
     const data = QueryGetFeeBalanceRequest.encode(request).finish();
     const promise = this.rpc.request(
-      "vigorousdeveloper.humans.humans.Query",
+      "humansdotai.humans.humans.Query",
       "FeeBalance",
       data
     );
@@ -1908,7 +1908,7 @@ export class QueryClientImpl implements Query {
   ): Promise<QueryAllFeeBalanceResponse> {
     const data = QueryAllFeeBalanceRequest.encode(request).finish();
     const promise = this.rpc.request(
-      "vigorousdeveloper.humans.humans.Query",
+      "humansdotai.humans.humans.Query",
       "FeeBalanceAll",
       data
     );
@@ -1922,7 +1922,7 @@ export class QueryClientImpl implements Query {
   ): Promise<QueryGetKeysignVoteDataResponse> {
     const data = QueryGetKeysignVoteDataRequest.encode(request).finish();
     const promise = this.rpc.request(
-      "vigorousdeveloper.humans.humans.Query",
+      "humansdotai.humans.humans.Query",
       "KeysignVoteData",
       data
     );
@@ -1936,7 +1936,7 @@ export class QueryClientImpl implements Query {
   ): Promise<QueryAllKeysignVoteDataResponse> {
     const data = QueryAllKeysignVoteDataRequest.encode(request).finish();
     const promise = this.rpc.request(
-      "vigorousdeveloper.humans.humans.Query",
+      "humansdotai.humans.humans.Query",
       "KeysignVoteDataAll",
       data
     );
@@ -1950,7 +1950,7 @@ export class QueryClientImpl implements Query {
   ): Promise<QueryGetObserveVoteResponse> {
     const data = QueryGetObserveVoteRequest.encode(request).finish();
     const promise = this.rpc.request(
-      "vigorousdeveloper.humans.humans.Query",
+      "humansdotai.humans.humans.Query",
       "ObserveVote",
       data
     );
@@ -1964,7 +1964,7 @@ export class QueryClientImpl implements Query {
   ): Promise<QueryAllObserveVoteResponse> {
     const data = QueryAllObserveVoteRequest.encode(request).finish();
     const promise = this.rpc.request(
-      "vigorousdeveloper.humans.humans.Query",
+      "humansdotai.humans.humans.Query",
       "ObserveVoteAll",
       data
     );
@@ -1978,7 +1978,7 @@ export class QueryClientImpl implements Query {
   ): Promise<QueryGetPoolBalanceResponse> {
     const data = QueryGetPoolBalanceRequest.encode(request).finish();
     const promise = this.rpc.request(
-      "vigorousdeveloper.humans.humans.Query",
+      "humansdotai.humans.humans.Query",
       "PoolBalance",
       data
     );
@@ -1992,7 +1992,7 @@ export class QueryClientImpl implements Query {
   ): Promise<QueryAllPoolBalanceResponse> {
     const data = QueryAllPoolBalanceRequest.encode(request).finish();
     const promise = this.rpc.request(
-      "vigorousdeveloper.humans.humans.Query",
+      "humansdotai.humans.humans.Query",
       "PoolBalanceAll",
       data
     );
@@ -2006,7 +2006,7 @@ export class QueryClientImpl implements Query {
   ): Promise<QueryGetTransactionDataResponse> {
     const data = QueryGetTransactionDataRequest.encode(request).finish();
     const promise = this.rpc.request(
-      "vigorousdeveloper.humans.humans.Query",
+      "humansdotai.humans.humans.Query",
       "TransactionData",
       data
     );
@@ -2020,7 +2020,7 @@ export class QueryClientImpl implements Query {
   ): Promise<QueryAllTransactionDataResponse> {
     const data = QueryAllTransactionDataRequest.encode(request).finish();
     const promise = this.rpc.request(
-      "vigorousdeveloper.humans.humans.Query",
+      "humansdotai.humans.humans.Query",
       "TransactionDataAll",
       data
     );

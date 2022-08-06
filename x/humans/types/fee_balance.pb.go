@@ -91,7 +91,7 @@ func (m *FeeBalance) GetDecimal() string {
 }
 
 func init() {
-	proto.RegisterType((*FeeBalance)(nil), "vigorousdeveloper.humans.humans.FeeBalance")
+	proto.RegisterType((*FeeBalance)(nil), "humansdotai.humans.humans.FeeBalance")
 }
 
 func init() { proto.RegisterFile("humans/fee_balance.proto", fileDescriptor_e5dff84e1c37a6d0) }
