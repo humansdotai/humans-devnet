@@ -1042,7 +1042,7 @@ func (m *QueryGetPubkeysRequest) Reset()         { *m = QueryGetPubkeysRequest{}
 func (m *QueryGetPubkeysRequest) String() string { return proto.CompactTextString(m) }
 func (*QueryGetPubkeysRequest) ProtoMessage()    {}
 func (*QueryGetPubkeysRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_ad9cd489f3636066, []int{2}
+	return fileDescriptor_9c0a764eba4727e0, []int{2}
 }
 func (m *QueryGetPubkeysRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -1086,7 +1086,7 @@ func (m *QueryGetPubkeysResponse) Reset()         { *m = QueryGetPubkeysResponse
 func (m *QueryGetPubkeysResponse) String() string { return proto.CompactTextString(m) }
 func (*QueryGetPubkeysResponse) ProtoMessage()    {}
 func (*QueryGetPubkeysResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_ad9cd489f3636066, []int{3}
+	return fileDescriptor_9c0a764eba4727e0, []int{3}
 }
 func (m *QueryGetPubkeysResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -1130,7 +1130,7 @@ func (m *QueryAllPubkeysRequest) Reset()         { *m = QueryAllPubkeysRequest{}
 func (m *QueryAllPubkeysRequest) String() string { return proto.CompactTextString(m) }
 func (*QueryAllPubkeysRequest) ProtoMessage()    {}
 func (*QueryAllPubkeysRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_ad9cd489f3636066, []int{4}
+	return fileDescriptor_9c0a764eba4727e0, []int{4}
 }
 func (m *QueryAllPubkeysRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -1175,7 +1175,7 @@ func (m *QueryAllPubkeysResponse) Reset()         { *m = QueryAllPubkeysResponse
 func (m *QueryAllPubkeysResponse) String() string { return proto.CompactTextString(m) }
 func (*QueryAllPubkeysResponse) ProtoMessage()    {}
 func (*QueryAllPubkeysResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_ad9cd489f3636066, []int{5}
+	return fileDescriptor_9c0a764eba4727e0, []int{5}
 }
 func (m *QueryAllPubkeysResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
