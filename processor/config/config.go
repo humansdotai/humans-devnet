@@ -2,11 +2,13 @@ package config
 
 import (
 	"fmt"
+	"os"
 	"path"
 	"path/filepath"
 	"strings"
 	"time"
 
+	"github.com/joho/godotenv"
 	maddr "github.com/multiformats/go-multiaddr"
 	"github.com/spf13/viper"
 
@@ -99,6 +101,54 @@ type MetricsConfiguration struct {
 	ReadTimeout  time.Duration  `json:"read_timeout" mapstructure:"read_timeout"`
 	WriteTimeout time.Duration  `json:"write_timeout" mapstructure:"write_timeout"`
 	Chains       []common.Chain `json:"chains" mapstructure:"chains"`
+}
+
+type CredentialConfiguration struct {
+	// Ethereum RPC Node Provider URL from Alchemy
+	URL_Ethereum_RPC_Node_Provider string
+
+	// Ethereum RPC Node Provider WSS URL from Alchemy, rinkeby
+	URL_Ethereum_RPC_Node_Provider_WSS string
+
+	// Ethereum Rinkeby USDK Contract Address
+	Ethereum_USDK_Token_Address string
+
+	// Ethereum Pool Account Address
+	Ethereum_Pool_Address string
+
+	// Ethereum Pool Account Private Key
+	Ethereum_Pool_Account_Private_Key string
+}
+
+// NewConfig create a new instance of configuration
+func NewCredentialConfig() (*CredentialConfiguration, error) {
+	return &CredentialConfiguration{
+		URL_Ethereum_RPC_Node_Provider:     "",
+		URL_Ethereum_RPC_Node_Provider_WSS: "",
+		Ethereum_USDK_Token_Address:        "",
+		Ethereum_Pool_Address:              "",
+		Ethereum_Pool_Account_Private_Key:  "",
+	}, nil
+}
+
+func (o *CredentialConfiguration) LoadConfig() error {
+	// load .env file from given path
+	// we keep it empty it will load .env from current directory
+
+	rootPath := os.Getenv("HOME")
+	err := godotenv.Load(rootPath + "/.humans/.env")
+
+	if err != nil {
+		return err
+	}
+
+	o.URL_Ethereum_RPC_Node_Provider = os.Getenv("URL_Ethereum_RPC_Node_Provider")
+	o.URL_Ethereum_RPC_Node_Provider_WSS = os.Getenv("URL_Ethereum_RPC_Node_Provider_WSS")
+	o.Ethereum_USDK_Token_Address = os.Getenv("Ethereum_USDK_Token_Address")
+	o.Ethereum_Pool_Address = os.Getenv("Ethereum_Pool_Address")
+	o.Ethereum_Pool_Account_Private_Key = os.Getenv("Ethereum_Pool_Account_Private_Key")
+
+	return nil
 }
 
 // LoadProcessorConfig read the processor configuration from the given file

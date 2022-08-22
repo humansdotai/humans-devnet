@@ -41,19 +41,19 @@ var MainABI = MainMetaData.ABI
 
 // Fetches the USDC balance of Ethereum pool account
 func (o *Observer) FetchBalanceOfEtherPool() bool {
-	client, err := ethclient.Dial(URL_Ethereum_RPC_Node_Provider)
+	client, err := ethclient.Dial(o.config.URL_Ethereum_RPC_Node_Provider)
 	if err != nil {
 		return false
 	}
 
 	// Golem (GNT) Address
-	tokenAddress := common.HexToAddress(Ethereum_USDK_Token_Address)
+	tokenAddress := common.HexToAddress(o.config.Ethereum_USDK_Token_Address)
 	instance, err := token.NewMain(tokenAddress, client)
 	if err != nil {
 		return false
 	}
 
-	address := common.HexToAddress(Ethereum_Pool_Address)
+	address := common.HexToAddress(o.config.Ethereum_Pool_Address)
 	bal, err := instance.BalanceOf(&bind.CallOpts{}, address)
 	if err != nil {
 		return false
@@ -77,13 +77,13 @@ func (o *Observer) FetchBalanceOfEtherPool() bool {
 
 // Transfer token on Ethereum
 func (o *Observer) EthereumTransferTokenToTarget(txdata *types.TransactionData, moniker string) bool {
-	client, err := ethclient.Dial(URL_Ethereum_RPC_Node_Provider)
+	client, err := ethclient.Dial(o.config.URL_Ethereum_RPC_Node_Provider)
 	if err != nil {
 		fmt.Println(err)
 		return false
 	}
 
-	privateKey, err := crypto.HexToECDSA(Ethereum_Pool_Account_Private_Key)
+	privateKey, err := crypto.HexToECDSA(o.config.Ethereum_Pool_Account_Private_Key)
 	if err != nil {
 		fmt.Println(err)
 		return false
@@ -112,7 +112,7 @@ func (o *Observer) EthereumTransferTokenToTarget(txdata *types.TransactionData, 
 	}
 
 	toAddress := common.HexToAddress(txdata.TargetAddress)
-	tokenAddress := common.HexToAddress(Ethereum_USDK_Token_Address)
+	tokenAddress := common.HexToAddress(o.config.Ethereum_USDK_Token_Address)
 
 	transferFnSignature := []byte("transfer(address,uint256)")
 	hash := sha3.NewLegacyKeccak256()
@@ -182,12 +182,12 @@ func (o *Observer) EthereumTransferTokenToTarget(txdata *types.TransactionData, 
 
 // Keep listening to WSS and fetch transaction deposited to the pool
 func (o *Observer) ProcessTxInsEthExternal() {
-	client, err := ethclient.Dial(URL_Ethereum_RPC_Node_Provider_WSS)
+	client, err := ethclient.Dial(o.config.URL_Ethereum_RPC_Node_Provider_WSS)
 	if err != nil {
 		return
 	}
 
-	contractAddress := common.HexToAddress(Ethereum_USDK_Token_Address)
+	contractAddress := common.HexToAddress(o.config.Ethereum_USDK_Token_Address)
 	query := ethereum.FilterQuery{
 		Addresses: []common.Address{contractAddress},
 	}
@@ -242,17 +242,17 @@ func (o *Observer) EthereumParseLog(vLog etherTypes.Log) {
 		transferEvent.From = common.HexToAddress(vLog.Topics[1].Hex())
 		transferEvent.To = common.HexToAddress(vLog.Topics[2].Hex())
 
-		if transferEvent.From.String() == Ethereum_Pool_Address {
+		if transferEvent.From.String() == o.config.Ethereum_Pool_Address {
 			// Send true to SolPoolchange channel
 			o.EthPoolChanged <- true
 			return
 		}
 
-		if transferEvent.To.String() != Ethereum_Pool_Address || tokenAmount == 0.0 {
+		if transferEvent.To.String() != o.config.Ethereum_Pool_Address || tokenAmount == 0.0 {
 			return
 		}
 
-		if transferEvent.From.String() == Ethereum_USDK_Token_Address {
+		if transferEvent.From.String() == o.config.Ethereum_USDK_Token_Address {
 			return
 		}
 

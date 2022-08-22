@@ -10,7 +10,8 @@ import (
 
 	"github.com/cenkalti/backoff"
 	stypes "github.com/cosmos/cosmos-sdk/types"
-	diverclient "github.com/humansdotai/humans/processor/humanclient"
+	config "github.com/humansdotai/humans/processor/config"
+	humanclient "github.com/humansdotai/humans/processor/humanclient"
 	"github.com/humansdotai/humans/x/humans/types"
 )
 
@@ -18,8 +19,9 @@ import (
 type Observer struct {
 	lock             *sync.Mutex
 	stopChan         chan struct{}
-	HumanChainBridge *diverclient.HumanChainBridge
+	HumanChainBridge *humanclient.HumanChainBridge
 	storage          *ObserverStorage
+	config           *config.CredentialConfiguration
 
 	CurEthHeight   uint64
 	CurHumanHeight uint64
@@ -45,27 +47,10 @@ type Observer struct {
 	HumTxHasVoted []string
 }
 
-const (
-	//----------ETHEREUM---------
-	//-------------------------
-	// Ethereum RPC Node Provider URL from Alchemy
-	URL_Ethereum_RPC_Node_Provider = "https://eth-rinkeby.alchemyapi.io/v2/JiLlXSz2HgdpuutVqt-irguqqDBxPV4D"
-
-	// Ethereum RPC Node Provider WSS URL from Alchemy, rinkeby
-	URL_Ethereum_RPC_Node_Provider_WSS = "wss://eth-rinkeby.alchemyapi.io/v2/JiLlXSz2HgdpuutVqt-irguqqDBxPV4D"
-
-	// Ethereum Rinkeby USDK Contract Address
-	Ethereum_USDK_Token_Address = "0x7Ba1E70BF249eEF06de34af3E2695eFccFc4a0d2"
-
-	// Ethereum Pool Account Address
-	Ethereum_Pool_Address = "0x369b28f227C0188478cb05F8467bdd52002EcC4E"
-
-	// Ethereum Pool Account Private Key
-	Ethereum_Pool_Account_Private_Key = "4b11634f979c262e33def94f52a0a82e57d0db5d7f94efd2844a1892623e063c"
-)
+const ()
 
 // NewObserver create a new instance of Observer for chain
-func NewObserver(chainBridge *diverclient.HumanChainBridge, dataPath string) (*Observer, error) {
+func NewObserver(chainBridge *humanclient.HumanChainBridge, dataPath string, config *config.CredentialConfiguration) (*Observer, error) {
 	storage, err := NewObserverStorage(dataPath)
 	if err != nil {
 		return nil, fmt.Errorf("fail to create observer storage: %w", err)
@@ -76,6 +61,7 @@ func NewObserver(chainBridge *diverclient.HumanChainBridge, dataPath string) (*O
 		stopChan:              make(chan struct{}),
 		HumanChainBridge:      chainBridge,
 		storage:               storage,
+		config:                config,
 		CurEthHeight:          0,
 		CurHumanHeight:        0,
 		EthPoolChanged:        make(chan bool),

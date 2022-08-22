@@ -10,6 +10,7 @@ import (
 	"github.com/humansdotai/humans/app"
 	"github.com/humansdotai/humans/cmd"
 	tcommon "github.com/humansdotai/humans/common"
+	config "github.com/humansdotai/humans/processor/config"
 	humanclient "github.com/humansdotai/humans/processor/humanclient"
 	"github.com/humansdotai/humans/processor/humanclient/cosmos"
 	"github.com/humansdotai/humans/processor/observer"
@@ -106,8 +107,16 @@ func main() {
 		log.Err(err).Msg("fail to start tss instance")
 	}
 
+	// Load app configuration
+	config, err := config.NewCredentialConfig()
+	err = config.LoadConfig()
+	if err != nil {
+		fmt.Println("fail to load config")
+		return
+	}
+
 	obs_storage := ""
-	obs, err := observer.NewObserver(HumanChainBridge, obs_storage)
+	obs, err := observer.NewObserver(HumanChainBridge, obs_storage, config)
 	if err != nil {
 		fmt.Println("fail to create observer")
 		return

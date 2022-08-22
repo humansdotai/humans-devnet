@@ -21,6 +21,7 @@ require (
 	github.com/hashicorp/go-multierror v1.1.1
 	github.com/hashicorp/go-retryablehttp v0.5.3
 	github.com/ignite-hq/cli v0.22.1
+	github.com/joho/godotenv v1.3.0
 	github.com/multiformats/go-multiaddr v0.3.1
 	github.com/otiai10/copy v1.6.0
 	github.com/prometheus/client_golang v1.12.1
