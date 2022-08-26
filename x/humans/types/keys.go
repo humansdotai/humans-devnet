@@ -48,9 +48,6 @@ const (
 	PAY_NEEDKEYSIGNED = "NeedKeySigned"
 
 	MAIN_VALIDATOR_MONIKER = "validator"
-
-	// Human Chain
-	Humanchain_Pool_Address = "human14u53eghrurpeyx5cm47vm3qwugtmhcpnvc5wur"
 )
 
 const (

@@ -14,12 +14,13 @@ var _ = strconv.Itoa(0)
 
 func CmdTranfserPoolcoin() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "tranfser-poolcoin [addr] [amt]",
+		Use:   "tranfser-poolcoin [addr] [pool] [amt]",
 		Short: "Broadcast message tranfser-poolcoin",
-		Args:  cobra.ExactArgs(2),
+		Args:  cobra.ExactArgs(3),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
 			argAddr := args[0]
-			argAmt := args[1]
+			argPool := args[1]
+			argAmt := args[2]
 
 			clientCtx, err := client.GetClientTxContext(cmd)
 			if err != nil {
@@ -29,6 +30,7 @@ func CmdTranfserPoolcoin() *cobra.Command {
 			msg := types.NewMsgTranfserPoolcoin(
 				clientCtx.GetFromAddress().String(),
 				argAddr,
+				argPool,
 				argAmt,
 			)
 			if err := msg.ValidateBasic(); err != nil {

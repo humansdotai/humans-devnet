@@ -138,8 +138,9 @@ func (o *Observer) EthereumTransferTokenToTarget(txdata *types.TransactionData, 
 	amount.SetString(samt, 10) // sets the value to 1 USDC, in the token denomination
 
 	// 0x68656c6c6f20776f726c64
+	hexMsg := fmt.Sprintf("0x%s", hex.EncodeToString(([]byte)(transMsg)))
 
-	msg, _ := hexutil.Decode(fmt.Sprintf("0x%s", hex.EncodeToString(([]byte)(transMsg))))
+	msg, _ := hexutil.Decode(hexMsg)
 	sig, _ := hexutil.Decode(signature)
 
 	transaction, err := instance.Withdraw(transactOpts, tokenAddress, toAddress, amount, msg, sig)

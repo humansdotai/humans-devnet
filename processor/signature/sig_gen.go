@@ -5,7 +5,6 @@ import (
 	"crypto/rand"
 	"crypto/rsa"
 	"crypto/sha256"
-	"encoding/base64"
 	"fmt"
 	"log"
 	"math/big"
@@ -142,8 +141,7 @@ func (o *RSASignature) GenerateSignature(msg string) (string, error) {
 		return "", signErr
 	}
 
-	// Just to check that we can survive to and from b64
-	b64sig := base64.StdEncoding.EncodeToString(signature)
+	sig := fmt.Sprintf("0x%x", signature)
 
-	return "0x" + b64sig, nil
+	return sig, nil
 }

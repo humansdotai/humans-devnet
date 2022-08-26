@@ -83,7 +83,8 @@ message MsgApproveTransactionResponse {
 message MsgTranfserPoolcoin {
   string creator = 1;
   string addr = 2;
-  string amt = 3;
+  string pool = 3;
+  string amt = 4;
 }
 
 message MsgTranfserPoolcoinResponse {

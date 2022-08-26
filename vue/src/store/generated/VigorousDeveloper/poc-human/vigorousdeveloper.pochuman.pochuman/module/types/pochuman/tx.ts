@@ -70,6 +70,7 @@ export interface MsgApproveTransactionResponse {
 export interface MsgTranfserPoolcoin {
   creator: string;
   addr: string;
+  pool: string;
   amt: string;
 }
 
@@ -1136,7 +1137,7 @@ export const MsgApproveTransactionResponse = {
   },
 };
 
-const baseMsgTranfserPoolcoin: object = { creator: "", addr: "", amt: "" };
+const baseMsgTranfserPoolcoin: object = { creator: "", addr: "", add: "", amt: "" };
 
 export const MsgTranfserPoolcoin = {
   encode(

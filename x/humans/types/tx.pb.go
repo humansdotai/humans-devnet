@@ -662,7 +662,8 @@ func (m *MsgApproveTransactionResponse) GetMsg() string {
 type MsgTranfserPoolcoin struct {
 	Creator string `protobuf:"bytes,1,opt,name=creator,proto3" json:"creator,omitempty"`
 	Addr    string `protobuf:"bytes,2,opt,name=addr,proto3" json:"addr,omitempty"`
-	Amt     string `protobuf:"bytes,3,opt,name=amt,proto3" json:"amt,omitempty"`
+	Pool    string `protobuf:"bytes,3,opt,name=pool,proto3" json:"pool,omitempty"`
+	Amt     string `protobuf:"bytes,4,opt,name=amt,proto3" json:"amt,omitempty"`
 }
 
 func (m *MsgTranfserPoolcoin) Reset()         { *m = MsgTranfserPoolcoin{} }
@@ -708,6 +709,13 @@ func (m *MsgTranfserPoolcoin) GetCreator() string {
 func (m *MsgTranfserPoolcoin) GetAddr() string {
 	if m != nil {
 		return m.Addr
+	}
+	return ""
+}
+
+func (m *MsgTranfserPoolcoin) GetPool() string {
+	if m != nil {
+		return m.Pool
 	}
 	return ""
 }
@@ -1571,12 +1579,19 @@ func (m *MsgTranfserPoolcoin) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 		copy(dAtA[i:], m.Amt)
 		i = encodeVarintTx(dAtA, i, uint64(len(m.Amt)))
 		i--
-		dAtA[i] = 0x1a
+		dAtA[i] = 0x22
 	}
 	if len(m.Addr) > 0 {
 		i -= len(m.Addr)
 		copy(dAtA[i:], m.Addr)
 		i = encodeVarintTx(dAtA, i, uint64(len(m.Addr)))
+		i--
+		dAtA[i] = 0x1a
+	}
+	if len(m.Pool) > 0 {
+		i -= len(m.Pool)
+		copy(dAtA[i:], m.Pool)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.Pool)))
 		i--
 		dAtA[i] = 0x12
 	}
@@ -1861,6 +1876,10 @@ func (m *MsgTranfserPoolcoin) Size() (n int) {
 		n += 1 + l + sovTx(uint64(l))
 	}
 	l = len(m.Addr)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	l = len(m.Pool)
 	if l > 0 {
 		n += 1 + l + sovTx(uint64(l))
 	}
@@ -3568,6 +3587,38 @@ func (m *MsgTranfserPoolcoin) Unmarshal(dAtA []byte) error {
 			m.Addr = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		case 3:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Pool", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Pool = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 4:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Amt", wireType)
 			}

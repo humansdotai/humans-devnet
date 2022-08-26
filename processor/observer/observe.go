@@ -194,38 +194,43 @@ func (o *Observer) ProcessRecoverSocketConnection() {
 // Send msgs to humans chain
 func (o *Observer) SendTxTohumansChain() error {
 	msgs := make([]stypes.Msg, 0)
+	//-----------
 	for _, m := range o.ArrMsgKeysignVote {
 		msgs = append(msgs, m)
 	}
+	o.ArrMsgKeysignVote = o.ArrMsgKeysignVote[:0]
 
+	//-----------
 	for _, m := range o.ArrMsgObservationVote {
 		msgs = append(msgs, m)
 	}
+	o.ArrMsgObservationVote = o.ArrMsgObservationVote[:0]
 
+	//-----------
 	for _, m := range o.ArrMsgUpdateBalance {
 		msgs = append(msgs, m)
 	}
+	o.ArrMsgUpdateBalance = o.ArrMsgUpdateBalance[:0]
 
+	//-----------
 	for _, m := range o.ArrMsgApproveTransaction {
 		msgs = append(msgs, m)
 	}
+	o.ArrMsgApproveTransaction = o.ArrMsgApproveTransaction[:0]
 
+	//-----------
 	for _, m := range o.ArrMsgTranfserPoolcoin {
 		msgs = append(msgs, m)
 	}
 
+	o.ArrMsgTranfserPoolcoin = o.ArrMsgTranfserPoolcoin[:0]
+
+	//-----------------
 	if len(msgs) < 1 {
 		return nil
 	}
 
 	err := o.SendBroadcast(msgs...)
-	if err == nil {
-		o.ArrMsgKeysignVote = o.ArrMsgKeysignVote[:0]
-		o.ArrMsgObservationVote = o.ArrMsgObservationVote[:0]
-		o.ArrMsgUpdateBalance = o.ArrMsgUpdateBalance[:0]
-		o.ArrMsgApproveTransaction = o.ArrMsgApproveTransaction[:0]
-		o.ArrMsgTranfserPoolcoin = o.ArrMsgTranfserPoolcoin[:0]
-	}
 
 	return err
 }
