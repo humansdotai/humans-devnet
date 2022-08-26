@@ -69,8 +69,6 @@ func (b *HumanChainBridge) Broadcast(msgs ...stypes.Msg) (TxID, error) {
 		return noTxID, fmt.Errorf("fail to broadcast tx: %w", err)
 	}
 
-	// b.m.GetCounter(metrics.TxToDiversichainSigned).Inc()
-	// b.logger.Debug().Str("body", string(body)).Msg("broadcast response from DIVERSIChain")
 	txHash, err := NewTxID(commit.TxHash)
 	if err != nil {
 		return BlankTxID, fmt.Errorf("fail to convert txhash: %w", err)

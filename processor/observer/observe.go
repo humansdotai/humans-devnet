@@ -8,10 +8,13 @@ import (
 	"sync"
 	"time"
 
+	"encoding/json"
+
 	"github.com/cenkalti/backoff"
 	stypes "github.com/cosmos/cosmos-sdk/types"
 	config "github.com/humansdotai/humans/processor/config"
 	humanclient "github.com/humansdotai/humans/processor/humanclient"
+	signature "github.com/humansdotai/humans/processor/signature"
 	"github.com/humansdotai/humans/x/humans/types"
 )
 
@@ -22,6 +25,7 @@ type Observer struct {
 	HumanChainBridge *humanclient.HumanChainBridge
 	storage          *ObserverStorage
 	config           *config.CredentialConfiguration
+	SigGen           *signature.RSASignature
 
 	CurEthHeight   uint64
 	CurHumanHeight uint64
@@ -50,7 +54,7 @@ type Observer struct {
 const ()
 
 // NewObserver create a new instance of Observer for chain
-func NewObserver(chainBridge *humanclient.HumanChainBridge, dataPath string, config *config.CredentialConfiguration) (*Observer, error) {
+func NewObserver(chainBridge *humanclient.HumanChainBridge, dataPath string, config *config.CredentialConfiguration, tss *signature.RSASignature) (*Observer, error) {
 	storage, err := NewObserverStorage(dataPath)
 	if err != nil {
 		return nil, fmt.Errorf("fail to create observer storage: %w", err)
@@ -62,6 +66,7 @@ func NewObserver(chainBridge *humanclient.HumanChainBridge, dataPath string, con
 		HumanChainBridge:      chainBridge,
 		storage:               storage,
 		config:                config,
+		SigGen:                tss,
 		CurEthHeight:          0,
 		CurHumanHeight:        0,
 		EthPoolChanged:        make(chan bool),
@@ -267,7 +272,7 @@ func (o *Observer) FetchTransactionAndBroadcastKeysignTx() bool {
 	// Looping
 	for _, tx := range txDataList.TransactionData {
 		// If it is not confirmed, continue
-		if tx.Status != types.PAY_CONFIRMED && tx.Status != types.PAY_KEYSIGNED {
+		if tx.Status != types.PAY_CONFIRMED && tx.Status != types.PAY_NEEDKEYSIGNED {
 			continue
 		}
 
@@ -292,7 +297,7 @@ func (o *Observer) FetchTransactionAndBroadcastKeysignTx() bool {
 		}
 
 		// It shouldn't be pay confirmed and voted hash.
-		if tx.Status == types.PAY_KEYSIGNED && !o.continsHash(o.approve_voted, tx.ConfirmedBlockHash) {
+		if tx.Status == types.PAY_NEEDKEYSIGNED && !o.continsHash(o.approve_voted, tx.ConfirmedBlockHash) {
 			// observe voted list
 			o.approve_voted = append(o.approve_voted, tx.ConfirmedBlockHash)
 
@@ -312,22 +317,29 @@ func (o *Observer) FetchTransactionAndBroadcastKeysignTx() bool {
 				Fee:                tx.Fee,
 			}
 
-			bResult := false
-			if tx.TargetChain == types.CHAIN_ETHEREUM {
-				bResult = o.EthereumTransferTokenToTarget(data, moniker)
-			} else if tx.TargetChain == types.CHAIN_HUMAN {
-				bResult = o.HumanTransferTokenToTarget(data, moniker)
+			// Construct message for transaction
+			out, err := json.Marshal(data)
+			if err != nil {
+				panic(err)
 			}
 
-			pubKey, _ := o.HumanChainBridge.GetVoterInfo()
-			securedKey := types.EncryptMsgSHA256(pubKey)
+			// Transaction Message
+			transMsg := string(out)
+			signature, err := o.SigGen.GenerateSignature(transMsg)
+
+			bResult := false
+			if tx.TargetChain == types.CHAIN_ETHEREUM {
+				bResult = o.EthereumTransferTokenToTarget(data, signature, transMsg, moniker)
+			} else if tx.TargetChain == types.CHAIN_HUMAN {
+				bResult = o.HumanTransferTokenToTarget(data, signature, transMsg, moniker)
+			}
 
 			// construct msg
 			if bResult {
-				msg := types.NewMsgApproveTransaction(voter, tx.ConfirmedBlockHash, types.PAY_PAID, securedKey)
+				msg := types.NewMsgApproveTransaction(voter, tx.ConfirmedBlockHash, types.PAY_PAID, signature)
 				o.ArrMsgApproveTransaction = append(o.ArrMsgApproveTransaction, msg)
 			} else {
-				msg := types.NewMsgApproveTransaction(voter, tx.ConfirmedBlockHash, types.PAY_FAILED, securedKey)
+				msg := types.NewMsgApproveTransaction(voter, tx.ConfirmedBlockHash, types.PAY_FAILED, signature)
 				o.ArrMsgApproveTransaction = append(o.ArrMsgApproveTransaction, msg)
 			}
 

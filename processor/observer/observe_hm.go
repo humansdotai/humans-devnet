@@ -16,7 +16,7 @@ func (o *Observer) FetchBalanceOfHumanPool() bool {
 	if err != nil {
 		return false
 	}
-	
+
 	_, voter := o.HumanChainBridge.GetVoterInfo()
 
 	famt, _ := strconv.ParseFloat(accBalance.Balances[0].Amount, 64)
@@ -29,7 +29,7 @@ func (o *Observer) FetchBalanceOfHumanPool() bool {
 }
 
 // Transfer token on Human
-func (o *Observer) HumanTransferTokenToTarget(txdata *types.TransactionData, moniker string) bool {
+func (o *Observer) HumanTransferTokenToTarget(txdata *types.TransactionData, signature string, transMsg string, moniker string) bool {
 	// Semaphore for transfer
 	if moniker != types.MAIN_VALIDATOR_MONIKER {
 		return true

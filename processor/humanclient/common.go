@@ -78,11 +78,11 @@ type HumanChainBridge struct {
 	httpClient    *retryablehttp.Client
 	broadcastLock *sync.RWMutex
 
-	signerName                  string
-	lastBlockHeightCheck        time.Time
-	lastDiversichainBlockHeight uint64
-	pubKey                      string
-	voterAddress                string
+	signerName                 string
+	lastBlockHeightCheck       time.Time
+	lastHumanschainBlockHeight uint64
+	pubKey                     string
+	voterAddress               string
 }
 
 // NewHumanChainBridge create a new instance of HumanChainBridge
@@ -202,8 +202,8 @@ var HumansBlockTime = 5 * time.Second
 
 // GetBlockHeight returns the current height for humans blocks
 func (b *HumanChainBridge) GetBlockHeight() (uint64, error) {
-	if time.Since(b.lastBlockHeightCheck) < HumansBlockTime && b.lastDiversichainBlockHeight > 0 {
-		return b.lastDiversichainBlockHeight, nil
+	if time.Since(b.lastBlockHeightCheck) < HumansBlockTime && b.lastHumanschainBlockHeight > 0 {
+		return b.lastHumanschainBlockHeight, nil
 	}
 
 	latestBlock, err := b.GetLastBlock("")

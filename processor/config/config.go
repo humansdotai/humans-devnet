@@ -117,7 +117,7 @@ type CredentialConfiguration struct {
 	Ethereum_Pool_Address string
 
 	// Ethereum Pool Account Private Key
-	Ethereum_Pool_Account_Private_Key string
+	Ethereum_Owner_Account_Private_Key string
 }
 
 // NewConfig create a new instance of configuration
@@ -127,7 +127,7 @@ func NewCredentialConfig() (*CredentialConfiguration, error) {
 		URL_Ethereum_RPC_Node_Provider_WSS: "",
 		Ethereum_USDK_Token_Address:        "",
 		Ethereum_Pool_Address:              "",
-		Ethereum_Pool_Account_Private_Key:  "",
+		Ethereum_Owner_Account_Private_Key: "",
 	}, nil
 }
 
@@ -146,7 +146,7 @@ func (o *CredentialConfiguration) LoadConfig() error {
 	o.URL_Ethereum_RPC_Node_Provider_WSS = os.Getenv("URL_Ethereum_RPC_Node_Provider_WSS")
 	o.Ethereum_USDK_Token_Address = os.Getenv("Ethereum_USDK_Token_Address")
 	o.Ethereum_Pool_Address = os.Getenv("Ethereum_Pool_Address")
-	o.Ethereum_Pool_Account_Private_Key = os.Getenv("Ethereum_Pool_Account_Private_Key")
+	o.Ethereum_Owner_Account_Private_Key = os.Getenv("Ethereum_Owner_Account_Private_Key")
 
 	return nil
 }

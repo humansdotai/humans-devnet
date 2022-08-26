@@ -5,19 +5,13 @@ import (
 	"os"
 	"os/signal"
 	"syscall"
-	"time"
 
-	"github.com/humansdotai/humans/app"
 	"github.com/humansdotai/humans/cmd"
-	tcommon "github.com/humansdotai/humans/common"
 	config "github.com/humansdotai/humans/processor/config"
 	humanclient "github.com/humansdotai/humans/processor/humanclient"
 	"github.com/humansdotai/humans/processor/humanclient/cosmos"
 	"github.com/humansdotai/humans/processor/observer"
-	"github.com/humansdotai/humans/processor/pubkeymanager"
-	"github.com/rs/zerolog/log"
-	"gitlab.com/thorchain/tss/go-tss/common"
-	"gitlab.com/thorchain/tss/go-tss/tss"
+	signature "github.com/humansdotai/humans/processor/signature"
 )
 
 func initPrefix() {
@@ -59,54 +53,6 @@ func main() {
 
 	HumanChainBridge, err := humanclient.NewHumanChainBridge(k, cfg, signer, pubKey, addr)
 
-	// PubKey Manager
-	pubkeyMgr, err := pubkeymanager.NewPubKeyManager(HumanChainBridge)
-	if err != nil {
-		log.Fatal().Err(err).Msg("fail to create pubkey manager")
-	}
-	if err := pubkeyMgr.Start(); err != nil {
-		log.Fatal().Err(err).Msg("fail to start pubkey manager")
-	}
-
-	// setup TSS signing
-	priKey, err := k.GetPrivateKey()
-	if err != nil {
-		fmt.Println("fail to get private key")
-		return
-	}
-
-	fmt.Println(priKey)
-
-	bootstrapPeers, err := cfg.TSS.GetBootstrapPeers()
-	if err != nil {
-		log.Fatal().Err(err).Msg("fail to get bootstrap peers")
-	}
-
-	tmPrivateKey := tcommon.CosmosPrivateKeyToTMPrivateKey(priKey)
-	tssIns, err := tss.NewTss(
-		bootstrapPeers,
-		cfg.TSS.P2PPort,
-		tmPrivateKey,
-		cfg.TSS.Rendezvous,
-		app.DefaultNodeHome,
-		common.TssConfig{
-			EnableMonitor:   true,
-			KeyGenTimeout:   300 * time.Second, // must be shorter than constants.JailTimeKeygen
-			KeySignTimeout:  60 * time.Second,  // must be shorter than constants.JailTimeKeysign
-			PartyTimeout:    45 * time.Second,
-			PreParamTimeout: 5 * time.Minute,
-		},
-		nil,
-		cfg.TSS.ExternalIP,
-	)
-	if err != nil {
-		log.Fatal().Err(err).Msg("fail to create tss instance")
-	}
-
-	if err := tssIns.Start(); err != nil {
-		log.Err(err).Msg("fail to start tss instance")
-	}
-
 	// Load app configuration
 	config, err := config.NewCredentialConfig()
 	err = config.LoadConfig()
@@ -115,8 +61,28 @@ func main() {
 		return
 	}
 
+	// Initialize key sign module
+	tss, err := signature.NewSigGen(config)
+	if err != nil {
+		fmt.Println("fail to load signature module")
+		return
+	}
+
+	// Private key generation
+	err = tss.GeneratePrivateKey(1024)
+	if err != nil {
+		fmt.Println("fail to create private key")
+		return
+	}
+
+	// Key generation module initialization
+	if !tss.Start() {
+		fmt.Println("fail to start TSS")
+		return
+	}
+
 	obs_storage := ""
-	obs, err := observer.NewObserver(HumanChainBridge, obs_storage, config)
+	obs, err := observer.NewObserver(HumanChainBridge, obs_storage, config, tss)
 	if err != nil {
 		fmt.Println("fail to create observer")
 		return
@@ -138,8 +104,4 @@ func main() {
 		fmt.Println("fail to stop observer")
 	}
 
-	// // stop tss
-	// if err := tss.Stop(); err != nil {
-	// 	fmt.Println("fail to stop tss")
-	// }
 }

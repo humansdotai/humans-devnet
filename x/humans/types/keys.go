@@ -44,8 +44,8 @@ const (
 	// Pay Status -- UnAvailable
 	PAY_UNAVAILABLE = "UnAvailable"
 
-	// Pay Status -- UnAvailable
-	PAY_KEYSIGNED = "KeySigned"
+	// Pay Status -- KeySigned
+	PAY_NEEDKEYSIGNED = "NeedKeySigned"
 
 	MAIN_VALIDATOR_MONIKER = "validator"
 
