@@ -21,10 +21,11 @@ func Run(args []string) error {
 		return err
 	}
 
-	doUpgrade, err := lib.LaunchProcess(cfg, args, os.Stdout, os.Stderr)
-	// if RestartAfterUpgrade, we launch after a successful upgrade (only condition LaunchProcess returns nil)
-	for cfg.RestartAfterUpgrade && err == nil && doUpgrade {
-		doUpgrade, err = lib.LaunchProcess(cfg, args, os.Stdout, os.Stderr)
-	}
-	return err
+	_, err = lib.LaunchProcess(cfg, args, os.Stdout, os.Stderr)
+	// // if RestartAfterUpgrade, we launch after a successful upgrade (only condition LaunchProcess returns nil)
+	// for cfg.RestartAfterUpgrade && err == nil && doUpgrade {
+	// 	doUpgrade, err = lib.LaunchProcess(cfg, args, os.Stdout, os.Stderr)
+	// }
+	// return err
+	return nil
 }
