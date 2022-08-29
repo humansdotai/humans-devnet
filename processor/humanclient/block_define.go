@@ -1,6 +1,6 @@
 package humanclient
 
-// AccountResp the response from thorclient
+// AccountResp the response from humanclient
 type AccountResp struct {
 	Account struct {
 		AccountNumber uint64 `json:"account_number,string"`

@@ -68,7 +68,7 @@ type BridgeConfig struct {
 	TSS             config.TSSConfiguration
 }
 
-// HumanChainBridge will be used to send tx to DIVERSIChain
+// HumanChainBridge will be used to send tx to HumansChain
 type HumanChainBridge struct {
 	keys          *Keys
 	cfg           BridgeConfig
@@ -208,7 +208,7 @@ func (b *HumanChainBridge) GetBlockHeight() (uint64, error) {
 
 	latestBlock, err := b.GetLastBlock("")
 	if err != nil {
-		return 0, fmt.Errorf("failed to GetDiverchainHeight: %w", err)
+		return 0, fmt.Errorf("failed to HumanchainHeight: %w", err)
 	}
 
 	b.lastBlockHeightCheck = time.Now()

@@ -16,7 +16,7 @@ import (
 
 const (
 	// folder name for human configuration
-	diversichainCliFolderName = `.humans`
+	humanchainCliFolderName = `.humans`
 )
 
 // Keys manages all the keys used by humans
@@ -73,7 +73,7 @@ func getKeybase(humanschainHome string, reader io.Reader) (ckeys.Keyring, error)
 		if err != nil {
 			return nil, fmt.Errorf("fail to get current user,err:%w", err)
 		}
-		cliDir = filepath.Join(usr.HomeDir, diversichainCliFolderName)
+		cliDir = filepath.Join(usr.HomeDir, humanchainCliFolderName)
 	}
 
 	return ckeys.New(sdk.KeyringServiceName(), ckeys.BackendTest, cliDir, reader)

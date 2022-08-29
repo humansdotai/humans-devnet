@@ -121,17 +121,25 @@ type CredentialConfiguration struct {
 
 	// Human Pool Contract Address
 	Humanchain_Pool_Address string
+
+	// Human Pool Owner Address
+	Humanchain_Pool_Owner_Address string
+
+	// Human Pool Owner Signer Key Name
+	Humanchain_Pool_Owner_Signer_KeyName string
 }
 
 // NewConfig create a new instance of configuration
 func NewCredentialConfig() (*CredentialConfiguration, error) {
 	return &CredentialConfiguration{
-		URL_Ethereum_RPC_Node_Provider:     "",
-		URL_Ethereum_RPC_Node_Provider_WSS: "",
-		Ethereum_USDK_Token_Address:        "",
-		Ethereum_Pool_Address:              "",
-		Ethereum_Owner_Account_Private_Key: "",
-		Humanchain_Pool_Address:            "",
+		URL_Ethereum_RPC_Node_Provider:       "",
+		URL_Ethereum_RPC_Node_Provider_WSS:   "",
+		Ethereum_USDK_Token_Address:          "",
+		Ethereum_Pool_Address:                "",
+		Ethereum_Owner_Account_Private_Key:   "",
+		Humanchain_Pool_Address:              "",
+		Humanchain_Pool_Owner_Address:        "",
+		Humanchain_Pool_Owner_Signer_KeyName: "",
 	}, nil
 }
 
@@ -152,6 +160,8 @@ func (o *CredentialConfiguration) LoadConfig() error {
 	o.Ethereum_Pool_Address = os.Getenv("Ethereum_Pool_Address")
 	o.Ethereum_Owner_Account_Private_Key = os.Getenv("Ethereum_Owner_Account_Private_Key")
 	o.Humanchain_Pool_Address = os.Getenv("Humanchain_Pool_Address")
+	o.Humanchain_Pool_Owner_Address = os.Getenv("Humanchain_Pool_Owner_Address")
+	o.Humanchain_Pool_Owner_Signer_KeyName = os.Getenv("Humanchain_Pool_Owner_Signer_KeyName")
 
 	return nil
 }

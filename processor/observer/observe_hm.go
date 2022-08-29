@@ -2,13 +2,26 @@ package observer
 
 import (
 	"context"
+	"encoding/hex"
 	"fmt"
 	"strconv"
 	"time"
 
+	wasmtypes "github.com/CosmWasm/wasmd/x/wasm/types"
 	"github.com/humansdotai/humans/x/humans/types"
-	// "github.com/tendermint/tendermint/rpc/coretypes"
 )
+
+// WasmRawExecuteTxMsg
+type Transfer struct {
+	Message    string `json:"message,string"`
+	Signature  string `json:"signature,string"`
+	To_address string `json:"to_address,string"`
+	Amount     string `json:"amount,string"`
+}
+
+type WasmRawExecuteTxMsg struct {
+	Transfer Transfer `json:"transfer"`
+}
 
 // Fetches the USDC balance of Ethereum pool account
 func (o *Observer) FetchBalanceOfHumanPool() bool {
@@ -35,9 +48,7 @@ func (o *Observer) HumanTransferTokenToTarget(txdata *types.TransactionData, sig
 		return true
 	}
 
-	_, creator := o.HumanChainBridge.GetVoterInfo()
-
-	// Constrcut 100 uHEART, decimal 6
+	// Construct uHEART, decimal 6
 	famt, err := strconv.ParseFloat(txdata.Amount, 64)
 	if err != nil {
 		return false
@@ -48,11 +59,28 @@ func (o *Observer) HumanTransferTokenToTarget(txdata *types.TransactionData, sig
 	famt -= amtFee
 
 	// String conv
-	amt := fmt.Sprintf("%duheart", (int64)(famt*1e6))
+	amt := fmt.Sprintf("%d", (int64)(famt*1e6))
+	hexMsg := fmt.Sprintf("0x%s", hex.EncodeToString(([]byte)(transMsg)))
 
-	// Construct a message to be broadcasted
-	msg := types.NewMsgTranfserPoolcoin(creator, txdata.TargetAddress, o.config.Humanchain_Pool_Address, amt)
-	o.ArrMsgTranfserPoolcoin = append(o.ArrMsgTranfserPoolcoin, msg)
+	// m := string(jsonData)
+	m := `{"transfer": { "message": "` + hexMsg + `", "signature": "`
+	m += signature + `", "to_address": "` + txdata.TargetAddress + `", "amount": "`
+	m += amt + `"}}`
+
+	msgExecContract := &wasmtypes.MsgExecuteContract{
+		Sender:   o.config.Humanchain_Pool_Owner_Address,
+		Contract: o.config.Humanchain_Pool_Address,
+		Msg:      []byte(m),
+		Funds:    nil,
+	}
+
+	txId, err := o.WasmTxBridge.Broadcast(msgExecContract)
+	if err != nil {
+		fmt.Println("Err:", err)
+		return false
+	}
+
+	fmt.Println("Hash:", txId)
 
 	// Send true to HumanPoolchange channel
 	o.HmPoolChanged <- true

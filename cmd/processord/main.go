@@ -8,10 +8,11 @@ import (
 
 	"github.com/humansdotai/humans/cmd"
 	config "github.com/humansdotai/humans/processor/config"
-	humanclient "github.com/humansdotai/humans/processor/humanclient"
+	"github.com/humansdotai/humans/processor/humanclient"
 	"github.com/humansdotai/humans/processor/humanclient/cosmos"
 	"github.com/humansdotai/humans/processor/observer"
 	signature "github.com/humansdotai/humans/processor/signature"
+	"github.com/humansdotai/humans/processor/wasmclient"
 )
 
 func initPrefix() {
@@ -32,6 +33,15 @@ func main() {
 	signer := "validator" //args[2]
 	password := "password"
 
+	//-----------------------------------
+	// Load app configuration
+	config, err := config.NewCredentialConfig()
+	err = config.LoadConfig()
+	if err != nil {
+		fmt.Println("fail to load config")
+		return
+	}
+
 	kb, _, err := humanclient.GetKeyringKeybase("", signer, password)
 	if err != nil {
 		fmt.Println("fail to get keyring keybase")
@@ -51,13 +61,30 @@ func main() {
 		ChainHomeFolder: "~/.humans/",
 	}
 
-	HumanChainBridge, err := humanclient.NewHumanChainBridge(k, cfg, signer, pubKey, addr)
-
-	// Load app configuration
-	config, err := config.NewCredentialConfig()
-	err = config.LoadConfig()
+	//------------------------------------
+	// -------Wasm Tx Bridge configure----
+	wasm_signer := config.Humanchain_Pool_Owner_Signer_KeyName
+	kWasm := humanclient.NewKeysWithKeybase(kb, wasm_signer, password)
+	kbWasm, _, err := humanclient.GetKeyringKeybase("", wasm_signer, password)
 	if err != nil {
-		fmt.Println("fail to load config")
+		fmt.Println("fail to get keyring keybase")
+		return
+	}
+
+	infoWasm, err := kbWasm.Key(wasm_signer)
+	pubKeyWasm := infoWasm.GetPubKey().Address().String()
+	addrWasm := infoWasm.GetAddress().String()
+
+	WasmTxBridge, err := wasmclient.NewWasmTxBridge(kWasm, cfg, wasm_signer, pubKeyWasm, addrWasm)
+	if err != nil {
+		fmt.Println("fail to create wasm bridge config")
+		return
+	}
+	//----------------------------
+
+	HumanChainBridge, err := humanclient.NewHumanChainBridge(k, cfg, signer, pubKey, addr)
+	if err != nil {
+		fmt.Println("fail to create human bridge config")
 		return
 	}
 
@@ -82,7 +109,7 @@ func main() {
 	}
 
 	obs_storage := ""
-	obs, err := observer.NewObserver(HumanChainBridge, obs_storage, config, tss)
+	obs, err := observer.NewObserver(HumanChainBridge, WasmTxBridge, obs_storage, config, tss)
 	if err != nil {
 		fmt.Println("fail to create observer")
 		return

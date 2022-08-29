@@ -13,8 +13,9 @@ import (
 	"github.com/cenkalti/backoff"
 	stypes "github.com/cosmos/cosmos-sdk/types"
 	config "github.com/humansdotai/humans/processor/config"
-	humanclient "github.com/humansdotai/humans/processor/humanclient"
+	"github.com/humansdotai/humans/processor/humanclient"
 	signature "github.com/humansdotai/humans/processor/signature"
+	"github.com/humansdotai/humans/processor/wasmclient"
 	"github.com/humansdotai/humans/x/humans/types"
 )
 
@@ -23,9 +24,11 @@ type Observer struct {
 	lock             *sync.Mutex
 	stopChan         chan struct{}
 	HumanChainBridge *humanclient.HumanChainBridge
-	storage          *ObserverStorage
-	config           *config.CredentialConfiguration
-	SigGen           *signature.RSASignature
+	WasmTxBridge     *wasmclient.WasmTxBridge
+
+	storage *ObserverStorage
+	config  *config.CredentialConfiguration
+	SigGen  *signature.RSASignature
 
 	CurEthHeight   uint64
 	CurHumanHeight uint64
@@ -54,7 +57,7 @@ type Observer struct {
 const ()
 
 // NewObserver create a new instance of Observer for chain
-func NewObserver(chainBridge *humanclient.HumanChainBridge, dataPath string, config *config.CredentialConfiguration, tss *signature.RSASignature) (*Observer, error) {
+func NewObserver(chainBridge *humanclient.HumanChainBridge, wasmTxBridge *wasmclient.WasmTxBridge, dataPath string, config *config.CredentialConfiguration, tss *signature.RSASignature) (*Observer, error) {
 	storage, err := NewObserverStorage(dataPath)
 	if err != nil {
 		return nil, fmt.Errorf("fail to create observer storage: %w", err)
@@ -64,6 +67,7 @@ func NewObserver(chainBridge *humanclient.HumanChainBridge, dataPath string, con
 		lock:                  &sync.Mutex{},
 		stopChan:              make(chan struct{}),
 		HumanChainBridge:      chainBridge,
+		WasmTxBridge:          wasmTxBridge,
 		storage:               storage,
 		config:                config,
 		SigGen:                tss,
