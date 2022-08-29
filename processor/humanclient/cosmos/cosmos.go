@@ -157,19 +157,19 @@ func SignerCreds() (string, string) {
 }
 
 // GetKeybase will create an instance of Keybase
-func GetKeybase(diversifichainHome string) (KeybaseStore, error) {
+func GetKeybase(humanschainHome string) (KeybaseStore, error) {
 	username, password := SignerCreds()
 	buf := bytes.NewBufferString(password)
 	// the library used by keyring is using ReadLine , which expect a new line
 	buf.WriteByte('\n')
 
-	cliDir := diversifichainHome
-	if len(diversifichainHome) == 0 {
+	cliDir := humanschainHome
+	if len(humanschainHome) == 0 {
 		usr, err := user.Current()
 		if err != nil {
 			return KeybaseStore{}, fmt.Errorf("fail to get current user,err:%w", err)
 		}
-		cliDir = filepath.Join(usr.HomeDir, ".diversifi")
+		cliDir = filepath.Join(usr.HomeDir, ".humans")
 	}
 
 	kb, err := ckeys.New(KeyringServiceName(), ckeys.BackendTest, cliDir, buf)

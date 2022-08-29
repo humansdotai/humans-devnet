@@ -13,12 +13,12 @@ import { MsgUpdateBalance } from "./types/humans/tx";
 
 
 const types = [
-  ["/vigorousdeveloper.humans.humans.MsgRequestTransaction", MsgRequestTransaction],
-  ["/vigorousdeveloper.humans.humans.MsgTranfserPoolcoin", MsgTranfserPoolcoin],
-  ["/vigorousdeveloper.humans.humans.MsgKeysignVote", MsgKeysignVote],
-  ["/vigorousdeveloper.humans.humans.MsgApproveTransaction", MsgApproveTransaction],
-  ["/vigorousdeveloper.humans.humans.MsgObservationVote", MsgObservationVote],
-  ["/vigorousdeveloper.humans.humans.MsgUpdateBalance", MsgUpdateBalance],
+  ["/humansdotai.humans.humans.MsgRequestTransaction", MsgRequestTransaction],
+  ["/humansdotai.humans.humans.MsgTranfserPoolcoin", MsgTranfserPoolcoin],
+  ["/humansdotai.humans.humans.MsgKeysignVote", MsgKeysignVote],
+  ["/humansdotai.humans.humans.MsgApproveTransaction", MsgApproveTransaction],
+  ["/humansdotai.humans.humans.MsgObservationVote", MsgObservationVote],
+  ["/humansdotai.humans.humans.MsgUpdateBalance", MsgUpdateBalance],
   
 ];
 export const MissingWalletError = new Error("wallet is required");
@@ -51,12 +51,12 @@ const txClient = async (wallet: OfflineSigner, { addr: addr }: TxClientOptions =
 
   return {
     signAndBroadcast: (msgs: EncodeObject[], { fee, memo }: SignAndBroadcastOptions = {fee: defaultFee, memo: ""}) => client.signAndBroadcast(address, msgs, fee,memo),
-    msgRequestTransaction: (data: MsgRequestTransaction): EncodeObject => ({ typeUrl: "/vigorousdeveloper.humans.humans.MsgRequestTransaction", value: MsgRequestTransaction.fromPartial( data ) }),
-    msgTranfserPoolcoin: (data: MsgTranfserPoolcoin): EncodeObject => ({ typeUrl: "/vigorousdeveloper.humans.humans.MsgTranfserPoolcoin", value: MsgTranfserPoolcoin.fromPartial( data ) }),
-    msgKeysignVote: (data: MsgKeysignVote): EncodeObject => ({ typeUrl: "/vigorousdeveloper.humans.humans.MsgKeysignVote", value: MsgKeysignVote.fromPartial( data ) }),
-    msgApproveTransaction: (data: MsgApproveTransaction): EncodeObject => ({ typeUrl: "/vigorousdeveloper.humans.humans.MsgApproveTransaction", value: MsgApproveTransaction.fromPartial( data ) }),
-    msgObservationVote: (data: MsgObservationVote): EncodeObject => ({ typeUrl: "/vigorousdeveloper.humans.humans.MsgObservationVote", value: MsgObservationVote.fromPartial( data ) }),
-    msgUpdateBalance: (data: MsgUpdateBalance): EncodeObject => ({ typeUrl: "/vigorousdeveloper.humans.humans.MsgUpdateBalance", value: MsgUpdateBalance.fromPartial( data ) }),
+    msgRequestTransaction: (data: MsgRequestTransaction): EncodeObject => ({ typeUrl: "/humansdotai.humans.humans.MsgRequestTransaction", value: MsgRequestTransaction.fromPartial( data ) }),
+    msgTranfserPoolcoin: (data: MsgTranfserPoolcoin): EncodeObject => ({ typeUrl: "/humansdotai.humans.humans.MsgTranfserPoolcoin", value: MsgTranfserPoolcoin.fromPartial( data ) }),
+    msgKeysignVote: (data: MsgKeysignVote): EncodeObject => ({ typeUrl: "/humansdotai.humans.humans.MsgKeysignVote", value: MsgKeysignVote.fromPartial( data ) }),
+    msgApproveTransaction: (data: MsgApproveTransaction): EncodeObject => ({ typeUrl: "/humansdotai.humans.humans.MsgApproveTransaction", value: MsgApproveTransaction.fromPartial( data ) }),
+    msgObservationVote: (data: MsgObservationVote): EncodeObject => ({ typeUrl: "/humansdotai.humans.humans.MsgObservationVote", value: MsgObservationVote.fromPartial( data ) }),
+    msgUpdateBalance: (data: MsgUpdateBalance): EncodeObject => ({ typeUrl: "/humansdotai.humans.humans.MsgUpdateBalance", value: MsgUpdateBalance.fromPartial( data ) }),
     
   };
 };

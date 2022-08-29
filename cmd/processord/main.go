@@ -7,9 +7,12 @@ import (
 	"syscall"
 
 	"github.com/humansdotai/humans/cmd"
-	diverclient "github.com/humansdotai/humans/processor/humanclient"
+	config "github.com/humansdotai/humans/processor/config"
+	"github.com/humansdotai/humans/processor/humanclient"
 	"github.com/humansdotai/humans/processor/humanclient/cosmos"
 	"github.com/humansdotai/humans/processor/observer"
+	signature "github.com/humansdotai/humans/processor/signature"
+	"github.com/humansdotai/humans/processor/wasmclient"
 )
 
 func initPrefix() {
@@ -30,7 +33,16 @@ func main() {
 	signer := args[2]
 	password := "password"
 
-	kb, _, err := diverclient.GetKeyringKeybase("", signer, password)
+	//-----------------------------------
+	// Load app configuration
+	config, err := config.NewCredentialConfig()
+	err = config.LoadConfig()
+	if err != nil {
+		fmt.Println("fail to load config")
+		return
+	}
+
+	kb, _, err := humanclient.GetKeyringKeybase("", signer, password)
 	if err != nil {
 		fmt.Println("fail to get keyring keybase")
 		return
@@ -40,35 +52,64 @@ func main() {
 	pubKey := info.GetPubKey().Address().String()
 	addr := info.GetAddress().String()
 
-	k := diverclient.NewKeysWithKeybase(kb, signer, password)
+	k := humanclient.NewKeysWithKeybase(kb, signer, password)
 
-	// setup TSS signing
-	priKey, err := k.GetPrivateKey()
-	if err != nil {
-		fmt.Println("fail to get private key")
-		return
-	}
-
-	fmt.Println(priKey)
-
-	// cfg := &diverclient.BridgeConfig{
-	// 	ChainId:         "test",
-	// 	ChainHost:       "127.0.0.1:1317",
-	// 	ChainRPC:        "127.0.0.1:26657",
-	// 	ChainHomeFolder: "~/.diversifi/",
-	// }
-
-	cfg := &diverclient.BridgeConfig{
+	cfg := &humanclient.BridgeConfig{
 		ChainId:         "test",
 		ChainHost:       "127.0.0.1:1317",
 		ChainRPC:        "127.0.0.1:26657",
 		ChainHomeFolder: "~/.humans/",
 	}
 
-	HumanChainBridge, err := diverclient.NewHumanChainBridge(k, cfg, signer, pubKey, addr)
+	//------------------------------------
+	// -------Wasm Tx Bridge configure----
+	wasm_signer := config.Humanchain_Pool_Owner_Signer_KeyName
+	kWasm := humanclient.NewKeysWithKeybase(kb, wasm_signer, password)
+	kbWasm, _, err := humanclient.GetKeyringKeybase("", wasm_signer, password)
+	if err != nil {
+		fmt.Println("fail to get keyring keybase")
+		return
+	}
+
+	infoWasm, err := kbWasm.Key(wasm_signer)
+	pubKeyWasm := infoWasm.GetPubKey().Address().String()
+	addrWasm := infoWasm.GetAddress().String()
+
+	WasmTxBridge, err := wasmclient.NewWasmTxBridge(kWasm, cfg, wasm_signer, pubKeyWasm, addrWasm)
+	if err != nil {
+		fmt.Println("fail to create wasm bridge config")
+		return
+	}
+	//----------------------------
+
+	HumanChainBridge, err := humanclient.NewHumanChainBridge(k, cfg, signer, pubKey, addr)
+	if err != nil {
+		fmt.Println("fail to create human bridge config")
+		return
+	}
+
+	// Initialize key sign module
+	tss, err := signature.NewSigGen(config)
+	if err != nil {
+		fmt.Println("fail to load signature module")
+		return
+	}
+
+	// Private key generation
+	err = tss.GeneratePrivateKey(1024)
+	if err != nil {
+		fmt.Println("fail to create private key")
+		return
+	}
+
+	// Key generation module initialization
+	if !tss.Start() {
+		fmt.Println("fail to start TSS")
+		return
+	}
 
 	obs_storage := ""
-	obs, err := observer.NewObserver(HumanChainBridge, obs_storage)
+	obs, err := observer.NewObserver(HumanChainBridge, WasmTxBridge, obs_storage, config, tss)
 	if err != nil {
 		fmt.Println("fail to create observer")
 		return
@@ -78,17 +119,6 @@ func main() {
 		fmt.Println("fail to start observer")
 		return
 	}
-
-	// tss, err := tss.NewTssSigner(HumanChainBridge)
-	// if err != nil {
-	// 	fmt.Println("fail to create tss")
-	// 	return
-	// }
-
-	// if err = tss.Start(); err != nil {
-	// 	fmt.Println("fail to start tss")
-	// 	return
-	// }
 
 	// wait....
 	ch := make(chan os.Signal, 1)
@@ -101,8 +131,4 @@ func main() {
 		fmt.Println("fail to stop observer")
 	}
 
-	// // stop tss
-	// if err := tss.Stop(); err != nil {
-	// 	fmt.Println("fail to stop tss")
-	// }
 }

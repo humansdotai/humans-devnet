@@ -1,5 +1,5 @@
 syntax = "proto3";
-package vigorousdeveloper.humans.humans;
+package humansdotai.humans.humans;
 
 import "gogoproto/gogo.proto";
 import "humans/params.proto";
@@ -20,5 +20,6 @@ message GenesisState {
   repeated ObserveVote observeVoteList = 4 [(gogoproto.nullable) = false];
   repeated PoolBalance poolBalanceList = 5 [(gogoproto.nullable) = false];
   repeated TransactionData transactionDataList = 6 [(gogoproto.nullable) = false];
+  repeated Pubkeys pubkeysList = 7 [(gogoproto.nullable) = false];
   // this line is used by starport scaffolding # genesis/proto/state
 }

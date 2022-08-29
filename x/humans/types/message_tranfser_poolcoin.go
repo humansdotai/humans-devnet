@@ -9,10 +9,11 @@ const TypeMsgTranfserPoolcoin = "tranfser_poolcoin"
 
 var _ sdk.Msg = &MsgTranfserPoolcoin{}
 
-func NewMsgTranfserPoolcoin(creator string, addr string, amt string) *MsgTranfserPoolcoin {
+func NewMsgTranfserPoolcoin(creator string, addr string, pool string, amt string) *MsgTranfserPoolcoin {
 	return &MsgTranfserPoolcoin{
 		Creator: creator,
 		Addr:    addr,
+		Pool:    pool,
 		Amt:     amt,
 	}
 }

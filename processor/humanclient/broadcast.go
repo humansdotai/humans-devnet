@@ -1,4 +1,4 @@
-package diverclient
+package humanclient
 
 import (
 	"fmt"
@@ -11,17 +11,12 @@ import (
 	stypes "github.com/cosmos/cosmos-sdk/types"
 )
 
-// Broadcast Broadcasts tx to diversifi
+// Broadcast Broadcasts tx to humans
 func (b *HumanChainBridge) Broadcast(msgs ...stypes.Msg) (TxID, error) {
 	b.broadcastLock.Lock()
 	defer b.broadcastLock.Unlock()
 
 	noTxID := TxID("")
-
-	// start := time.Now()
-	// defer func() {
-	// 	b.m.GetHistograms(metrics.SendToDiversichainDuration).Observe(time.Since(start).Seconds())
-	// }()
 
 	blockHeight, err := b.GetBlockHeight()
 	if err != nil {
@@ -32,7 +27,7 @@ func (b *HumanChainBridge) Broadcast(msgs ...stypes.Msg) (TxID, error) {
 		var seqNum uint64
 		b.accountNumber, seqNum, err = b.getAccountNumberAndSequenceNumber()
 		if err != nil {
-			return noTxID, fmt.Errorf("fail to get account number and sequence number from diversifi : %w", err)
+			return noTxID, fmt.Errorf("fail to get account number and sequence number from humans : %w", err)
 		}
 		b.blockHeight = blockHeight
 		if seqNum > b.seqNumber {
@@ -69,8 +64,6 @@ func (b *HumanChainBridge) Broadcast(msgs ...stypes.Msg) (TxID, error) {
 		return noTxID, fmt.Errorf("fail to broadcast tx: %w", err)
 	}
 
-	// b.m.GetCounter(metrics.TxToDiversichainSigned).Inc()
-	// b.logger.Debug().Str("body", string(body)).Msg("broadcast response from DIVERSIChain")
 	txHash, err := NewTxID(commit.TxHash)
 	if err != nil {
 		return BlankTxID, fmt.Errorf("fail to convert txhash: %w", err)
@@ -86,7 +79,7 @@ func (b *HumanChainBridge) Broadcast(msgs ...stypes.Msg) (TxID, error) {
 			}
 		}
 		// b.logger.Info().Msgf("messages: %+v", msgs)
-		// commit code 6 means `unknown request` , which means the tx can't be accepted by diversifi
+		// commit code 6 means `unknown request` , which means the tx can't be accepted by humans
 		// if that's the case, let's just ignore it and move on
 		if commit.Code != 6 {
 			return txHash, fmt.Errorf("fail to broadcast to HumanChain,code:%d, log:%s", commit.Code, commit.RawLog)

@@ -155,7 +155,7 @@ func (m *TransactionData) GetFee() string {
 }
 
 func init() {
-	proto.RegisterType((*TransactionData)(nil), "vigorousdeveloper.humans.humans.TransactionData")
+	proto.RegisterType((*TransactionData)(nil), "humansdotai.humans.humans.TransactionData")
 }
 
 func init() { proto.RegisterFile("humans/transaction_data.proto", fileDescriptor_39f3589d73def3b5) }

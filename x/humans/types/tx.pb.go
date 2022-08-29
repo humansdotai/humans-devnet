@@ -662,7 +662,8 @@ func (m *MsgApproveTransactionResponse) GetMsg() string {
 type MsgTranfserPoolcoin struct {
 	Creator string `protobuf:"bytes,1,opt,name=creator,proto3" json:"creator,omitempty"`
 	Addr    string `protobuf:"bytes,2,opt,name=addr,proto3" json:"addr,omitempty"`
-	Amt     string `protobuf:"bytes,3,opt,name=amt,proto3" json:"amt,omitempty"`
+	Pool    string `protobuf:"bytes,3,opt,name=pool,proto3" json:"pool,omitempty"`
+	Amt     string `protobuf:"bytes,4,opt,name=amt,proto3" json:"amt,omitempty"`
 }
 
 func (m *MsgTranfserPoolcoin) Reset()         { *m = MsgTranfserPoolcoin{} }
@@ -712,6 +713,13 @@ func (m *MsgTranfserPoolcoin) GetAddr() string {
 	return ""
 }
 
+func (m *MsgTranfserPoolcoin) GetPool() string {
+	if m != nil {
+		return m.Pool
+	}
+	return ""
+}
+
 func (m *MsgTranfserPoolcoin) GetAmt() string {
 	if m != nil {
 		return m.Amt
@@ -756,18 +764,18 @@ func (m *MsgTranfserPoolcoinResponse) XXX_DiscardUnknown() {
 var xxx_messageInfo_MsgTranfserPoolcoinResponse proto.InternalMessageInfo
 
 func init() {
-	proto.RegisterType((*MsgRequestTransaction)(nil), "vigorousdeveloper.humans.humans.MsgRequestTransaction")
-	proto.RegisterType((*MsgRequestTransactionResponse)(nil), "vigorousdeveloper.humans.humans.MsgRequestTransactionResponse")
-	proto.RegisterType((*MsgObservationVote)(nil), "vigorousdeveloper.humans.humans.MsgObservationVote")
-	proto.RegisterType((*MsgObservationVoteResponse)(nil), "vigorousdeveloper.humans.humans.MsgObservationVoteResponse")
-	proto.RegisterType((*MsgUpdateBalance)(nil), "vigorousdeveloper.humans.humans.MsgUpdateBalance")
-	proto.RegisterType((*MsgUpdateBalanceResponse)(nil), "vigorousdeveloper.humans.humans.MsgUpdateBalanceResponse")
-	proto.RegisterType((*MsgKeysignVote)(nil), "vigorousdeveloper.humans.humans.MsgKeysignVote")
-	proto.RegisterType((*MsgKeysignVoteResponse)(nil), "vigorousdeveloper.humans.humans.MsgKeysignVoteResponse")
-	proto.RegisterType((*MsgApproveTransaction)(nil), "vigorousdeveloper.humans.humans.MsgApproveTransaction")
-	proto.RegisterType((*MsgApproveTransactionResponse)(nil), "vigorousdeveloper.humans.humans.MsgApproveTransactionResponse")
-	proto.RegisterType((*MsgTranfserPoolcoin)(nil), "vigorousdeveloper.humans.humans.MsgTranfserPoolcoin")
-	proto.RegisterType((*MsgTranfserPoolcoinResponse)(nil), "vigorousdeveloper.humans.humans.MsgTranfserPoolcoinResponse")
+	proto.RegisterType((*MsgRequestTransaction)(nil), "humansdotai.humans.humans.MsgRequestTransaction")
+	proto.RegisterType((*MsgRequestTransactionResponse)(nil), "humansdotai.humans.humans.MsgRequestTransactionResponse")
+	proto.RegisterType((*MsgObservationVote)(nil), "humansdotai.humans.humans.MsgObservationVote")
+	proto.RegisterType((*MsgObservationVoteResponse)(nil), "humansdotai.humans.humans.MsgObservationVoteResponse")
+	proto.RegisterType((*MsgUpdateBalance)(nil), "humansdotai.humans.humans.MsgUpdateBalance")
+	proto.RegisterType((*MsgUpdateBalanceResponse)(nil), "humansdotai.humans.humans.MsgUpdateBalanceResponse")
+	proto.RegisterType((*MsgKeysignVote)(nil), "humansdotai.humans.humans.MsgKeysignVote")
+	proto.RegisterType((*MsgKeysignVoteResponse)(nil), "humansdotai.humans.humans.MsgKeysignVoteResponse")
+	proto.RegisterType((*MsgApproveTransaction)(nil), "humansdotai.humans.humans.MsgApproveTransaction")
+	proto.RegisterType((*MsgApproveTransactionResponse)(nil), "humansdotai.humans.humans.MsgApproveTransactionResponse")
+	proto.RegisterType((*MsgTranfserPoolcoin)(nil), "humansdotai.humans.humans.MsgTranfserPoolcoin")
+	proto.RegisterType((*MsgTranfserPoolcoinResponse)(nil), "humansdotai.humans.humans.MsgTranfserPoolcoinResponse")
 }
 
 func init() { proto.RegisterFile("humans/tx.proto", fileDescriptor_5d2649692c14e9b1) }
@@ -848,7 +856,7 @@ func NewMsgClient(cc grpc1.ClientConn) MsgClient {
 
 func (c *msgClient) RequestTransaction(ctx context.Context, in *MsgRequestTransaction, opts ...grpc.CallOption) (*MsgRequestTransactionResponse, error) {
 	out := new(MsgRequestTransactionResponse)
-	err := c.cc.Invoke(ctx, "/vigorousdeveloper.humans.humans.Msg/RequestTransaction", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/humansdotai.humans.humans.Msg/RequestTransaction", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -857,7 +865,7 @@ func (c *msgClient) RequestTransaction(ctx context.Context, in *MsgRequestTransa
 
 func (c *msgClient) ObservationVote(ctx context.Context, in *MsgObservationVote, opts ...grpc.CallOption) (*MsgObservationVoteResponse, error) {
 	out := new(MsgObservationVoteResponse)
-	err := c.cc.Invoke(ctx, "/vigorousdeveloper.humans.humans.Msg/ObservationVote", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/humansdotai.humans.humans.Msg/ObservationVote", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -866,7 +874,7 @@ func (c *msgClient) ObservationVote(ctx context.Context, in *MsgObservationVote,
 
 func (c *msgClient) UpdateBalance(ctx context.Context, in *MsgUpdateBalance, opts ...grpc.CallOption) (*MsgUpdateBalanceResponse, error) {
 	out := new(MsgUpdateBalanceResponse)
-	err := c.cc.Invoke(ctx, "/vigorousdeveloper.humans.humans.Msg/UpdateBalance", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/humansdotai.humans.humans.Msg/UpdateBalance", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -875,7 +883,7 @@ func (c *msgClient) UpdateBalance(ctx context.Context, in *MsgUpdateBalance, opt
 
 func (c *msgClient) KeysignVote(ctx context.Context, in *MsgKeysignVote, opts ...grpc.CallOption) (*MsgKeysignVoteResponse, error) {
 	out := new(MsgKeysignVoteResponse)
-	err := c.cc.Invoke(ctx, "/vigorousdeveloper.humans.humans.Msg/KeysignVote", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/humansdotai.humans.humans.Msg/KeysignVote", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -884,7 +892,7 @@ func (c *msgClient) KeysignVote(ctx context.Context, in *MsgKeysignVote, opts ..
 
 func (c *msgClient) ApproveTransaction(ctx context.Context, in *MsgApproveTransaction, opts ...grpc.CallOption) (*MsgApproveTransactionResponse, error) {
 	out := new(MsgApproveTransactionResponse)
-	err := c.cc.Invoke(ctx, "/vigorousdeveloper.humans.humans.Msg/ApproveTransaction", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/humansdotai.humans.humans.Msg/ApproveTransaction", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -893,7 +901,7 @@ func (c *msgClient) ApproveTransaction(ctx context.Context, in *MsgApproveTransa
 
 func (c *msgClient) TranfserPoolcoin(ctx context.Context, in *MsgTranfserPoolcoin, opts ...grpc.CallOption) (*MsgTranfserPoolcoinResponse, error) {
 	out := new(MsgTranfserPoolcoinResponse)
-	err := c.cc.Invoke(ctx, "/vigorousdeveloper.humans.humans.Msg/TranfserPoolcoin", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/humansdotai.humans.humans.Msg/TranfserPoolcoin", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -947,7 +955,7 @@ func _Msg_RequestTransaction_Handler(srv interface{}, ctx context.Context, dec f
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/vigorousdeveloper.humans.humans.Msg/RequestTransaction",
+		FullMethod: "/humansdotai.humans.humans.Msg/RequestTransaction",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(MsgServer).RequestTransaction(ctx, req.(*MsgRequestTransaction))
@@ -965,7 +973,7 @@ func _Msg_ObservationVote_Handler(srv interface{}, ctx context.Context, dec func
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/vigorousdeveloper.humans.humans.Msg/ObservationVote",
+		FullMethod: "/humansdotai.humans.humans.Msg/ObservationVote",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(MsgServer).ObservationVote(ctx, req.(*MsgObservationVote))
@@ -983,7 +991,7 @@ func _Msg_UpdateBalance_Handler(srv interface{}, ctx context.Context, dec func(i
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/vigorousdeveloper.humans.humans.Msg/UpdateBalance",
+		FullMethod: "/humansdotai.humans.humans.Msg/UpdateBalance",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(MsgServer).UpdateBalance(ctx, req.(*MsgUpdateBalance))
@@ -1001,7 +1009,7 @@ func _Msg_KeysignVote_Handler(srv interface{}, ctx context.Context, dec func(int
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/vigorousdeveloper.humans.humans.Msg/KeysignVote",
+		FullMethod: "/humansdotai.humans.humans.Msg/KeysignVote",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(MsgServer).KeysignVote(ctx, req.(*MsgKeysignVote))
@@ -1019,7 +1027,7 @@ func _Msg_ApproveTransaction_Handler(srv interface{}, ctx context.Context, dec f
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/vigorousdeveloper.humans.humans.Msg/ApproveTransaction",
+		FullMethod: "/humansdotai.humans.humans.Msg/ApproveTransaction",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(MsgServer).ApproveTransaction(ctx, req.(*MsgApproveTransaction))
@@ -1037,7 +1045,7 @@ func _Msg_TranfserPoolcoin_Handler(srv interface{}, ctx context.Context, dec fun
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/vigorousdeveloper.humans.humans.Msg/TranfserPoolcoin",
+		FullMethod: "/humansdotai.humans.humans.Msg/TranfserPoolcoin",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(MsgServer).TranfserPoolcoin(ctx, req.(*MsgTranfserPoolcoin))
@@ -1046,7 +1054,7 @@ func _Msg_TranfserPoolcoin_Handler(srv interface{}, ctx context.Context, dec fun
 }
 
 var _Msg_serviceDesc = grpc.ServiceDesc{
-	ServiceName: "vigorousdeveloper.humans.humans.Msg",
+	ServiceName: "humansdotai.humans.humans.Msg",
 	HandlerType: (*MsgServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
@@ -1571,12 +1579,19 @@ func (m *MsgTranfserPoolcoin) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 		copy(dAtA[i:], m.Amt)
 		i = encodeVarintTx(dAtA, i, uint64(len(m.Amt)))
 		i--
-		dAtA[i] = 0x1a
+		dAtA[i] = 0x22
 	}
 	if len(m.Addr) > 0 {
 		i -= len(m.Addr)
 		copy(dAtA[i:], m.Addr)
 		i = encodeVarintTx(dAtA, i, uint64(len(m.Addr)))
+		i--
+		dAtA[i] = 0x1a
+	}
+	if len(m.Pool) > 0 {
+		i -= len(m.Pool)
+		copy(dAtA[i:], m.Pool)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.Pool)))
 		i--
 		dAtA[i] = 0x12
 	}
@@ -1861,6 +1876,10 @@ func (m *MsgTranfserPoolcoin) Size() (n int) {
 		n += 1 + l + sovTx(uint64(l))
 	}
 	l = len(m.Addr)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	l = len(m.Pool)
 	if l > 0 {
 		n += 1 + l + sovTx(uint64(l))
 	}
@@ -3568,6 +3587,38 @@ func (m *MsgTranfserPoolcoin) Unmarshal(dAtA []byte) error {
 			m.Addr = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		case 3:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Pool", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Pool = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 4:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Amt", wireType)
 			}

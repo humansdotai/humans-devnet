@@ -7,7 +7,7 @@ import { PoolBalance } from "../humans/pool_balance";
 import { TransactionData } from "../humans/transaction_data";
 import { Writer, Reader } from "protobufjs/minimal";
 
-export const protobufPackage = "vigorousdeveloper.humans.humans";
+export const protobufPackage = "humansdotai.humans.humans";
 
 /** GenesisState defines the humans module's genesis state. */
 export interface GenesisState {

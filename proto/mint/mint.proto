@@ -1,5 +1,5 @@
 syntax = "proto3";
-package vigorousdeveloper.humans.mint;
+package humansdotai.humans.mint;
 
 option go_package = "github.com/humansdotai/humans/x/mint/types";
 

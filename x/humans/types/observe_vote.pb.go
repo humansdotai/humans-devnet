@@ -131,7 +131,7 @@ func (m *ObserveVote) GetUsed() string {
 }
 
 func init() {
-	proto.RegisterType((*ObserveVote)(nil), "vigorousdeveloper.humans.humans.ObserveVote")
+	proto.RegisterType((*ObserveVote)(nil), "humansdotai.humans.humans.ObserveVote")
 }
 
 func init() { proto.RegisterFile("humans/observe_vote.proto", fileDescriptor_ba5bb922194c38e6) }

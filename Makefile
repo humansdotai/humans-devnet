@@ -60,7 +60,7 @@ build-docker:
 
 # Run a 4-node testnet locally
 localnet-start: build-linux localnet-stop
-	@if ! [ -f build/node0/humansd/config/genesis.json ]; then docker run --rm -v $(CURDIR)/build:/diversifid:Z lottery/core testnet --v 4 -o . --starting-ip-address 192.168.10.2 --keyring-backend=test --chain-id test ; fi
+	@if ! [ -f build/node0/humansd/config/genesis.json ]; then docker run --rm -v $(CURDIR)/build:/humansd:Z lottery/core testnet --v 4 -o . --starting-ip-address 192.168.10.2 --keyring-backend=test --chain-id test ; fi
 	./scripts/import-localnet-seeds.sh
 	docker-compose up
 

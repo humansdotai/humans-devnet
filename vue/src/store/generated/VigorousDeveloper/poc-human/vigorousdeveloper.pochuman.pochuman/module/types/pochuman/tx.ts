@@ -1,7 +1,7 @@
 /* eslint-disable */
 import { Reader, Writer } from "protobufjs/minimal";
 
-export const protobufPackage = "vigorousdeveloper.humans.humans";
+export const protobufPackage = "humansdotai.humans.humans";
 
 export interface MsgRequestTransaction {
   creator: string;
@@ -70,6 +70,7 @@ export interface MsgApproveTransactionResponse {
 export interface MsgTranfserPoolcoin {
   creator: string;
   addr: string;
+  pool: string;
   amt: string;
 }
 
@@ -1136,7 +1137,7 @@ export const MsgApproveTransactionResponse = {
   },
 };
 
-const baseMsgTranfserPoolcoin: object = { creator: "", addr: "", amt: "" };
+const baseMsgTranfserPoolcoin: object = { creator: "", addr: "", add: "", amt: "" };
 
 export const MsgTranfserPoolcoin = {
   encode(
@@ -1309,7 +1310,7 @@ export class MsgClientImpl implements Msg {
   ): Promise<MsgRequestTransactionResponse> {
     const data = MsgRequestTransaction.encode(request).finish();
     const promise = this.rpc.request(
-      "vigorousdeveloper.humans.humans.Msg",
+      "humansdotai.humans.humans.Msg",
       "RequestTransaction",
       data
     );
@@ -1323,7 +1324,7 @@ export class MsgClientImpl implements Msg {
   ): Promise<MsgObservationVoteResponse> {
     const data = MsgObservationVote.encode(request).finish();
     const promise = this.rpc.request(
-      "vigorousdeveloper.humans.humans.Msg",
+      "humansdotai.humans.humans.Msg",
       "ObservationVote",
       data
     );
@@ -1335,7 +1336,7 @@ export class MsgClientImpl implements Msg {
   UpdateBalance(request: MsgUpdateBalance): Promise<MsgUpdateBalanceResponse> {
     const data = MsgUpdateBalance.encode(request).finish();
     const promise = this.rpc.request(
-      "vigorousdeveloper.humans.humans.Msg",
+      "humansdotai.humans.humans.Msg",
       "UpdateBalance",
       data
     );
@@ -1347,7 +1348,7 @@ export class MsgClientImpl implements Msg {
   KeysignVote(request: MsgKeysignVote): Promise<MsgKeysignVoteResponse> {
     const data = MsgKeysignVote.encode(request).finish();
     const promise = this.rpc.request(
-      "vigorousdeveloper.humans.humans.Msg",
+      "humansdotai.humans.humans.Msg",
       "KeysignVote",
       data
     );
@@ -1361,7 +1362,7 @@ export class MsgClientImpl implements Msg {
   ): Promise<MsgApproveTransactionResponse> {
     const data = MsgApproveTransaction.encode(request).finish();
     const promise = this.rpc.request(
-      "vigorousdeveloper.humans.humans.Msg",
+      "humansdotai.humans.humans.Msg",
       "ApproveTransaction",
       data
     );
@@ -1375,7 +1376,7 @@ export class MsgClientImpl implements Msg {
   ): Promise<MsgTranfserPoolcoinResponse> {
     const data = MsgTranfserPoolcoin.encode(request).finish();
     const promise = this.rpc.request(
-      "vigorousdeveloper.humans.humans.Msg",
+      "humansdotai.humans.humans.Msg",
       "TranfserPoolcoin",
       data
     );

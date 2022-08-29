@@ -169,7 +169,7 @@ export default {
 	},
 	actions: {
 		init({ dispatch, rootGetters }) {
-			console.log('Vuex module: vigorousdeveloper.humans.humans initialized!')
+			console.log('Vuex module: humansdotai.humans.humans initialized!')
 			if (rootGetters['common/env/client']) {
 				rootGetters['common/env/client'].on('newblock', () => {
 					dispatch('StoreUpdate')

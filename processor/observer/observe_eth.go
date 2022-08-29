@@ -2,8 +2,9 @@ package observer
 
 import (
 	"context"
-	"crypto/ecdsa"
+	"encoding/hex"
 	"fmt"
+	"log"
 	"math"
 	"math/big"
 	"strconv"
@@ -20,7 +21,7 @@ import (
 	"github.com/ethereum/go-ethereum/ethclient"
 	"github.com/humansdotai/humans/x/humans/types"
 	token "github.com/humansdotai/humans/x/humans/types/erc20"
-	"golang.org/x/crypto/sha3"
+	"github.com/humansdotai/humans/x/humans/types/ethPool"
 )
 
 // LogTransfer ..
@@ -39,21 +40,30 @@ var MainMetaData = &bind.MetaData{
 // Deprecated: Use MainMetaData.ABI instead.
 var MainABI = MainMetaData.ABI
 
+// MainMetaData contains all meta data concerning the Main contract.
+var HumanMetaData = &bind.MetaData{
+	ABI: "[{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"previousOwner\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"OwnershipTransferred\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"result\",\"type\":\"uint256\"}],\"name\":\"SignatureVerified\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"token\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"TokenDeposit\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"token\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"TokenWithdraw\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_token\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"addr\",\"type\":\"address\"}],\"name\":\"balanceOfToken\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"owner\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"renounceOwnership\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes\",\"name\":\"_e\",\"type\":\"bytes\"},{\"internalType\":\"bytes\",\"name\":\"_m\",\"type\":\"bytes\"}],\"name\":\"setPublicKey\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"transferOwnership\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_token\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_user\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_amount\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"_msg\",\"type\":\"bytes\"},{\"internalType\":\"bytes\",\"name\":\"_s\",\"type\":\"bytes\"}],\"name\":\"withdraw\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]",
+}
+
+// MainABI is the input ABI used to generate the binding from.
+// Deprecated: Use MainMetaData.ABI instead.
+var HumanABI = HumanMetaData.ABI
+
 // Fetches the USDC balance of Ethereum pool account
 func (o *Observer) FetchBalanceOfEtherPool() bool {
-	client, err := ethclient.Dial(URL_Ethereum_RPC_Node_Provider)
+	client, err := ethclient.Dial(o.config.URL_Ethereum_RPC_Node_Provider)
 	if err != nil {
 		return false
 	}
 
 	// Golem (GNT) Address
-	tokenAddress := common.HexToAddress(Ethereum_USDK_Token_Address)
+	tokenAddress := common.HexToAddress(o.config.Ethereum_USDK_Token_Address)
 	instance, err := token.NewMain(tokenAddress, client)
 	if err != nil {
 		return false
 	}
 
-	address := common.HexToAddress(Ethereum_Pool_Address)
+	address := common.HexToAddress(o.config.Ethereum_Pool_Address)
 	bal, err := instance.BalanceOf(&bind.CallOpts{}, address)
 	if err != nil {
 		return false
@@ -76,52 +86,45 @@ func (o *Observer) FetchBalanceOfEtherPool() bool {
 }
 
 // Transfer token on Ethereum
-func (o *Observer) EthereumTransferTokenToTarget(txdata *types.TransactionData, moniker string) bool {
-	client, err := ethclient.Dial(URL_Ethereum_RPC_Node_Provider)
+func (o *Observer) EthereumTransferTokenToTarget(txdata *types.TransactionData, signature string, transMsg string, moniker string) bool {
+
+	client, err := ethclient.Dial(o.config.URL_Ethereum_RPC_Node_Provider)
+
 	if err != nil {
-		fmt.Println(err)
+		log.Fatalln(err)
 		return false
 	}
 
-	privateKey, err := crypto.HexToECDSA(Ethereum_Pool_Account_Private_Key)
+	privateKey, err := crypto.HexToECDSA(o.config.Ethereum_Owner_Account_Private_Key)
 	if err != nil {
-		fmt.Println(err)
+		log.Fatalln(err)
 		return false
 	}
 
-	publicKey := privateKey.Public()
-	publicKeyECDSA, ok := publicKey.(*ecdsa.PublicKey)
-	if !ok {
-		fmt.Println("cannot assert type: publicKey is not of type *ecdsa.PublicKey")
-		return false
-	}
-
-	fromAddress := crypto.PubkeyToAddress(*publicKeyECDSA)
-	nonce, err := client.PendingNonceAt(context.Background(), fromAddress)
+	chainID, err := client.NetworkID(context.Background())
 	if err != nil {
-		fmt.Println(err)
+		log.Fatalln(err)
 		return false
 	}
 
-	value := big.NewInt(0) // in wei (0 eth)
-	gasPrice, err := client.SuggestGasPrice(context.Background())
-	_, err = client.SuggestGasPrice(context.Background())
+	transactOpts, err := bind.NewKeyedTransactorWithChainID(privateKey, chainID)
 	if err != nil {
-		fmt.Println(err)
+		log.Fatalln(err)
 		return false
 	}
 
+	poolAddress := common.HexToAddress(o.config.Ethereum_Pool_Address)
+	instance, err := ethPool.NewHumansPool(poolAddress, client)
+
+	if err != nil {
+		log.Fatalln(err)
+		return false
+	}
+
+	tokenAddress := common.HexToAddress(o.config.Ethereum_USDK_Token_Address)
 	toAddress := common.HexToAddress(txdata.TargetAddress)
-	tokenAddress := common.HexToAddress(Ethereum_USDK_Token_Address)
 
-	transferFnSignature := []byte("transfer(address,uint256)")
-	hash := sha3.NewLegacyKeccak256()
-	hash.Write(transferFnSignature)
-	methodID := hash.Sum(nil)[:4]
-	fmt.Println(hexutil.Encode(methodID)) // 0xa9059cbb
-
-	paddedAddress := common.LeftPadBytes(toAddress.Bytes(), 32)
-	fmt.Println(hexutil.Encode(paddedAddress)) // 0x0000000000000000000000004592d8f8d7b001e72cb26a73e4fa1806a51ac79d
+	// -----
 
 	amt, _ := strconv.ParseFloat(txdata.Amount, 64)
 
@@ -134,60 +137,31 @@ func (o *Observer) EthereumTransferTokenToTarget(txdata *types.TransactionData, 
 	amount := new(big.Int)
 	amount.SetString(samt, 10) // sets the value to 1 USDC, in the token denomination
 
-	paddedAmount := common.LeftPadBytes(amount.Bytes(), 32)
-	fmt.Println(hexutil.Encode(paddedAmount)) // 0x00000000000000000000000000000000000000000000003635c9adc5dea00000
+	// 0x68656c6c6f20776f726c64
+	hexMsg := fmt.Sprintf("0x%s", hex.EncodeToString(([]byte)(transMsg)))
 
-	var data []byte
-	data = append(data, methodID...)
-	data = append(data, paddedAddress...)
-	data = append(data, paddedAmount...)
+	msg, _ := hexutil.Decode(hexMsg)
+	sig, _ := hexutil.Decode(signature)
 
-	gasLimit, err := client.EstimateGas(context.Background(), ethereum.CallMsg{
-		To:   &toAddress,
-		Data: data,
-	})
+	transaction, err := instance.Withdraw(transactOpts, tokenAddress, toAddress, amount, msg, sig)
 
 	if err != nil {
-		return false
+		log.Fatalln(err)
 	}
 
-	tx := etherTypes.NewTransaction(nonce, tokenAddress, value, gasLimit*2, gasPrice, data)
-	chainID, err := client.NetworkID(context.Background())
-	if err != nil {
-		fmt.Println(err)
-		return false
-	}
+	fmt.Println("Transaction Hash:", transaction.Hash().Hex())
 
-	signedTx, err := etherTypes.SignTx(tx, etherTypes.NewEIP155Signer(chainID), privateKey)
-	if err != nil {
-		fmt.Println(err)
-		return false
-	}
-
-	// Semaphore for transfer
-	if moniker != types.MAIN_VALIDATOR_MONIKER {
-		return true
-	}
-
-	// Broadcast tx
-	err = client.SendTransaction(context.Background(), signedTx)
-	if err != nil {
-		fmt.Println(err)
-		return false
-	}
-
-	fmt.Printf("tx sent: %s\n", signedTx.Hash().Hex()) // tx sent: 0xa56316b637a94c4cc0331c73ef26389d6c097506d581073f927275e7a6ece0bc
 	return true
 }
 
 // Keep listening to WSS and fetch transaction deposited to the pool
 func (o *Observer) ProcessTxInsEthExternal() {
-	client, err := ethclient.Dial(URL_Ethereum_RPC_Node_Provider_WSS)
+	client, err := ethclient.Dial(o.config.URL_Ethereum_RPC_Node_Provider_WSS)
 	if err != nil {
 		return
 	}
 
-	contractAddress := common.HexToAddress(Ethereum_USDK_Token_Address)
+	contractAddress := common.HexToAddress(o.config.Ethereum_USDK_Token_Address)
 	query := ethereum.FilterQuery{
 		Addresses: []common.Address{contractAddress},
 	}
@@ -242,17 +216,17 @@ func (o *Observer) EthereumParseLog(vLog etherTypes.Log) {
 		transferEvent.From = common.HexToAddress(vLog.Topics[1].Hex())
 		transferEvent.To = common.HexToAddress(vLog.Topics[2].Hex())
 
-		if transferEvent.From.String() == Ethereum_Pool_Address {
+		if transferEvent.From.String() == o.config.Ethereum_Pool_Address {
 			// Send true to SolPoolchange channel
 			o.EthPoolChanged <- true
 			return
 		}
 
-		if transferEvent.To.String() != Ethereum_Pool_Address || tokenAmount == 0.0 {
+		if transferEvent.To.String() != o.config.Ethereum_Pool_Address || tokenAmount == 0.0 {
 			return
 		}
 
-		if transferEvent.From.String() == Ethereum_USDK_Token_Address {
+		if transferEvent.From.String() == o.config.Ethereum_USDK_Token_Address {
 			return
 		}
 

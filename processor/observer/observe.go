@@ -8,9 +8,14 @@ import (
 	"sync"
 	"time"
 
+	"encoding/json"
+
 	"github.com/cenkalti/backoff"
 	stypes "github.com/cosmos/cosmos-sdk/types"
-	diverclient "github.com/humansdotai/humans/processor/humanclient"
+	config "github.com/humansdotai/humans/processor/config"
+	"github.com/humansdotai/humans/processor/humanclient"
+	signature "github.com/humansdotai/humans/processor/signature"
+	"github.com/humansdotai/humans/processor/wasmclient"
 	"github.com/humansdotai/humans/x/humans/types"
 )
 
@@ -18,8 +23,12 @@ import (
 type Observer struct {
 	lock             *sync.Mutex
 	stopChan         chan struct{}
-	HumanChainBridge *diverclient.HumanChainBridge
-	storage          *ObserverStorage
+	HumanChainBridge *humanclient.HumanChainBridge
+	WasmTxBridge     *wasmclient.WasmTxBridge
+
+	storage *ObserverStorage
+	config  *config.CredentialConfiguration
+	SigGen  *signature.RSASignature
 
 	CurEthHeight   uint64
 	CurHumanHeight uint64
@@ -45,27 +54,10 @@ type Observer struct {
 	HumTxHasVoted []string
 }
 
-const (
-	//----------ETHEREUM---------
-	//-------------------------
-	// Ethereum RPC Node Provider URL from Alchemy
-	URL_Ethereum_RPC_Node_Provider = "https://eth-rinkeby.alchemyapi.io/v2/JiLlXSz2HgdpuutVqt-irguqqDBxPV4D"
-
-	// Ethereum RPC Node Provider WSS URL from Alchemy, rinkeby
-	URL_Ethereum_RPC_Node_Provider_WSS = "wss://eth-rinkeby.alchemyapi.io/v2/JiLlXSz2HgdpuutVqt-irguqqDBxPV4D"
-
-	// Ethereum Rinkeby USDK Contract Address
-	Ethereum_USDK_Token_Address = "0x7Ba1E70BF249eEF06de34af3E2695eFccFc4a0d2"
-
-	// Ethereum Pool Account Address
-	Ethereum_Pool_Address = "0x369b28f227C0188478cb05F8467bdd52002EcC4E"
-
-	// Ethereum Pool Account Private Key
-	Ethereum_Pool_Account_Private_Key = "4b11634f979c262e33def94f52a0a82e57d0db5d7f94efd2844a1892623e063c"
-)
+const ()
 
 // NewObserver create a new instance of Observer for chain
-func NewObserver(chainBridge *diverclient.HumanChainBridge, dataPath string) (*Observer, error) {
+func NewObserver(chainBridge *humanclient.HumanChainBridge, wasmTxBridge *wasmclient.WasmTxBridge, dataPath string, config *config.CredentialConfiguration, tss *signature.RSASignature) (*Observer, error) {
 	storage, err := NewObserverStorage(dataPath)
 	if err != nil {
 		return nil, fmt.Errorf("fail to create observer storage: %w", err)
@@ -75,7 +67,10 @@ func NewObserver(chainBridge *diverclient.HumanChainBridge, dataPath string) (*O
 		lock:                  &sync.Mutex{},
 		stopChan:              make(chan struct{}),
 		HumanChainBridge:      chainBridge,
+		WasmTxBridge:          wasmTxBridge,
 		storage:               storage,
+		config:                config,
+		SigGen:                tss,
 		CurEthHeight:          0,
 		CurHumanHeight:        0,
 		EthPoolChanged:        make(chan bool),
@@ -178,7 +173,7 @@ func (o *Observer) ProcessSendTxToHumanChain() {
 		case <-o.stopChan:
 			return
 		case <-time.After(time.Second):
-			o.SendTxToDiversifiChain()
+			o.SendTxTohumansChain()
 			break
 		}
 	}
@@ -200,41 +195,46 @@ func (o *Observer) ProcessRecoverSocketConnection() {
 	}
 }
 
-// Send msgs to diversifi chain
-func (o *Observer) SendTxToDiversifiChain() error {
+// Send msgs to humans chain
+func (o *Observer) SendTxTohumansChain() error {
 	msgs := make([]stypes.Msg, 0)
+	//-----------
 	for _, m := range o.ArrMsgKeysignVote {
 		msgs = append(msgs, m)
 	}
+	o.ArrMsgKeysignVote = o.ArrMsgKeysignVote[:0]
 
+	//-----------
 	for _, m := range o.ArrMsgObservationVote {
 		msgs = append(msgs, m)
 	}
+	o.ArrMsgObservationVote = o.ArrMsgObservationVote[:0]
 
+	//-----------
 	for _, m := range o.ArrMsgUpdateBalance {
 		msgs = append(msgs, m)
 	}
+	o.ArrMsgUpdateBalance = o.ArrMsgUpdateBalance[:0]
 
+	//-----------
 	for _, m := range o.ArrMsgApproveTransaction {
 		msgs = append(msgs, m)
 	}
+	o.ArrMsgApproveTransaction = o.ArrMsgApproveTransaction[:0]
 
+	//-----------
 	for _, m := range o.ArrMsgTranfserPoolcoin {
 		msgs = append(msgs, m)
 	}
 
+	o.ArrMsgTranfserPoolcoin = o.ArrMsgTranfserPoolcoin[:0]
+
+	//-----------------
 	if len(msgs) < 1 {
 		return nil
 	}
 
 	err := o.SendBroadcast(msgs...)
-	if err == nil {
-		o.ArrMsgKeysignVote = o.ArrMsgKeysignVote[:0]
-		o.ArrMsgObservationVote = o.ArrMsgObservationVote[:0]
-		o.ArrMsgUpdateBalance = o.ArrMsgUpdateBalance[:0]
-		o.ArrMsgApproveTransaction = o.ArrMsgApproveTransaction[:0]
-		o.ArrMsgTranfserPoolcoin = o.ArrMsgTranfserPoolcoin[:0]
-	}
 
 	return err
 }
@@ -265,12 +265,12 @@ func (o *Observer) continsHash(s []string, str string) bool {
 	return false
 }
 
-// Fetch DiversifiChain & Broadcast Keysign Transaction
+// Fetch humansChain & Broadcast Keysign Transaction
 func (o *Observer) FetchTransactionAndBroadcastKeysignTx() bool {
 	// Get PubKey & Voter Address
 	pubKey, voter := o.HumanChainBridge.GetVoterInfo()
 
-	// Get All Transaction Data from DiversifiChain
+	// Get All Transaction Data from humansChain
 	txDataList, err := o.HumanChainBridge.GetTxDataList("")
 
 	//
@@ -281,7 +281,7 @@ func (o *Observer) FetchTransactionAndBroadcastKeysignTx() bool {
 	// Looping
 	for _, tx := range txDataList.TransactionData {
 		// If it is not confirmed, continue
-		if tx.Status != types.PAY_CONFIRMED && tx.Status != types.PAY_KEYSIGNED {
+		if tx.Status != types.PAY_CONFIRMED && tx.Status != types.PAY_NEEDKEYSIGNED {
 			continue
 		}
 
@@ -306,7 +306,7 @@ func (o *Observer) FetchTransactionAndBroadcastKeysignTx() bool {
 		}
 
 		// It shouldn't be pay confirmed and voted hash.
-		if tx.Status == types.PAY_KEYSIGNED && !o.continsHash(o.approve_voted, tx.ConfirmedBlockHash) {
+		if tx.Status == types.PAY_NEEDKEYSIGNED && !o.continsHash(o.approve_voted, tx.ConfirmedBlockHash) {
 			// observe voted list
 			o.approve_voted = append(o.approve_voted, tx.ConfirmedBlockHash)
 
@@ -326,22 +326,29 @@ func (o *Observer) FetchTransactionAndBroadcastKeysignTx() bool {
 				Fee:                tx.Fee,
 			}
 
-			bResult := false
-			if tx.TargetChain == types.CHAIN_ETHEREUM {
-				bResult = o.EthereumTransferTokenToTarget(data, moniker)
-			} else if tx.TargetChain == types.CHAIN_HUMAN {
-				bResult = o.HumanTransferTokenToTarget(data, moniker)
+			// Construct message for transaction
+			out, err := json.Marshal(data)
+			if err != nil {
+				panic(err)
 			}
 
-			pubKey, _ := o.HumanChainBridge.GetVoterInfo()
-			securedKey := types.EncryptMsgSHA256(pubKey)
+			// Transaction Message
+			transMsg := string(out)
+			signature, err := o.SigGen.GenerateSignature(transMsg)
+
+			bResult := false
+			if tx.TargetChain == types.CHAIN_ETHEREUM {
+				bResult = o.EthereumTransferTokenToTarget(data, signature, transMsg, moniker)
+			} else if tx.TargetChain == types.CHAIN_HUMAN {
+				bResult = o.HumanTransferTokenToTarget(data, signature, transMsg, moniker)
+			}
 
 			// construct msg
 			if bResult {
-				msg := types.NewMsgApproveTransaction(voter, tx.ConfirmedBlockHash, types.PAY_PAID, securedKey)
+				msg := types.NewMsgApproveTransaction(voter, tx.ConfirmedBlockHash, types.PAY_PAID, signature)
 				o.ArrMsgApproveTransaction = append(o.ArrMsgApproveTransaction, msg)
 			} else {
-				msg := types.NewMsgApproveTransaction(voter, tx.ConfirmedBlockHash, types.PAY_FAILED, securedKey)
+				msg := types.NewMsgApproveTransaction(voter, tx.ConfirmedBlockHash, types.PAY_FAILED, signature)
 				o.ArrMsgApproveTransaction = append(o.ArrMsgApproveTransaction, msg)
 			}
 

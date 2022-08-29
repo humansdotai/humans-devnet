@@ -123,7 +123,7 @@ func (k Keeper) KeysignTxData(ctx sdk.Context, ksVotes []types.KeysignVoteData, 
 
 	// Update Block Hash and Status
 	if nVoteCnt >= types.VALID_CNT_SIGNER {
-		d.Status = types.PAY_KEYSIGNED
+		d.Status = types.PAY_NEEDKEYSIGNED
 	}
 
 	// Update store

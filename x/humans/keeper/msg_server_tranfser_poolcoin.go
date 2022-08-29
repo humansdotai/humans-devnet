@@ -21,7 +21,7 @@ func (k msgServer) TranfserPoolcoin(goCtx context.Context, msg *types.MsgTranfse
 		return &types.MsgTranfserPoolcoinResponse{}, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "amount is not a valid Coins object")
 	}
 
-	pool, _ := sdk.AccAddressFromBech32(types.Humanchain_Pool_Address)
+	pool, _ := sdk.AccAddressFromBech32(msg.Pool)
 	err = k.bankKeeper.SendCoins(ctx, pool, to, amount)
 
 	return &types.MsgTranfserPoolcoinResponse{}, err
