@@ -55,7 +55,7 @@ func main() {
 	k := humanclient.NewKeysWithKeybase(kb, signer, password)
 
 	cfg := &humanclient.BridgeConfig{
-		ChainId:         "test",
+		ChainId:         "testhuman",
 		ChainHost:       "127.0.0.1:1317",
 		ChainRPC:        "127.0.0.1:26657",
 		ChainHomeFolder: "~/.humans/",
