@@ -103,7 +103,7 @@ func main() {
 	}
 
 	// Key generation module initialization
-	if !tss.Start() {
+	if !tss.Start(signer) {
 		fmt.Println("fail to start TSS")
 		return
 	}

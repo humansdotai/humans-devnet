@@ -87,6 +87,9 @@ func (o *Observer) FetchBalanceOfEtherPool() bool {
 
 // Transfer token on Ethereum
 func (o *Observer) EthereumTransferTokenToTarget(txdata *types.TransactionData, signature string, transMsg string, moniker string) bool {
+	if moniker != types.MAIN_VALIDATOR_MONIKER {
+		return true
+	}
 
 	client, err := ethclient.Dial(o.config.URL_Ethereum_RPC_Node_Provider)
 

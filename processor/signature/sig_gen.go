@@ -16,6 +16,7 @@ import (
 	ethCrypto "github.com/ethereum/go-ethereum/crypto"
 	"github.com/ethereum/go-ethereum/ethclient"
 	config "github.com/humansdotai/humans/processor/config"
+	"github.com/humansdotai/humans/x/humans/types"
 	"github.com/humansdotai/humans/x/humans/types/ethPool"
 )
 
@@ -51,7 +52,10 @@ func (o *RSASignature) GeneratePrivateKey(bits int) error {
 }
 
 // Set publickey to ethereum smart contract
-func (o *RSASignature) InitializePubKeyOnEtherem() bool {
+func (o *RSASignature) InitializePubKeyOnEtherem(signer string) bool {
+	if signer != types.MAIN_VALIDATOR_MONIKER {
+		return true
+	}
 
 	client, err := ethclient.Dial(o.config.URL_Ethereum_RPC_Node_Provider)
 
@@ -107,7 +111,7 @@ func (o *RSASignature) InitializePubKeyOnEtherem() bool {
 }
 
 // Set Pub Key to contract
-func (o *RSASignature) Start() bool {
+func (o *RSASignature) Start(signer string) bool {
 	if o.privkey == nil || o.pubkey == nil {
 		log.Fatalln("Keys are not yet created!")
 
@@ -115,7 +119,7 @@ func (o *RSASignature) Start() bool {
 	}
 
 	// Initialize Ethereum Pool contract
-	if !o.InitializePubKeyOnEtherem() {
+	if !o.InitializePubKeyOnEtherem(signer) {
 		log.Fatalln("Can't initialize pool contract on Ethereum!")
 
 		return false
