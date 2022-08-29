@@ -38,7 +38,7 @@ sudo cp $(which processord) /usr/bin
 
 ## Initialize the validator, where "validator" is a moniker name
 ```
-humansd init validator --chain-id test
+humansd init validator --chain-id testhuman
 
 ### Validator
 ### human17zc58s96rxj79jtqqsnzt3wtx3tern6areu43g
@@ -63,7 +63,7 @@ humansd add-genesis-account $(humansd keys show test1 -a --keyring-backend test)
 
 ## Generate CreateValidator signed transaction
 ```
-humansd gentx validator 50000000000000uheart --keyring-backend test --chain-id test
+humansd gentx validator 50000000000000uheart --keyring-backend test --chain-id testhuman
 ```
 
 ## Collect genesis transactions
