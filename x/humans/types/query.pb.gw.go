@@ -501,7 +501,6 @@ func local_request_Query_TransactionDataAll_0(ctx context.Context, marshaler run
 
 }
 
-
 func request_Query_Pubkeys_0(ctx context.Context, marshaler runtime.Marshaler, client QueryClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq QueryGetPubkeysRequest
 	var metadata runtime.ServerMetadata
@@ -851,7 +850,6 @@ func RegisterQueryHandlerServer(ctx context.Context, mux *runtime.ServeMux, serv
 
 	})
 
-
 	mux.Handle("GET", pattern_Query_Pubkeys_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
@@ -1159,7 +1157,6 @@ func RegisterQueryHandlerClient(ctx context.Context, mux *runtime.ServeMux, clie
 
 	})
 
-
 	mux.Handle("GET", pattern_Query_Pubkeys_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
@@ -1204,31 +1201,31 @@ func RegisterQueryHandlerClient(ctx context.Context, mux *runtime.ServeMux, clie
 }
 
 var (
-	pattern_Query_Params_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"humansdotai", "humans", "humans", "params"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_Query_Params_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 1, 2, 2}, []string{"humansdotai", "humans", "params"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_Query_FeeBalance_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"humansdotai", "humans", "humans", "fee_balance", "index"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_Query_FeeBalance_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3}, []string{"humansdotai", "humans", "fee_balance", "index"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_Query_FeeBalanceAll_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"humansdotai", "humans", "humans", "fee_balance"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_Query_FeeBalanceAll_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 1, 2, 2}, []string{"humansdotai", "humans", "fee_balance"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_Query_KeysignVoteData_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"humansdotai", "humans", "humans", "keysign_vote_data", "index"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_Query_KeysignVoteData_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3}, []string{"humansdotai", "humans", "keysign_vote_data", "index"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_Query_KeysignVoteDataAll_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"humansdotai", "humans", "humans", "keysign_vote_data"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_Query_KeysignVoteDataAll_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 1, 2, 2}, []string{"humansdotai", "humans", "keysign_vote_data"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_Query_ObserveVote_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"humansdotai", "humans", "humans", "observe_vote", "index"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_Query_ObserveVote_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3}, []string{"humansdotai", "humans", "observe_vote", "index"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_Query_ObserveVoteAll_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"humansdotai", "humans", "humans", "observe_vote"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_Query_ObserveVoteAll_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 1, 2, 2}, []string{"humansdotai", "humans", "observe_vote"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_Query_PoolBalance_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"humansdotai", "humans", "humans", "pool_balance", "index"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_Query_PoolBalance_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3}, []string{"humansdotai", "humans", "pool_balance", "index"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_Query_PoolBalanceAll_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"humansdotai", "humans", "humans", "pool_balance"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_Query_PoolBalanceAll_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 1, 2, 2}, []string{"humansdotai", "humans", "pool_balance"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_Query_TransactionData_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"humansdotai", "humans", "humans", "transaction_data", "index"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_Query_TransactionData_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3}, []string{"humansdotai", "humans", "transaction_data", "index"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_Query_TransactionDataAll_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"humansdotai", "humans", "humans", "transaction_data"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_Query_TransactionDataAll_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 1, 2, 2}, []string{"humansdotai", "humans", "transaction_data"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_Query_Pubkeys_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"PriceChain", "rd_net", "rdnet", "pubkeys", "index"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_Query_Pubkeys_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3}, []string{"humansdotai", "humans", "pubkeys", "index"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_Query_PubkeysAll_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"PriceChain", "rd_net", "rdnet", "pubkeys"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_Query_PubkeysAll_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 1, 2, 2}, []string{"humansdotai", "humans", "pubkeys"}, "", runtime.AssumeColonVerbOpt(true)))
 )
 
 var (

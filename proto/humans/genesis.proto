@@ -8,6 +8,7 @@ import "humans/keysign_vote_data.proto";
 import "humans/observe_vote.proto";
 import "humans/pool_balance.proto";
 import "humans/transaction_data.proto";
+import "humans/pubkeys.proto";
 // this line is used by starport scaffolding # genesis/proto/import
 
 option go_package = "github.com/humansdotai/humans/x/humans/types";

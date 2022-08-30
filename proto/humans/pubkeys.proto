@@ -1,5 +1,5 @@
 syntax = "proto3";
-package pricechain.rd_net.rdnet;
+package humansdotai.humans.humans;
 
 option go_package = "github.com/humansdotai/humans/x/humans/types";
 

@@ -3,8 +3,6 @@ package main
 import (
 	"fmt"
 	"os"
-
-	"github.com/humansdotai/humans/cmd/humansd-manager/lib"
 )
 
 func main() {
@@ -16,15 +14,16 @@ func main() {
 
 // Run is the main loop, but returns an error
 func Run(args []string) error {
-	cfg, err := lib.GetConfigFromEnv()
-	if err != nil {
-		return err
-	}
+	// cfg, err := lib.GetConfigFromEnv()
+	// if err != nil {
+	// 	return err
+	// }
 
-	doUpgrade, err := lib.LaunchProcess(cfg, args, os.Stdout, os.Stderr)
-	// if RestartAfterUpgrade, we launch after a successful upgrade (only condition LaunchProcess returns nil)
-	for cfg.RestartAfterUpgrade && err == nil && doUpgrade {
-		doUpgrade, err = lib.LaunchProcess(cfg, args, os.Stdout, os.Stderr)
-	}
-	return err
+	// doUpgrade, err := lib.LaunchProcess(cfg, args, os.Stdout, os.Stderr)
+	// // if RestartAfterUpgrade, we launch after a successful upgrade (only condition LaunchProcess returns nil)
+	// for cfg.RestartAfterUpgrade && err == nil && doUpgrade {
+	// 	doUpgrade, err = lib.LaunchProcess(cfg, args, os.Stdout, os.Stderr)
+	// }
+	// return err
+	return nil
 }
