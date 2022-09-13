@@ -16,12 +16,10 @@ all: install
 install: go.sum
 	go install -mod=readonly $(BUILD_FLAGS) ./cmd/humansd-manager
 	go install -mod=readonly $(BUILD_FLAGS) ./cmd/humansd
-	go install -mod=readonly $(BUILD_FLAGS) ./cmd/processord
 
 build: go.sum clean
 	go build -mod=mod $(BUILD_FLAGS) -o build/humansd-manager ./cmd/humansd-manager
 	go build -mod=mod $(BUILD_FLAGS) -o build/humansd ./cmd/humansd
-	go build -mod=mod $(BUILD_FLAGS) -o build/processord ./cmd/processord
 
 build-linux:
 	GOOS=linux GOARCH=amd64 $(MAKE) build
@@ -112,4 +110,3 @@ proto-check-breaking:
 # Create log files
 log-files:
 	sudo mkdir -p /var/log/humansd && sudo touch /var/log/humansd/humansd.log && sudo touch /var/log/humansd/humansd_error.log
-	sudo mkdir -p /var/log/processord && sudo touch /var/log/processord/processord.log && sudo touch /var/log/processord/processord_error.log
