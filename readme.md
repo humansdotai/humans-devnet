@@ -42,15 +42,15 @@ humansd init validator --chain-id testhuman
 
 ### Validator
 ### human17zc58s96rxj79jtqqsnzt3wtx3tern6areu43g
-echo "pet apart myth reflect stuff force attract taste caught fit exact ice slide sheriff state since unusual gaze practice course mesh magnet ozone purchase" | humansd keys add validator --keyring-backend test --recover
+humansd keys add validator --keyring-backend test --recover
 
 ### Pool
 ### human14u53eghrurpeyx5cm47vm3qwugtmhcpnstfx9t
-echo "bottom soccer blue sniff use improve rough use amateur senior transfer quarter" | humansd keys add validator1 --keyring-backend test --recover
+humansd keys add validator1 --keyring-backend test --recover
 
 ### Test 1
 ### human1dfjns5lk748pzrd79z4zp9k22mrchm2a5t2f6u
-echo "betray theory cargo way left cricket doll room donkey wire reunion fall left surprise hamster corn village happy bulb token artist twelve whisper expire" | humansd keys add test1 --keyring-backend test --recover
+humansd keys add test1 --keyring-backend test --recover
 ```
 
 ## Add genesis accounts
