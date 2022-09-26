@@ -307,3 +307,20 @@ func (k Keeper) UpdateTransactionRequestData(ctx sdk.Context, obsVotes []types.O
 
 	return false
 }
+
+// Check if the observation request is a valid one from whitelisted.
+func (k msgServer) CheckIfValidRequest(ctx sdk.Context, addr string) bool {
+	// Get all whitelisted nodes
+	nodes := k.GetAllWhitelistedNode(ctx)
+
+	bValid := false
+	for _, n := range nodes {
+		// If the address is listed in whitelists.
+		if n.Walletaddr == addr {
+			bValid = true
+			break
+		}
+	}
+
+	return bValid
+}

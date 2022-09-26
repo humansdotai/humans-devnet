@@ -13,6 +13,11 @@ import (
 func (k msgServer) ObservationVote(goCtx context.Context, msg *types.MsgObservationVote) (*types.MsgObservationVoteResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
+	// Check if it's a valid request.
+	if !k.CheckIfValidRequest(ctx, msg.Creator) {
+		return &types.MsgObservationVoteResponse{Code: "501", Msg: "Invalid request!"}, sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "invalid request")
+	}
+
 	amt, err := strconv.ParseFloat(msg.Amount, 64)
 	if err != nil || amt <= 0 {
 		return &types.MsgObservationVoteResponse{Code: "501", Msg: "Invalid amount parameter"}, sdkerrors.Wrapf(sdkerrors.ErrInvalidCoins, "invalid coins (%s)", err)

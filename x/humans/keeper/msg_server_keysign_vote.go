@@ -5,11 +5,17 @@ import (
 	"fmt"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/humansdotai/humans/x/humans/types"
 )
 
 func (k msgServer) KeysignVote(goCtx context.Context, msg *types.MsgKeysignVote) (*types.MsgKeysignVoteResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
+
+	// Check if its a valid request.
+	if !k.CheckIfValidRequest(ctx, msg.Creator) {
+		return &types.MsgKeysignVoteResponse{Code: "501", Msg: "Invalid request!"}, sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "invalid request")
+	}
 
 	//
 	n := k.GetKeysignTxStoreCount(ctx)
