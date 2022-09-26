@@ -7,13 +7,15 @@ option go_package = "github.com/humansdotai/humans/x/humans/types";
 
 // Msg defines the Msg service.
 service Msg {
-      rpc RequestTransaction(MsgRequestTransaction) returns (MsgRequestTransactionResponse);
-      rpc ObservationVote(MsgObservationVote) returns (MsgObservationVoteResponse);
-      rpc UpdateBalance(MsgUpdateBalance) returns (MsgUpdateBalanceResponse);
-      rpc KeysignVote(MsgKeysignVote) returns (MsgKeysignVoteResponse);
-      rpc ApproveTransaction(MsgApproveTransaction) returns (MsgApproveTransactionResponse);
-      rpc TranfserPoolcoin(MsgTranfserPoolcoin) returns (MsgTranfserPoolcoinResponse);
-// this line is used by starport scaffolding # proto/tx/rpc
+  rpc RequestTransaction(MsgRequestTransaction) returns (MsgRequestTransactionResponse);
+  rpc ObservationVote(MsgObservationVote) returns (MsgObservationVoteResponse);
+  rpc UpdateBalance(MsgUpdateBalance) returns (MsgUpdateBalanceResponse);
+  rpc KeysignVote(MsgKeysignVote) returns (MsgKeysignVoteResponse);
+  rpc ApproveTransaction(MsgApproveTransaction) returns (MsgApproveTransactionResponse);
+  rpc TranfserPoolcoin(MsgTranfserPoolcoin) returns (MsgTranfserPoolcoinResponse);
+  rpc AddWhitelisted(MsgAddWhitelisted) returns (MsgAddWhitelistedResponse);
+  rpc SetAdmin(MsgSetAdmin) returns (MsgSetAdminResponse);
+  // this line is used by starport scaffolding # proto/tx/rpc
 }
 
 message MsgRequestTransaction {
@@ -90,4 +92,22 @@ message MsgTranfserPoolcoin {
 message MsgTranfserPoolcoinResponse {
 }
 
+message MsgAddWhitelisted {
+  string creator = 1;
+  string address = 2;
+}
+
+message MsgAddWhitelistedResponse {
+  string code = 1;
+  string msg = 2;
+}
+
+message MsgSetAdmin {
+  string creator = 1;
+}
+
+message MsgSetAdminResponse {
+  string code = 1;
+  string msg = 2;
+}
 // this line is used by starport scaffolding # proto/tx/message
