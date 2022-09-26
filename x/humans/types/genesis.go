@@ -15,7 +15,9 @@ func DefaultGenesis() *GenesisState {
 		ObserveVoteList:     []ObserveVote{},
 		PoolBalanceList:     []PoolBalance{},
 		TransactionDataList: []TransactionData{},
-		PubkeysList: []Pubkeys{},
+		PubkeysList:         []Pubkeys{},
+		SuperadminList:      []Superadmin{},
+		WhitelistedNodeList: []WhitelistedNode{},
 		// this line is used by starport scaffolding # genesis/types/default
 		Params: DefaultParams(),
 	}
@@ -83,6 +85,26 @@ func (gs GenesisState) Validate() error {
 			return fmt.Errorf("duplicated index for pubkeys")
 		}
 		pubkeysIndexMap[index] = struct{}{}
+	}
+	// Check for duplicated index in superadmin
+	superadminIndexMap := make(map[string]struct{})
+
+	for _, elem := range gs.SuperadminList {
+		index := string(SuperadminKey(elem.Index))
+		if _, ok := superadminIndexMap[index]; ok {
+			return fmt.Errorf("duplicated index for superadmin")
+		}
+		superadminIndexMap[index] = struct{}{}
+	}
+	// Check for duplicated index in whitelistedNode
+	whitelistedNodeIndexMap := make(map[string]struct{})
+
+	for _, elem := range gs.WhitelistedNodeList {
+		index := string(WhitelistedNodeKey(elem.Index))
+		if _, ok := whitelistedNodeIndexMap[index]; ok {
+			return fmt.Errorf("duplicated index for whitelistedNode")
+		}
+		whitelistedNodeIndexMap[index] = struct{}{}
 	}
 	// this line is used by starport scaffolding # genesis/types/validate
 

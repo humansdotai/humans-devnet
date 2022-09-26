@@ -7,36 +7,18 @@ import { msgTypes } from './registry';
 import { IgniteClient } from "../client"
 import { MissingWalletError } from "../helpers"
 import { Api } from "./rest";
-import { MsgUpdateBalance } from "./types/humans/tx";
-import { MsgTranfserPoolcoin } from "./types/humans/tx";
 import { MsgObservationVote } from "./types/humans/tx";
-import { MsgKeysignVote } from "./types/humans/tx";
 import { MsgApproveTransaction } from "./types/humans/tx";
+import { MsgUpdateBalance } from "./types/humans/tx";
+import { MsgKeysignVote } from "./types/humans/tx";
 import { MsgRequestTransaction } from "./types/humans/tx";
+import { MsgTranfserPoolcoin } from "./types/humans/tx";
 
 
-export { MsgUpdateBalance, MsgTranfserPoolcoin, MsgObservationVote, MsgKeysignVote, MsgApproveTransaction, MsgRequestTransaction };
-
-type sendMsgUpdateBalanceParams = {
-  value: MsgUpdateBalance,
-  fee?: StdFee,
-  memo?: string
-};
-
-type sendMsgTranfserPoolcoinParams = {
-  value: MsgTranfserPoolcoin,
-  fee?: StdFee,
-  memo?: string
-};
+export { MsgObservationVote, MsgApproveTransaction, MsgUpdateBalance, MsgKeysignVote, MsgRequestTransaction, MsgTranfserPoolcoin };
 
 type sendMsgObservationVoteParams = {
   value: MsgObservationVote,
-  fee?: StdFee,
-  memo?: string
-};
-
-type sendMsgKeysignVoteParams = {
-  value: MsgKeysignVote,
   fee?: StdFee,
   memo?: string
 };
@@ -47,35 +29,53 @@ type sendMsgApproveTransactionParams = {
   memo?: string
 };
 
+type sendMsgUpdateBalanceParams = {
+  value: MsgUpdateBalance,
+  fee?: StdFee,
+  memo?: string
+};
+
+type sendMsgKeysignVoteParams = {
+  value: MsgKeysignVote,
+  fee?: StdFee,
+  memo?: string
+};
+
 type sendMsgRequestTransactionParams = {
   value: MsgRequestTransaction,
   fee?: StdFee,
   memo?: string
 };
 
-
-type msgUpdateBalanceParams = {
-  value: MsgUpdateBalance,
-};
-
-type msgTranfserPoolcoinParams = {
+type sendMsgTranfserPoolcoinParams = {
   value: MsgTranfserPoolcoin,
+  fee?: StdFee,
+  memo?: string
 };
+
 
 type msgObservationVoteParams = {
   value: MsgObservationVote,
-};
-
-type msgKeysignVoteParams = {
-  value: MsgKeysignVote,
 };
 
 type msgApproveTransactionParams = {
   value: MsgApproveTransaction,
 };
 
+type msgUpdateBalanceParams = {
+  value: MsgUpdateBalance,
+};
+
+type msgKeysignVoteParams = {
+  value: MsgKeysignVote,
+};
+
 type msgRequestTransactionParams = {
   value: MsgRequestTransaction,
+};
+
+type msgTranfserPoolcoinParams = {
+  value: MsgTranfserPoolcoin,
 };
 
 
@@ -96,34 +96,6 @@ export const txClient = ({ signer, prefix, addr }: TxClientOptions = { addr: "ht
 
   return {
 		
-		async sendMsgUpdateBalance({ value, fee, memo }: sendMsgUpdateBalanceParams): Promise<DeliverTxResponse> {
-			if (!signer) {
-					throw new Error('TxClient:sendMsgUpdateBalance: Unable to sign Tx. Signer is not present.')
-			}
-			try {			
-				const { address } = (await signer.getAccounts())[0]; 
-				const signingClient = await SigningStargateClient.connectWithSigner(addr,signer,{registry, prefix});
-				let msg = this.msgUpdateBalance({ value: MsgUpdateBalance.fromPartial(value) })
-				return await signingClient.signAndBroadcast(address, [msg], fee ? fee : defaultFee, memo)
-			} catch (e: any) {
-				throw new Error('TxClient:sendMsgUpdateBalance: Could not broadcast Tx: '+ e.message)
-			}
-		},
-		
-		async sendMsgTranfserPoolcoin({ value, fee, memo }: sendMsgTranfserPoolcoinParams): Promise<DeliverTxResponse> {
-			if (!signer) {
-					throw new Error('TxClient:sendMsgTranfserPoolcoin: Unable to sign Tx. Signer is not present.')
-			}
-			try {			
-				const { address } = (await signer.getAccounts())[0]; 
-				const signingClient = await SigningStargateClient.connectWithSigner(addr,signer,{registry, prefix});
-				let msg = this.msgTranfserPoolcoin({ value: MsgTranfserPoolcoin.fromPartial(value) })
-				return await signingClient.signAndBroadcast(address, [msg], fee ? fee : defaultFee, memo)
-			} catch (e: any) {
-				throw new Error('TxClient:sendMsgTranfserPoolcoin: Could not broadcast Tx: '+ e.message)
-			}
-		},
-		
 		async sendMsgObservationVote({ value, fee, memo }: sendMsgObservationVoteParams): Promise<DeliverTxResponse> {
 			if (!signer) {
 					throw new Error('TxClient:sendMsgObservationVote: Unable to sign Tx. Signer is not present.')
@@ -135,20 +107,6 @@ export const txClient = ({ signer, prefix, addr }: TxClientOptions = { addr: "ht
 				return await signingClient.signAndBroadcast(address, [msg], fee ? fee : defaultFee, memo)
 			} catch (e: any) {
 				throw new Error('TxClient:sendMsgObservationVote: Could not broadcast Tx: '+ e.message)
-			}
-		},
-		
-		async sendMsgKeysignVote({ value, fee, memo }: sendMsgKeysignVoteParams): Promise<DeliverTxResponse> {
-			if (!signer) {
-					throw new Error('TxClient:sendMsgKeysignVote: Unable to sign Tx. Signer is not present.')
-			}
-			try {			
-				const { address } = (await signer.getAccounts())[0]; 
-				const signingClient = await SigningStargateClient.connectWithSigner(addr,signer,{registry, prefix});
-				let msg = this.msgKeysignVote({ value: MsgKeysignVote.fromPartial(value) })
-				return await signingClient.signAndBroadcast(address, [msg], fee ? fee : defaultFee, memo)
-			} catch (e: any) {
-				throw new Error('TxClient:sendMsgKeysignVote: Could not broadcast Tx: '+ e.message)
 			}
 		},
 		
@@ -166,6 +124,34 @@ export const txClient = ({ signer, prefix, addr }: TxClientOptions = { addr: "ht
 			}
 		},
 		
+		async sendMsgUpdateBalance({ value, fee, memo }: sendMsgUpdateBalanceParams): Promise<DeliverTxResponse> {
+			if (!signer) {
+					throw new Error('TxClient:sendMsgUpdateBalance: Unable to sign Tx. Signer is not present.')
+			}
+			try {			
+				const { address } = (await signer.getAccounts())[0]; 
+				const signingClient = await SigningStargateClient.connectWithSigner(addr,signer,{registry, prefix});
+				let msg = this.msgUpdateBalance({ value: MsgUpdateBalance.fromPartial(value) })
+				return await signingClient.signAndBroadcast(address, [msg], fee ? fee : defaultFee, memo)
+			} catch (e: any) {
+				throw new Error('TxClient:sendMsgUpdateBalance: Could not broadcast Tx: '+ e.message)
+			}
+		},
+		
+		async sendMsgKeysignVote({ value, fee, memo }: sendMsgKeysignVoteParams): Promise<DeliverTxResponse> {
+			if (!signer) {
+					throw new Error('TxClient:sendMsgKeysignVote: Unable to sign Tx. Signer is not present.')
+			}
+			try {			
+				const { address } = (await signer.getAccounts())[0]; 
+				const signingClient = await SigningStargateClient.connectWithSigner(addr,signer,{registry, prefix});
+				let msg = this.msgKeysignVote({ value: MsgKeysignVote.fromPartial(value) })
+				return await signingClient.signAndBroadcast(address, [msg], fee ? fee : defaultFee, memo)
+			} catch (e: any) {
+				throw new Error('TxClient:sendMsgKeysignVote: Could not broadcast Tx: '+ e.message)
+			}
+		},
+		
 		async sendMsgRequestTransaction({ value, fee, memo }: sendMsgRequestTransactionParams): Promise<DeliverTxResponse> {
 			if (!signer) {
 					throw new Error('TxClient:sendMsgRequestTransaction: Unable to sign Tx. Signer is not present.')
@@ -180,36 +166,26 @@ export const txClient = ({ signer, prefix, addr }: TxClientOptions = { addr: "ht
 			}
 		},
 		
-		
-		msgUpdateBalance({ value }: msgUpdateBalanceParams): EncodeObject {
-			try {
-				return { typeUrl: "/humansdotai.humans.humans.MsgUpdateBalance", value: MsgUpdateBalance.fromPartial( value ) }  
+		async sendMsgTranfserPoolcoin({ value, fee, memo }: sendMsgTranfserPoolcoinParams): Promise<DeliverTxResponse> {
+			if (!signer) {
+					throw new Error('TxClient:sendMsgTranfserPoolcoin: Unable to sign Tx. Signer is not present.')
+			}
+			try {			
+				const { address } = (await signer.getAccounts())[0]; 
+				const signingClient = await SigningStargateClient.connectWithSigner(addr,signer,{registry, prefix});
+				let msg = this.msgTranfserPoolcoin({ value: MsgTranfserPoolcoin.fromPartial(value) })
+				return await signingClient.signAndBroadcast(address, [msg], fee ? fee : defaultFee, memo)
 			} catch (e: any) {
-				throw new Error('TxClient:MsgUpdateBalance: Could not create message: ' + e.message)
+				throw new Error('TxClient:sendMsgTranfserPoolcoin: Could not broadcast Tx: '+ e.message)
 			}
 		},
 		
-		msgTranfserPoolcoin({ value }: msgTranfserPoolcoinParams): EncodeObject {
-			try {
-				return { typeUrl: "/humansdotai.humans.humans.MsgTranfserPoolcoin", value: MsgTranfserPoolcoin.fromPartial( value ) }  
-			} catch (e: any) {
-				throw new Error('TxClient:MsgTranfserPoolcoin: Could not create message: ' + e.message)
-			}
-		},
 		
 		msgObservationVote({ value }: msgObservationVoteParams): EncodeObject {
 			try {
 				return { typeUrl: "/humansdotai.humans.humans.MsgObservationVote", value: MsgObservationVote.fromPartial( value ) }  
 			} catch (e: any) {
 				throw new Error('TxClient:MsgObservationVote: Could not create message: ' + e.message)
-			}
-		},
-		
-		msgKeysignVote({ value }: msgKeysignVoteParams): EncodeObject {
-			try {
-				return { typeUrl: "/humansdotai.humans.humans.MsgKeysignVote", value: MsgKeysignVote.fromPartial( value ) }  
-			} catch (e: any) {
-				throw new Error('TxClient:MsgKeysignVote: Could not create message: ' + e.message)
 			}
 		},
 		
@@ -221,11 +197,35 @@ export const txClient = ({ signer, prefix, addr }: TxClientOptions = { addr: "ht
 			}
 		},
 		
+		msgUpdateBalance({ value }: msgUpdateBalanceParams): EncodeObject {
+			try {
+				return { typeUrl: "/humansdotai.humans.humans.MsgUpdateBalance", value: MsgUpdateBalance.fromPartial( value ) }  
+			} catch (e: any) {
+				throw new Error('TxClient:MsgUpdateBalance: Could not create message: ' + e.message)
+			}
+		},
+		
+		msgKeysignVote({ value }: msgKeysignVoteParams): EncodeObject {
+			try {
+				return { typeUrl: "/humansdotai.humans.humans.MsgKeysignVote", value: MsgKeysignVote.fromPartial( value ) }  
+			} catch (e: any) {
+				throw new Error('TxClient:MsgKeysignVote: Could not create message: ' + e.message)
+			}
+		},
+		
 		msgRequestTransaction({ value }: msgRequestTransactionParams): EncodeObject {
 			try {
 				return { typeUrl: "/humansdotai.humans.humans.MsgRequestTransaction", value: MsgRequestTransaction.fromPartial( value ) }  
 			} catch (e: any) {
 				throw new Error('TxClient:MsgRequestTransaction: Could not create message: ' + e.message)
+			}
+		},
+		
+		msgTranfserPoolcoin({ value }: msgTranfserPoolcoinParams): EncodeObject {
+			try {
+				return { typeUrl: "/humansdotai.humans.humans.MsgTranfserPoolcoin", value: MsgTranfserPoolcoin.fromPartial( value ) }  
+			} catch (e: any) {
+				throw new Error('TxClient:MsgTranfserPoolcoin: Could not create message: ' + e.message)
 			}
 		},
 		

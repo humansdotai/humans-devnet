@@ -11,6 +11,8 @@ import "humans/observe_vote.proto";
 import "humans/pool_balance.proto";
 import "humans/transaction_data.proto";
 import "humans/pubkeys.proto";
+import "humans/superadmin.proto";
+import "humans/whitelisted_node.proto";
 // this line is used by starport scaffolding # 1
 
 option go_package = "github.com/humansdotai/humans/x/humans/types";
@@ -79,6 +81,26 @@ service Query {
 	// Queries a list of Pubkeys items.
 	rpc PubkeysAll(QueryAllPubkeysRequest) returns (QueryAllPubkeysResponse) {
 		option (google.api.http).get = "/humansdotai/humans/humans/pubkeys";
+	}
+	
+	// Queries a Superadmin by index.
+	rpc Superadmin(QueryGetSuperadminRequest) returns (QueryGetSuperadminResponse) {
+		option (google.api.http).get = "/humansdotai/humans/humans/superadmin/{index}";
+	}
+
+	// Queries a list of Superadmin items.
+	rpc SuperadminAll(QueryAllSuperadminRequest) returns (QueryAllSuperadminResponse) {
+		option (google.api.http).get = "/humansdotai/humans/humans/superadmin";
+	}
+	
+	// Queries a WhitelistedNode by index.
+	rpc WhitelistedNode(QueryGetWhitelistedNodeRequest) returns (QueryGetWhitelistedNodeResponse) {
+		option (google.api.http).get = "/humansdotai/humans/humans/whitelisted_node/{index}";
+	}
+
+	// Queries a list of WhitelistedNode items.
+	rpc WhitelistedNodeAll(QueryAllWhitelistedNodeRequest) returns (QueryAllWhitelistedNodeResponse) {
+		option (google.api.http).get = "/humansdotai/humans/humans/whitelisted_node";
 	}
 // this line is used by starport scaffolding # 2
 }
@@ -197,6 +219,41 @@ message QueryAllPubkeysRequest {
 
 message QueryAllPubkeysResponse {
   repeated Pubkeys pubkeys = 1 [(gogoproto.nullable) = false];
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+message QueryGetSuperadminRequest {
+	string index = 1;
+
+}
+
+message QueryGetSuperadminResponse {
+  Superadmin superadmin = 1 [(gogoproto.nullable) = false];
+}
+
+message QueryAllSuperadminRequest {
+  cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+message QueryAllSuperadminResponse {
+  repeated Superadmin superadmin = 1 [(gogoproto.nullable) = false];
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+message QueryGetWhitelistedNodeRequest {
+	string index = 1;
+
+}
+
+message QueryGetWhitelistedNodeResponse {
+  WhitelistedNode whitelistedNode = 1 [(gogoproto.nullable) = false];
+}
+
+message QueryAllWhitelistedNodeRequest {
+  cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+message QueryAllWhitelistedNodeResponse {
+  repeated WhitelistedNode whitelistedNode = 1 [(gogoproto.nullable) = false];
   cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
 

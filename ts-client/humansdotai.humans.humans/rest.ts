@@ -183,6 +183,21 @@ export interface HumansQueryAllTransactionDataResponse {
   pagination?: V1Beta1PageResponse;
 }
 
+export interface HumansQueryAllWhitelistedNodeResponse {
+  whitelistedNode?: HumansWhitelistedNode[];
+
+  /**
+   * PageResponse is to be embedded in gRPC response messages where the
+   * corresponding request message has used PageRequest.
+   *
+   *  message SomeResponse {
+   *          repeated Bar results = 1;
+   *          PageResponse page = 2;
+   *  }
+   */
+  pagination?: V1Beta1PageResponse;
+}
+
 export interface HumansQueryGetFeeBalanceResponse {
   feeBalance?: HumansFeeBalance;
 }
@@ -207,6 +222,10 @@ export interface HumansQueryGetTransactionDataResponse {
   transactionData?: HumansTransactionData;
 }
 
+export interface HumansQueryGetWhitelistedNodeResponse {
+  whitelistedNode?: HumansWhitelistedNode;
+}
+
 /**
  * QueryParamsResponse is response type for the Query/Params RPC method.
  */
@@ -228,6 +247,13 @@ export interface HumansTransactionData {
   confirmedBlockHash?: string;
   signedKey?: string;
   fee?: string;
+}
+
+export interface HumansWhitelistedNode {
+  index?: string;
+  nodeaddr?: string;
+  walletaddr?: string;
+  pubkey?: string;
 }
 
 export interface ProtobufAny {
@@ -750,6 +776,47 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
   queryTransactionData = (index: string, params: RequestParams = {}) =>
     this.request<HumansQueryGetTransactionDataResponse, RpcStatus>({
       path: `/humansdotai/humans/humans/transaction_data/${index}`,
+      method: "GET",
+      format: "json",
+      ...params,
+    });
+
+  /**
+   * No description
+   *
+   * @tags Query
+   * @name QueryWhitelistedNodeAll
+   * @summary Queries a list of WhitelistedNode items.
+   * @request GET:/humansdotai/humans/humans/whitelisted_node
+   */
+  queryWhitelistedNodeAll = (
+    query?: {
+      "pagination.key"?: string;
+      "pagination.offset"?: string;
+      "pagination.limit"?: string;
+      "pagination.count_total"?: boolean;
+    },
+    params: RequestParams = {},
+  ) =>
+    this.request<HumansQueryAllWhitelistedNodeResponse, RpcStatus>({
+      path: `/humansdotai/humans/humans/whitelisted_node`,
+      method: "GET",
+      query: query,
+      format: "json",
+      ...params,
+    });
+
+  /**
+   * No description
+   *
+   * @tags Query
+   * @name QueryWhitelistedNode
+   * @summary Queries a WhitelistedNode by index.
+   * @request GET:/humansdotai/humans/humans/whitelisted_node/{index}
+   */
+  queryWhitelistedNode = (index: string, params: RequestParams = {}) =>
+    this.request<HumansQueryGetWhitelistedNodeResponse, RpcStatus>({
+      path: `/humansdotai/humans/humans/whitelisted_node/${index}`,
       method: "GET",
       format: "json",
       ...params,

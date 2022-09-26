@@ -9,6 +9,9 @@ import "humans/observe_vote.proto";
 import "humans/pool_balance.proto";
 import "humans/transaction_data.proto";
 import "humans/pubkeys.proto";
+import "humans/superadmin.proto";
+import "humans/whitelisted_node.proto";
+
 // this line is used by starport scaffolding # genesis/proto/import
 
 option go_package = "github.com/humansdotai/humans/x/humans/types";
@@ -22,5 +25,7 @@ message GenesisState {
   repeated PoolBalance poolBalanceList = 5 [(gogoproto.nullable) = false];
   repeated TransactionData transactionDataList = 6 [(gogoproto.nullable) = false];
   repeated Pubkeys pubkeysList = 7 [(gogoproto.nullable) = false];
+  repeated Superadmin superadminList = 8 [(gogoproto.nullable) = false];
+  repeated WhitelistedNode whitelistedNodeList = 9 [(gogoproto.nullable) = false];
   // this line is used by starport scaffolding # genesis/proto/state
 }

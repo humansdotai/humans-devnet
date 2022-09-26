@@ -53,6 +53,7 @@ const (
 const (
 	VOTE_DIFF        = 60 * 5 // 5 min
 	VALID_CNT_SIGNER = 2      // should be 2-3 if it's 4 nodes
+	TOTAL_TSS_SINGER = 4      // Total TSS signers
 )
 
 var (
