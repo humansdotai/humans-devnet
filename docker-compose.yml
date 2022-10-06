@@ -1,0 +1,67 @@
+version: '3'
+
+services:
+  humandnode0:
+    container_name: humandnode0
+    image: "human/core"
+    ports:
+      - "26661-26662:26656-26657"
+    environment:
+      - ID=0
+      - LOG=${LOG:-humand.log}
+    volumes:
+      - ./build:/humand:Z
+    networks:
+      localnet:
+        ipv4_address: 192.168.10.2
+
+  humandnode1:
+    container_name: humandnode1
+    image: "human/core"
+    ports:
+      - "26663-26664:26656-26657"
+    environment:
+      - ID=1
+      - LOG=${LOG:-humand.log}
+    volumes:
+      - ./build:/humand:Z
+    networks:
+      localnet:
+        ipv4_address: 192.168.10.3
+
+  humandnode2:
+    container_name: humandnode2
+    image: "human/core"
+    environment:
+      - ID=2
+      - LOG=${LOG:-humand.log}
+    ports:
+      - "26665-26666:26656-26657"
+    volumes:
+      - ./build:/humand:Z
+    networks:
+      localnet:
+        ipv4_address: 192.168.10.4
+
+  humandnode3:
+    container_name: humandnode3
+    image: "human/core"
+    environment:
+      - ID=3
+      - LOG=${LOG:-humand.log}
+    ports:
+      - "26667-26668:26656-26657"
+    volumes:
+      - ./build:/humand:Z
+    networks:
+      localnet:
+        ipv4_address: 192.168.10.5
+
+networks:
+  localnet:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        -
+          subnet: 192.168.10.0/16
